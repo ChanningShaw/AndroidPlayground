@@ -100,6 +100,12 @@ fun RectF.scale(scale: Float): RectF {
     return RectF(centerX() - width() * scale / 2, centerY() - height() * scale / 2, centerX() + width() * scale / 2, centerY() + height() * scale / 2)
 }
 
+operator fun PointF.minus(p: PointF): PointF {
+    x -= p.x
+    y -= p.y
+    return this
+}
+
 
 fun PointF.distanceTo(x1: Float, y1: Float): Float {
     return sqrt((x - x1) * (x - x1) + (y - y1) * (y - y1))
@@ -108,6 +114,10 @@ fun PointF.distanceTo(x1: Float, y1: Float): Float {
 object PlaneGeometryUtils {
     fun twoPointDistance(x1: Float, y1: Float, x2: Float, y2: Float): Float {
         return sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2))
+    }
+
+    fun twoPointDistance(p1: PointF, p2: PointF): Float {
+        return sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y))
     }
 
     fun rectOfCenterPoint(x: Float, y: Float, radius: Float): RectF {
@@ -139,7 +149,9 @@ object PlaneGeometryUtils {
             val b2 = temp[1]
             val c2 = temp[2]
             val y = (a1 * c2 - a2 * c1) / (a2 * b1 - a1 * b2)
-            val x = if (a1 !=0.0f) {  -(c1 + b1 * y) / a1 } else {
+            val x = if (a1 != 0.0f) {
+                -(c1 + b1 * y) / a1
+            } else {
                 -(c2 + b2 * y) / a2
             }
             listOf(PointF(x, y))
@@ -178,7 +190,42 @@ object PlaneGeometryUtils {
         return list
     }
 
+    /**
+     * TODO 两圆的交点这里有很多情况
+     */
+    fun getCrossPoints(c1: Circle, c2: Circle): List<PointF> {
+        val list = mutableListOf<PointF>()
+        var coefficients = c1.getCoefficients()
+        val a1 = coefficients[0]
+        val b1 = coefficients[1]
+        val c1 = coefficients[2]
+
+        coefficients = c2.getCoefficients()
+        val a2 = coefficients[0]
+        val b2 = coefficients[1]
+        val c2 = coefficients[2]
+        if (b1 == b2) {
+            val x = -(c2 - c1) / (a2 - a1)
+            val solutions = BinaryLinearEquation.solve(1f, b1, x * x + a1 * x + c1)
+            for (y in solutions) {
+                list.add(PointF(x, y))
+            }
+        } else {
+            val k = (a1 - a2) / (b2 - b1)
+            val b = (c1 - c2) / (b2 - b1)
+            val solutions = BinaryLinearEquation.solve(k * k + 1, 2 * k * b + a1 + b1 * k, b * b + b1 * b + c1)
+            for (x in solutions) {
+                list.add(PointF(x, k * x + b))
+            }
+        }
+        return list
+    }
+
     fun isOverlapWith(line: Line, circle: Circle): Boolean {
         return line.distanceTo(circle.getCenter()) <= circle.getRadius()
+    }
+
+    fun isOverlapWith(c1: Circle, c2: Circle): Boolean {
+        return twoPointDistance(c1.getCenter(), c2.getCenter()) <= c1.getRadius() + c2.getRadius()
     }
 }

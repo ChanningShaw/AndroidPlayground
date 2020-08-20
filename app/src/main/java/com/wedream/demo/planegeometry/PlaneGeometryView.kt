@@ -5,7 +5,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
-import android.os.Handler
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
@@ -14,6 +13,8 @@ import android.view.View
 import com.wedream.demo.planegeometry.PlaneGeometryUtils.twoPointDistance
 import com.wedream.demo.planegeometry.shape.*
 import com.wedream.demo.util.Vector2D
+import kotlin.math.PI
+import kotlin.math.abs
 import kotlin.random.Random
 
 class PlaneGeometryView(context: Context, attrs: AttributeSet?, defStyle: Int) : View(context, attrs, defStyle) {
@@ -21,6 +22,7 @@ class PlaneGeometryView(context: Context, attrs: AttributeSet?, defStyle: Int) :
     constructor(context: Context) : this(context, null, 0)
 
     private val paint = Paint()
+    private val crossPointPaint = Paint()
     private val elementList = mutableListOf<ShapeElement>()
 
     private var currentSelect: ShapeElement? = null
@@ -39,21 +41,15 @@ class PlaneGeometryView(context: Context, attrs: AttributeSet?, defStyle: Int) :
 
     private var velocityTracker: VelocityTracker? = null
 
-    private var animationHandler: Handler = Handler {
-        currentSelect?.let {
-            val speed = it.speed
-            it.shape.moveBy(speed.x, speed.y)
-            checkCollision()
-            invalidate()
-            sendBounceMessage()
-        }
-        false
-    }
-
-
     init {
         paint.style = Paint.Style.STROKE
+
+        crossPointPaint.style = Paint.Style.STROKE
+        crossPointPaint.color = Color.RED
+        crossPointPaint.strokeWidth = 20f
     }
+
+    private val colors = listOf(Color.BLACK, Color.GREEN, Color.BLUE, Color.GRAY, Color.RED, Color.CYAN, Color.MAGENTA)
 
     companion object {
         const val MSG_BOUNCE_ANIMATION = 0
@@ -62,7 +58,7 @@ class PlaneGeometryView(context: Context, attrs: AttributeSet?, defStyle: Int) :
     override fun onDraw(canvas: Canvas?) {
         canvas?.let {
             drawBorder(canvas)
-            drawLines(canvas)
+            drawElements(canvas)
             drawCross(canvas)
         }
     }
@@ -72,22 +68,51 @@ class PlaneGeometryView(context: Context, attrs: AttributeSet?, defStyle: Int) :
         borderRect.set(0f, 0f, width.toFloat(), height.toFloat())
     }
 
-    private fun sendBounceMessage() {
-        animationHandler.removeMessages(MSG_BOUNCE_ANIMATION)
-        animationHandler.sendEmptyMessage(MSG_BOUNCE_ANIMATION)
-    }
-
     /**
      * 碰撞检测
      */
     private fun checkCollision() {
-        out@for (segment in borderRect.getSegments()) {
-            for (element in elementList) {
+        val tempList = hashSetOf<ShapeElement>()
+        for (i in elementList.indices) {
+            val element = elementList[i]
+            if (tempList.contains(element)) {
+                continue
+            }
+            //改变速度
+            val speed = element.speed
+            if (speed.isZero()) {
+                continue
+            }
+            element.shape.moveBy(speed.x, speed.y)
+            // 首先检测和边界的碰撞情况
+            for (segment in borderRect.getSegments()) {
                 if (segment.isOverlapWith(element.shape)) {
                     // 如果碰撞了，要改变速度
                     element.speed = element.speed.reflectBy(segment.getVector())
-                    Log.e("xcm", "change speed = ${element.speed}")
-                    break@out
+                    element.paint.color = colors.random()
+                    continue
+                }
+            }
+            // 检测与其他物体的碰撞
+            for (j in i + 1 until elementList.size) {
+                val other = elementList[j]
+                if (tempList.contains(other)) {
+                    continue
+                }
+                // 圆与圆
+                val shape1 = element.shape
+                val shape2 = other.shape
+                // 虽然相交，但如果已经在远离了，不做碰撞
+                if (shape1.isOverlapWith(shape2)) {
+                    if (shape1 is Circle && shape2 is Circle) {
+                        val tangentVector = Vector2D(shape1.getCenter() - shape2.getCenter())
+                        Log.e("xcm", "before ${element.speed}, ${other.speed}")
+                        element.speed = element.speed.reflectWith(tangentVector)
+                        other.speed = other.speed.reflectBy(tangentVector.inverse())
+                        Log.e("xcm", "after ${element.speed}, ${other.speed}")
+                    }
+                    tempList.add(element)
+                    tempList.add(other)
                 }
             }
         }
@@ -97,23 +122,23 @@ class PlaneGeometryView(context: Context, attrs: AttributeSet?, defStyle: Int) :
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
     }
 
-    private fun drawLines(canvas: Canvas) {
+    private fun drawElements(canvas: Canvas) {
+        checkCollision()
         for (e in elementList) {
             if (e == currentSelect) {
                 e.paint.strokeWidth = 10f
             } else {
-                e.paint.strokeWidth = 3f
+                e.paint.strokeWidth = 6f
             }
             e.shape.draw(canvas, e.paint)
         }
+        invalidate()
     }
 
     private fun drawCross(canvas: Canvas) {
         for (i in elementList.indices) {
             for (j in i + 1 until elementList.size) {
                 elementList[i].shape.crossPointWith(elementList[j].shape).forEach { p ->
-                    paint.color = Color.RED
-                    paint.strokeWidth = 20f
                     canvas.drawPoint(p.x, p.y, paint)
                 }
             }
@@ -204,12 +229,10 @@ class PlaneGeometryView(context: Context, attrs: AttributeSet?, defStyle: Int) :
 
     private fun doFly() {
         currentSelect?.let {
-            velocityTracker?.computeCurrentVelocity(8)
+            velocityTracker?.computeCurrentVelocity(17)
             val xSpeed = velocityTracker?.getXVelocity(0) ?: return
             val ySpeed = velocityTracker?.getYVelocity(0) ?: return
-            Log.e("xcm", "xSpeed = $xSpeed, ySpeed = $ySpeed")
-            it.speed = Vector2D(xSpeed, ySpeed)
-            sendBounceMessage()
+            it.speed = Vector2D(xSpeed / 5f, ySpeed / 5f)
         }
     }
 
@@ -250,7 +273,9 @@ class PlaneGeometryView(context: Context, attrs: AttributeSet?, defStyle: Int) :
         val y = random.nextInt(0, height).toFloat()
         val radius = random.nextInt(50, 100).toFloat()
         val c = Circle(x, y, radius)
-        elementList.add(ShapeElement(c))
+        val shape = ShapeElement(c)
+        shape.paint.color = colors.random()
+        elementList.add(shape)
         invalidate()
     }
 
@@ -261,8 +286,7 @@ class PlaneGeometryView(context: Context, attrs: AttributeSet?, defStyle: Int) :
         }
     }
 
-    fun removeAll(){
-        animationHandler.removeMessages(MSG_BOUNCE_ANIMATION)
+    fun removeAll() {
         elementList.clear()
         invalidate()
     }

@@ -5,6 +5,7 @@ import android.widget.Button
 import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
+import com.wedream.demo.util.Vector2D
 
 class PlaneGeometryActivity : AppCompatActivity() {
 
@@ -15,6 +16,10 @@ class PlaneGeometryActivity : AppCompatActivity() {
         setContentView(R.layout.activity_plane_geometry)
         demoView = findViewById(R.id.demo_view)
         findViewById<Button>(R.id.add_circle).setOnClickListener { demoView?.addCircle() }
+        findViewById<Button>(R.id.add_line).setOnClickListener {
+            Vector2D(1f, 0f).angleWith(Vector2D(-1f, 1f))
+        }
+
 
         findViewById<RadioGroup>(R.id.rg_modes).setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
@@ -30,5 +35,10 @@ class PlaneGeometryActivity : AppCompatActivity() {
         findViewById<Button>(R.id.remove_all).setOnClickListener {
             demoView?.removeAll()
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        demoView?.removeAll()
     }
 }

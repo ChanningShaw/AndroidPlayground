@@ -3,6 +3,7 @@ package com.wedream.demo.planegeometry.shape
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.PointF
+import com.wedream.demo.planegeometry.PlaneGeometryUtils
 import com.wedream.demo.planegeometry.PlaneGeometryUtils.getCrossPoints
 import com.wedream.demo.planegeometry.distanceTo
 import kotlin.math.abs
@@ -52,6 +53,9 @@ class Circle constructor(private var x: Float,
             is Line -> {
                 return getCrossPoints(shape, this)
             }
+            is Circle -> {
+                return getCrossPoints(shape, this)
+            }
         }
         return emptyList()
     }
@@ -76,7 +80,15 @@ class Circle constructor(private var x: Float,
     }
 
     override fun isOverlapWith(shape: Shape): Boolean {
-        return false
+        when (shape) {
+            is Line -> {
+                return PlaneGeometryUtils.isOverlapWith(shape, this)
+            }
+            is Circle ->{
+                return PlaneGeometryUtils.isOverlapWith(this, shape)
+            }
+            else -> return false
+        }
     }
 
     override fun getArea(): Float {
@@ -89,5 +101,9 @@ class Circle constructor(private var x: Float,
 
     fun getRadius(): Float {
         return radius
+    }
+
+    override fun toString(): String {
+        return "($x, $y, $radius)"
     }
 }
