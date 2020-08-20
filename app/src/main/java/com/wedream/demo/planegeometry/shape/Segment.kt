@@ -1,9 +1,10 @@
-package com.wedream.demo.util
+package com.wedream.demo.planegeometry.shape
 
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.PointF
 import android.util.Log
+import com.wedream.demo.util.Vector2D
 
 class Segment(private var x1: Float,
               private var y1: Float,
@@ -30,7 +31,7 @@ class Segment(private var x1: Float,
     override fun has(p: PointF): Boolean {
         if (getType() == Type.Horizontal) {
             return p.x in x1..x2 || p.x in x2..x1
-        } else if (getType() == Type.Vertical){
+        } else if (getType() == Type.Vertical) {
             return p.y in y1..y2 || p.y in y2..y1
         }
         val x = getX(p.y)
@@ -40,5 +41,12 @@ class Segment(private var x1: Float,
 
     override fun toString(): String {
         return "Segment: $x1, $y1 - $x2, $y2"
+    }
+
+    /**
+     * 和直线不同，这里要保证右手原则，线段是有方向的
+     */
+    override fun getVector(): Vector2D {
+        return Vector2D(x2 - x1, y2 - y1)
     }
 }

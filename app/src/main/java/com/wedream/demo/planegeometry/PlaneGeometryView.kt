@@ -5,37 +5,29 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
+import android.os.Handler
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
+import android.view.VelocityTracker
 import android.view.View
-import com.wedream.demo.util.*
-import com.wedream.demo.util.PlaneGeometryUtils.twoPointDistance
+import com.wedream.demo.planegeometry.PlaneGeometryUtils.twoPointDistance
+import com.wedream.demo.planegeometry.shape.*
+import com.wedream.demo.util.Vector2D
+import kotlin.random.Random
 
 class PlaneGeometryView(context: Context, attrs: AttributeSet?, defStyle: Int) : View(context, attrs, defStyle) {
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context) : this(context, null, 0)
 
     private val paint = Paint()
-    private val elementList = listOf(
-        LineElement(Line(0f, 0f, 100f, 100f)),
-        LineElement(Line(0f, 200f, 200f, 300f)),
-        LineElement(Rect(100f, 200f, 300f, 400f)),
-        LineElement(Circle(0f, 200f, 200f))
-    )
+    private val elementList = mutableListOf<ShapeElement>()
 
-    private var currentSelect: LineElement? = null
-    private var currentDoubleSelect: LineElement? = null
+    private var currentSelect: ShapeElement? = null
+    private var currentDoubleSelect: ShapeElement? = null
     private var lastPointerDistance = 1f
     private var inScaleMode = false
-
-    init {
-        elementList[0].paint.strokeWidth = 3f
-        elementList[0].paint.color = Color.BLUE
-
-        elementList[1].paint.strokeWidth = 3f
-        elementList[1].paint.color = Color.GREEN
-    }
+    private var borderRect = Rect()
 
     private var downX = 0f
     private var downY = 0f
@@ -43,11 +35,66 @@ class PlaneGeometryView(context: Context, attrs: AttributeSet?, defStyle: Int) :
     private var lastX = 0f
     private var lastY = 0f
 
+    private var mode = Mode.Normal
+
+    private var velocityTracker: VelocityTracker? = null
+
+    private var animationHandler: Handler = Handler {
+        currentSelect?.let {
+            val speed = it.speed
+            it.shape.moveBy(speed.x, speed.y)
+            checkCollision()
+            invalidate()
+            sendBounceMessage()
+        }
+        false
+    }
+
+
+    init {
+        paint.style = Paint.Style.STROKE
+    }
+
+    companion object {
+        const val MSG_BOUNCE_ANIMATION = 0
+    }
+
     override fun onDraw(canvas: Canvas?) {
         canvas?.let {
+            drawBorder(canvas)
             drawLines(canvas)
             drawCross(canvas)
         }
+    }
+
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        super.onLayout(changed, left, top, right, bottom)
+        borderRect.set(0f, 0f, width.toFloat(), height.toFloat())
+    }
+
+    private fun sendBounceMessage() {
+        animationHandler.removeMessages(MSG_BOUNCE_ANIMATION)
+        animationHandler.sendEmptyMessage(MSG_BOUNCE_ANIMATION)
+    }
+
+    /**
+     * 碰撞检测
+     */
+    private fun checkCollision() {
+        out@for (segment in borderRect.getSegments()) {
+            for (element in elementList) {
+                if (segment.isOverlapWith(element.shape)) {
+                    // 如果碰撞了，要改变速度
+                    element.speed = element.speed.reflectBy(segment.getVector())
+                    Log.e("xcm", "change speed = ${element.speed}")
+                    break@out
+                }
+            }
+        }
+    }
+
+    private fun drawBorder(canvas: Canvas) {
+        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
     }
 
     private fun drawLines(canvas: Canvas) {
@@ -77,6 +124,7 @@ class PlaneGeometryView(context: Context, attrs: AttributeSet?, defStyle: Int) :
         if (event == null) {
             return false
         }
+        velocityTracker?.addMovement(event)
         val x = event.x
         val y = event.y
         val point = PointF(x, y)
@@ -91,13 +139,15 @@ class PlaneGeometryView(context: Context, attrs: AttributeSet?, defStyle: Int) :
             MotionEvent.ACTION_POINTER_DOWN -> {
                 doubleSelectedDetect()
                 lastPointerDistance = twoFingerDistance(event)
-                Log.e("xcm", "lastPointerDistance = $lastPointerDistance")
             }
             MotionEvent.ACTION_POINTER_UP -> {
                 currentDoubleSelect = null
             }
             MotionEvent.ACTION_UP -> {
                 inScaleMode = false
+                if (mode == Mode.Bounce) {
+                    doFly()
+                }
             }
             MotionEvent.ACTION_MOVE -> {
                 if (inScaleMode) {
@@ -126,7 +176,6 @@ class PlaneGeometryView(context: Context, attrs: AttributeSet?, defStyle: Int) :
                 val dis = twoPointDistance(x, y, x1, y1)
                 val scale = dis / lastPointerDistance
                 lastPointerDistance = dis
-                Log.e("xcm", "dis = $dis, scale = $scale")
                 it.scaleBy(scale)
             } else {
                 when (it) {
@@ -153,6 +202,17 @@ class PlaneGeometryView(context: Context, attrs: AttributeSet?, defStyle: Int) :
         }
     }
 
+    private fun doFly() {
+        currentSelect?.let {
+            velocityTracker?.computeCurrentVelocity(8)
+            val xSpeed = velocityTracker?.getXVelocity(0) ?: return
+            val ySpeed = velocityTracker?.getYVelocity(0) ?: return
+            Log.e("xcm", "xSpeed = $xSpeed, ySpeed = $ySpeed")
+            it.speed = Vector2D(xSpeed, ySpeed)
+            sendBounceMessage()
+        }
+    }
+
     private fun doubleSelectedDetect() {
         for (e in elementList) {
             if (currentDoubleSelect == null && e == currentSelect) {
@@ -163,12 +223,17 @@ class PlaneGeometryView(context: Context, attrs: AttributeSet?, defStyle: Int) :
         }
     }
 
-    data class LineElement(var shape: Shape) {
+    data class ShapeElement(var shape: Shape) {
         var paint: Paint = Paint()
+        var speed: Vector2D = Vector2D()
 
         init {
             paint.style = Paint.Style.STROKE
         }
+    }
+
+    enum class Mode {
+        Normal, Bounce
     }
 
     private fun twoFingerDistance(event: MotionEvent): Float {
@@ -177,5 +242,28 @@ class PlaneGeometryView(context: Context, attrs: AttributeSet?, defStyle: Int) :
         val x1 = event.getX(1)
         val y1 = event.getY(1)
         return twoPointDistance(x, y, x1, y1)
+    }
+
+    fun addCircle() {
+        val random = Random(System.currentTimeMillis())
+        val x = random.nextInt(0, width).toFloat()
+        val y = random.nextInt(0, height).toFloat()
+        val radius = random.nextInt(50, 100).toFloat()
+        val c = Circle(x, y, radius)
+        elementList.add(ShapeElement(c))
+        invalidate()
+    }
+
+    fun setMode(mode: Mode) {
+        this.mode = mode
+        if (mode == Mode.Bounce && velocityTracker == null) {
+            velocityTracker = VelocityTracker.obtain()
+        }
+    }
+
+    fun removeAll(){
+        animationHandler.removeMessages(MSG_BOUNCE_ANIMATION)
+        elementList.clear()
+        invalidate()
     }
 }

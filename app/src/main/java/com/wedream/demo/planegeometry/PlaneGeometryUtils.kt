@@ -1,8 +1,12 @@
-package com.wedream.demo.util
+package com.wedream.demo.planegeometry
 
 import android.graphics.Matrix
 import android.graphics.PointF
 import android.graphics.RectF
+import com.wedream.demo.planegeometry.shape.Circle
+import com.wedream.demo.planegeometry.shape.Line
+import com.wedream.demo.planegeometry.shape.Rect
+import com.wedream.demo.util.BinaryLinearEquation
 import kotlin.math.*
 
 /**
@@ -172,5 +176,9 @@ object PlaneGeometryUtils {
         val list = mutableListOf<PointF>()
         rect.getSegments().forEach { list.addAll(it.crossPointWith(line)) }
         return list
+    }
+
+    fun isOverlapWith(line: Line, circle: Circle): Boolean {
+        return line.distanceTo(circle.getCenter()) <= circle.getRadius()
     }
 }

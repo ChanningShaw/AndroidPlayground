@@ -5,7 +5,7 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import com.wedream.demo.util.fitRect
+import com.wedream.demo.planegeometry.fitRect
 
 class MatrixDemoView(context: Context, attrs: AttributeSet?, defStyle: Int) : View(context, attrs, defStyle) {
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)

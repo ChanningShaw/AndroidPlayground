@@ -1,9 +1,10 @@
-package com.wedream.demo.util
+package com.wedream.demo.planegeometry.shape
 
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.PointF
-import com.wedream.demo.util.PlaneGeometryUtils.getCrossPoints
+import com.wedream.demo.planegeometry.PlaneGeometryUtils.getCrossPoints
+import com.wedream.demo.planegeometry.distanceTo
 import kotlin.math.abs
 
 /**
@@ -74,7 +75,19 @@ class Circle constructor(private var x: Float,
         return p.x * p.x + p.y * p.y + a * p.x + b * p.y + c == 0f
     }
 
+    override fun isOverlapWith(shape: Shape): Boolean {
+        return false
+    }
+
     override fun getArea(): Float {
         return Math.PI.toFloat() * radius * radius
+    }
+
+    override fun getCenter(): PointF {
+        return PointF(x, y)
+    }
+
+    fun getRadius(): Float {
+        return radius
     }
 }

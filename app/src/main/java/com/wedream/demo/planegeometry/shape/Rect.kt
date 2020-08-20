@@ -1,15 +1,17 @@
-package com.wedream.demo.util
+package com.wedream.demo.planegeometry.shape
 
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.PointF
 import android.util.Log
-import com.wedream.demo.util.PlaneGeometryUtils.getCrossPoints
+import com.wedream.demo.planegeometry.PlaneGeometryUtils.getCrossPoints
 
 class Rect(private var left: Float,
            private var top: Float,
            private var right: Float,
            private var bottom: Float) : ScalableShape() {
+
+    constructor() : this(0f, 0f, 0f, 0f)
 
     override fun isClicked(p: PointF): Boolean {
         getSegments().forEach {
@@ -62,15 +64,22 @@ class Rect(private var left: Float,
         return false
     }
 
+    override fun isOverlapWith(shape: Shape): Boolean {
+        return false
+    }
+
     fun getPoints(): List<PointF> {
         return listOf(PointF(left, top), PointF(right, top), PointF(right, bottom), PointF(left, bottom))
     }
 
+    /**
+     * 这里要注意顺序
+     */
     fun getSegments(): List<Segment> {
-        return listOf(Segment(left, top, right, top),
-            Segment(right, top, right, bottom),
+        return listOf(Segment(right, top, left, top),
+            Segment(left, top, left, bottom),
             Segment(left, bottom, right, bottom),
-            Segment(left, top, left, bottom))
+            Segment(right, bottom, right, top))
     }
 
     override fun toString(): String {
@@ -79,6 +88,10 @@ class Rect(private var left: Float,
 
     override fun getArea(): Float {
         return (right - left) * (bottom - top)
+    }
+
+    override fun getCenter(): PointF {
+        return PointF(centerX(), centerY())
     }
 
     fun centerX(): Float {
@@ -95,5 +108,13 @@ class Rect(private var left: Float,
 
     fun height(): Float {
         return bottom - top
+    }
+
+
+    fun set(left: Float, top: Float, right: Float, bottom: Float) {
+        this.left = left
+        this.top = top
+        this.right = right
+        this.bottom = bottom
     }
 }

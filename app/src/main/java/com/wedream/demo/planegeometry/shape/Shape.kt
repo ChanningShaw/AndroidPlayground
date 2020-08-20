@@ -1,4 +1,4 @@
-package com.wedream.demo.util
+package com.wedream.demo.planegeometry.shape
 
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -15,4 +15,5 @@ abstract class Shape {
     abstract fun moveBy(deltaX: Float, deltaY: Float)
     abstract fun getCoefficients(): List<Float>
     abstract fun has(p: PointF): Boolean
+    abstract fun isOverlapWith(shape: Shape): Boolean
 }

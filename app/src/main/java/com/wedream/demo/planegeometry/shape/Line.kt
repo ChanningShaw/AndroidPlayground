@@ -1,10 +1,12 @@
-package com.wedream.demo.util
+package com.wedream.demo.planegeometry.shape
 
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.PointF
 import android.util.Log
-import com.wedream.demo.util.PlaneGeometryUtils.getCrossPoints
+import com.wedream.demo.planegeometry.PlaneGeometryUtils.getCrossPoints
+import com.wedream.demo.planegeometry.PlaneGeometryUtils.isOverlapWith
+import com.wedream.demo.util.Vector2D
 import kotlin.math.abs
 import kotlin.math.sqrt
 
@@ -32,7 +34,6 @@ open class Line : Shape {
             Type.Common
         }
     }
-
 
     /**
      * 直线的一般形式 ax + by + c = 0
@@ -169,7 +170,23 @@ open class Line : Shape {
         return a * p.x + b * p.y + c == 0f
     }
 
+    override fun isOverlapWith(shape: Shape): Boolean {
+        when (shape) {
+            is Circle -> {
+                return isOverlapWith(this, shape)
+            }
+        }
+        return false
+    }
+
     override fun toString(): String {
         return "Line: $a, $b, $c"
+    }
+
+    /**
+     * 返回直线的向量
+     */
+    open fun getVector(): Vector2D {
+        return Vector2D(-b, a)
     }
 }

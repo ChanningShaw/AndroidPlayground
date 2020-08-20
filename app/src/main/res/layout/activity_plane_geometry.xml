@@ -4,9 +4,61 @@
   android:layout_height="match_parent"
   android:orientation="vertical">
 
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <Button
+      android:id="@+id/add_line"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="添加直线" />
+
+    <Button
+      android:id="@+id/add_rect"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="添加矩形" />
+
+    <Button
+      android:id="@+id/add_circle"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="添加圆" />
+
+    <Button
+      android:id="@+id/remove_all"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="移除所有" />
+
+  </LinearLayout>
+
+    <RadioGroup
+      android:id="@+id/rg_modes"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal">
+
+    <RadioButton
+      android:id="@+id/rb_normal"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:checked="true"
+      android:text="普通" />
+
+    <RadioButton
+      android:id="@+id/rb_bounce"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="碰撞" />
+
+  </RadioGroup>
+
   <com.wedream.demo.planegeometry.PlaneGeometryView
     android:id="@+id/demo_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="0dp"
+    android:layout_weight="1" />
 
 </LinearLayout>
