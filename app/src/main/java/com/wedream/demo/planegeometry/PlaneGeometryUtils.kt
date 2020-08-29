@@ -14,6 +14,10 @@ import kotlin.math.*
  *
  * @author xiaochunming
  */
+object Constants {
+    const val ERROR_OVERLAP = 5f
+}
+
 /**
  * 判断一个点是否在矩形之内
  *
@@ -101,9 +105,7 @@ fun RectF.scale(scale: Float): RectF {
 }
 
 operator fun PointF.minus(p: PointF): PointF {
-    x -= p.x
-    y -= p.y
-    return this
+    return PointF(x - p.x, y - p.y)
 }
 
 

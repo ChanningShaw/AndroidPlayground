@@ -13,8 +13,8 @@ import android.view.View
 import com.wedream.demo.planegeometry.PlaneGeometryUtils.twoPointDistance
 import com.wedream.demo.planegeometry.shape.*
 import com.wedream.demo.util.Vector2D
-import kotlin.math.PI
-import kotlin.math.abs
+import kotlin.math.cos
+import kotlin.math.sin
 import kotlin.random.Random
 
 class PlaneGeometryView(context: Context, attrs: AttributeSet?, defStyle: Int) : View(context, attrs, defStyle) {
@@ -75,15 +75,12 @@ class PlaneGeometryView(context: Context, attrs: AttributeSet?, defStyle: Int) :
         val tempList = hashSetOf<ShapeElement>()
         for (i in elementList.indices) {
             val element = elementList[i]
+            //改变速度
+            val speed = element.speed
+            element.shape.moveBy(speed.x, speed.y)
             if (tempList.contains(element)) {
                 continue
             }
-            //改变速度
-            val speed = element.speed
-            if (speed.isZero()) {
-                continue
-            }
-            element.shape.moveBy(speed.x, speed.y)
             // 首先检测和边界的碰撞情况
             for (segment in borderRect.getSegments()) {
                 if (segment.isOverlapWith(element.shape)) {
@@ -99,16 +96,36 @@ class PlaneGeometryView(context: Context, attrs: AttributeSet?, defStyle: Int) :
                 if (tempList.contains(other)) {
                     continue
                 }
-                // 圆与圆
                 val shape1 = element.shape
                 val shape2 = other.shape
-                // 虽然相交，但如果已经在远离了，不做碰撞
                 if (shape1.isOverlapWith(shape2)) {
+                    // 圆与圆
                     if (shape1 is Circle && shape2 is Circle) {
-                        val tangentVector = Vector2D(shape1.getCenter() - shape2.getCenter())
+                        // TODO
+                        // 动量守恒
+//                        val v10 = element.speed.magnitude()
+//                        val v20 = other.speed.magnitude()
+//                        val m1 = shape1.getArea()
+//                        val m2 = shape2.getArea()
+//                        // 圆心连线的向量
+//                        val connectVector = Vector2D(shape2.getCenter() - shape1.getCenter())
+//                        val angle1 = element.speed.angleWith(connectVector)
+//                        val v10x = v10 * cos(angle1)
+//                        val v10y = v10 * sin(angle1)
+//                        val angle2 = other.speed.angleWith(connectVector)
+//                        val v20x = v20 * cos(angle2)
+//                        val v20y = v20 * sin(angle2)
+//
+//                        val v11x = ((m1 - m2) * v10x + 2 * m2 * v20x) / (m1 + m2)
+//                        val v21x = ((m2 - m1) * v20x + 2 * m1 * v10x) / (m1 + m2)
+//                        val v11y = ((m1 - m2) * v10y + 2 * m2 * v20y) / (m1 + m2)
+//                        val v21y = ((m2 - m1) * v20y + 2 * m1 * v10y) / (m1 + m2)
+
+                        //旋转回去
+//                        element.speed = Vector2D(v11x, v11y)
+//                        other.speed = Vector2D(v21x, v21y)
+
                         Log.e("xcm", "before ${element.speed}, ${other.speed}")
-                        element.speed = element.speed.reflectWith(tangentVector)
-                        other.speed = other.speed.reflectBy(tangentVector.inverse())
                         Log.e("xcm", "after ${element.speed}, ${other.speed}")
                     }
                     tempList.add(element)
@@ -232,7 +249,10 @@ class PlaneGeometryView(context: Context, attrs: AttributeSet?, defStyle: Int) :
             velocityTracker?.computeCurrentVelocity(17)
             val xSpeed = velocityTracker?.getXVelocity(0) ?: return
             val ySpeed = velocityTracker?.getYVelocity(0) ?: return
-            it.speed = Vector2D(xSpeed / 5f, ySpeed / 5f)
+            val speed = Vector2D(xSpeed / 5f, ySpeed / 5f)
+            if (speed.magnitude() > 5f) {
+                it.speed = speed
+            }
         }
     }
 
@@ -269,10 +289,10 @@ class PlaneGeometryView(context: Context, attrs: AttributeSet?, defStyle: Int) :
 
     fun addCircle() {
         val random = Random(System.currentTimeMillis())
-        val x = random.nextInt(0, width).toFloat()
-        val y = random.nextInt(0, height).toFloat()
-        val radius = random.nextInt(50, 100).toFloat()
-        val c = Circle(x, y, radius)
+        val radius = random.nextInt(50, 100)
+        val x = random.nextInt(radius, width - radius).toFloat()
+        val y = random.nextInt(radius, height - radius).toFloat()
+        val c = Circle(x, y, radius.toFloat())
         val shape = ShapeElement(c)
         shape.paint.color = colors.random()
         elementList.add(shape)
