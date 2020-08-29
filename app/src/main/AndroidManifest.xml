@@ -17,6 +17,7 @@
             </intent-filter>
         </activity><activity android:name=".render.MatrixDemoActivity" />
         <activity android:name=".render.DrawTextDemoActivity" /><activity android:name=".planegeometry.PlaneGeometryActivity" />
+        <activity android:name=".sort.SortActivity" />
     </application>
 
 </manifest>

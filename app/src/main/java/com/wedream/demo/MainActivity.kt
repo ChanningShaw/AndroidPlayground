@@ -9,6 +9,7 @@ import com.wedream.demo.common.CommonAdapter
 import com.wedream.demo.render.DrawTextDemoActivity
 import com.wedream.demo.render.MatrixDemoActivity
 import com.wedream.demo.planegeometry.PlaneGeometryActivity
+import com.wedream.demo.sort.SortActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,7 +17,8 @@ class MainActivity : AppCompatActivity() {
         val data = listOf(
             MatrixDemoActivity::class.java,
             DrawTextDemoActivity::class.java,
-            PlaneGeometryActivity::class.java
+            PlaneGeometryActivity::class.java,
+            SortActivity::class.java
         )
     }
 

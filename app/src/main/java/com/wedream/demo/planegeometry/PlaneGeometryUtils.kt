@@ -64,6 +64,13 @@ fun RectF.and(rect: RectF): RectF {
     return RectF()
 }
 
+fun RectF.reset(){
+    left = 0f
+    top = 0f
+    right = 0f
+    bottom = 0f
+}
+
 /**
  * 让矩形变小
  */
