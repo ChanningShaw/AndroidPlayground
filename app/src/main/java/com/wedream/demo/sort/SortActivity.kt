@@ -37,6 +37,7 @@ class SortActivity : AppCompatActivity() {
                     0 -> SortAlgorithmType.Bubble
                     1 -> SortAlgorithmType.Select
                     2 -> SortAlgorithmType.Insert
+                    3 -> SortAlgorithmType.Shell
                     else -> SortAlgorithmType.Bubble
                 }
                 sortView?.setAlgorithm(algo)
@@ -49,6 +50,6 @@ class SortActivity : AppCompatActivity() {
     }
 
     enum class SortAlgorithmType{
-        Bubble, Select, Insert
+        Bubble, Select, Insert, Shell
     }
 }

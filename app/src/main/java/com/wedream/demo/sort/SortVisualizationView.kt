@@ -23,10 +23,12 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
     private var paintDefault = Paint()
     private var paintSelected1 = Paint()
     private var paintSelected2 = Paint()
+    private var textPaint = Paint()
     private var pos1 = -1
     private var pos2 = -1
     private var tempRect = RectF(0f, 0f, 0f, 0f)
     private var moveToTemp = false
+    private var text = ""
 
     private var algo = SortActivity.SortAlgorithmType.Bubble
 
@@ -42,6 +44,8 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
         paintDefault.color = Color.parseColor("#3CB371")
         paintSelected1.color = Color.parseColor("#436EEE")
         paintSelected2.color = Color.parseColor("#551A8B")
+        textPaint.color = Color.BLACK
+        textPaint.textSize = 60f
     }
 
     override fun onDraw(canvas: Canvas?) {
@@ -61,6 +65,10 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
             }
             if (!moveToTemp) {
                 c.drawRect(tempRect, paintDefault)
+            }
+            if (text.isNotEmpty()) {
+                val textWidth = textPaint.measureText(text)
+                c.drawText(text, (width - textWidth) * 0.5f, getElementHeight() * 0.5f, textPaint)
             }
         }
     }
@@ -109,6 +117,7 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
     fun startSort() {
         Thread {
             SortAlgorithm.sort(data, this, algo)
+            SortAlgorithm.print(data)
         }.start()
     }
 
@@ -161,6 +170,11 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
             }
             invalidate()
         }
+    }
+
+    override fun onMessage(msg: String) {
+        text = msg
+        invalidate()
     }
 
     private fun moveToTemp(rect: RectF): RectF {

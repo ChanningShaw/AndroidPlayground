@@ -10,6 +10,7 @@ object SortAlgorithm {
         fun onSwap(i1: Int, i2: Int)
         fun onMove(from: Int, to: Int)
         fun onFinish()
+        fun onMessage(msg: String)
     }
 
     fun sort(data: Array<Int>, listener: SortListener, algorithm: SortActivity.SortAlgorithmType) {
@@ -22,6 +23,9 @@ object SortAlgorithm {
             }
             SortActivity.SortAlgorithmType.Insert -> {
                 insertSort(data, listener)
+            }
+            SortActivity.SortAlgorithmType.Shell -> {
+                shellSort(data, listener)
             }
         }
     }
@@ -67,7 +71,7 @@ object SortAlgorithm {
     }
 
     fun insertSort(data: Array<Int>, listener: SortListener) {
-        var current = 0
+        var current: Int
         for (i in data.indices) {
             var preIndex = i - 1;
             current = data[i]
@@ -84,6 +88,39 @@ object SortAlgorithm {
             data[preIndex + 1] = current;
         }
         listener.onFinish()
+    }
+
+    /**
+     * 希尔排序是基于插入排序的以下两点性质而提出改进方法的：
+     * 插入排序在对几乎已经排好序的数据操作时，效率高，即可以达到线性排序的效率。
+     * 但插入排序一般来说是低效的，因为插入排序每次只能将数据移动一位。
+     */
+    fun shellSort(data: Array<Int>, listener: SortListener) {
+        var gap = data.size / 2
+        while (gap > 0) {
+            listener.onMessage("gap = $gap")
+            for (i in gap until data.size) {
+                insertI(data, gap, i, listener)
+            }
+            gap /= 2
+        }
+        listener.onFinish()
+    }
+
+    private fun insertI(data: Array<Int>, gap: Int, i: Int, listener: SortListener) {
+        val inserted = data[i]
+        listener.onMove(i, -1)
+        Thread.sleep(SLEEP_TIME)
+        var j = i - gap
+        while (j >= 0 && inserted < data[j]) {
+            listener.onMove(j, j + gap)
+            Thread.sleep(SLEEP_TIME)
+            data[j + gap] = data[j]
+            j -= gap
+        }
+        listener.onMove(-1, j + gap)
+        Thread.sleep(SLEEP_TIME)
+        data[j + gap] = inserted
     }
 
     fun swap(i: Int, j: Int, data: Array<Int>) {

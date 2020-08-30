@@ -4,5 +4,6 @@
         <item>bubble</item>　　　　　
         <item>select</item>　　　　　
         <item>insert</item>
+        <item>shell</item>
     </string-array>
 </resources>
