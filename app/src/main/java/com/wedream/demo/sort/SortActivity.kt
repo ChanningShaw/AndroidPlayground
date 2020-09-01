@@ -49,7 +49,7 @@ class SortActivity : AppCompatActivity() {
         super.onStop()
     }
 
-    enum class SortAlgorithmType{
+    enum class SortAlgorithmType {
         Bubble, Select, Insert, Shell
     }
 }

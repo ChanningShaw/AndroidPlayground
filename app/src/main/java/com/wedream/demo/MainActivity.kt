@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.wedream.demo.app.MyApplication
 import com.wedream.demo.category.CategoryAdapter
 import com.wedream.demo.common.CommonAdapter
+import com.wedream.demo.kotlin.CoroutineActivity
+import com.wedream.demo.kotlin.FlowActivity
 import com.wedream.demo.render.DrawTextDemoActivity
 import com.wedream.demo.render.MatrixDemoActivity
 import com.wedream.demo.planegeometry.PlaneGeometryActivity
@@ -19,6 +21,8 @@ class MainActivity : AppCompatActivity() {
             MatrixDemoActivity::class.java,
             DrawTextDemoActivity::class.java,
             PlaneGeometryActivity::class.java,
+            CoroutineActivity::class.java,
+            FlowActivity::class.java,
             SortActivity::class.java
         )
     }
