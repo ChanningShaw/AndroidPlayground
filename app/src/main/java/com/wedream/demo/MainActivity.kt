@@ -12,6 +12,7 @@ import com.wedream.demo.kotlin.FlowActivity
 import com.wedream.demo.render.DrawTextDemoActivity
 import com.wedream.demo.render.MatrixDemoActivity
 import com.wedream.demo.planegeometry.PlaneGeometryActivity
+import com.wedream.demo.render.DrawPathActivity
 import com.wedream.demo.sort.SortActivity
 
 class MainActivity : AppCompatActivity() {
@@ -23,7 +24,8 @@ class MainActivity : AppCompatActivity() {
             PlaneGeometryActivity::class.java,
             CoroutineActivity::class.java,
             FlowActivity::class.java,
-            SortActivity::class.java
+            SortActivity::class.java,
+            DrawPathActivity::class.java
         )
     }
 

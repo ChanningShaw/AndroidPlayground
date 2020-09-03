@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="sort_algorithm">
-        <item>bubble</item>　　　　　
-        <item>select</item>　　　　　
+        <item>bubble</item>
+        <item>select</item>
         <item>insert</item>
         <item>shell</item>
+        <item>merge</item>
     </string-array>
 </resources>
