@@ -14,7 +14,7 @@ import com.wedream.demo.sort.SortAlgorithm.SLEEP_TIME
 import com.wedream.demo.util.ArrayUtils
 
 class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: Int) :
-    View(context, attrs, defStyle), SortAlgorithm.SortListener {
+    View(context, attrs, defStyle), AlgorithmRunner.SortListener {
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context) : this(context, null, 0)
 
@@ -30,7 +30,7 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
     private var moveToTemp = false
     private var text = ""
 
-    private var algo = SortActivity.SortAlgorithmType.Bubble
+    private var algo = SortAlgorithm.Type.Bubble
 
 
     companion object {
@@ -121,7 +121,7 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
         }.start()
     }
 
-    fun setAlgorithm(algo: SortActivity.SortAlgorithmType) {
+    fun setAlgorithm(algo: SortAlgorithm.Type) {
         this.algo = algo
     }
 

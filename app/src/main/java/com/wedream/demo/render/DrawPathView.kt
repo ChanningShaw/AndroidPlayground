@@ -33,7 +33,7 @@ class DrawPathView(context: Context, attrs: AttributeSet?, defStyle: Int) : View
             path.moveTo(rectF.left, rectF.centerY())
             paint.style = Paint.Style.FILL
             paint.color = Color.GRAY
-            path.quadTo((rectF.left + weakenRight) * 0.2f, rectF.top, weakenRight, rectF.top);
+            path.quadTo(rectF.left + (weakenRight - rectF.left) * 0.1f, rectF.top, weakenRight, rectF.top);
             path.lineTo(rectF.left, rectF.top)
             path.lineTo(rectF.left, rectF.centerY())
             path.close()
@@ -41,7 +41,7 @@ class DrawPathView(context: Context, attrs: AttributeSet?, defStyle: Int) : View
 
             path.reset()
             path.moveTo(rectF.left, rectF.centerY())
-            path.quadTo((rectF.left + weakenRight) * 0.2f, rectF.top, weakenRight, rectF.top);
+            path.quadTo(rectF.left + (weakenRight - rectF.left) * 0.1f, rectF.top, weakenRight, rectF.top);
             paint.style = Paint.Style.STROKE
             paint.color = Color.BLUE
             it.drawPath(path, paint);

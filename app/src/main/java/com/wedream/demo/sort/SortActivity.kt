@@ -34,12 +34,12 @@ class SortActivity : AppCompatActivity() {
                 id: Long
             ) {
                 var algo = when (position) {
-                    0 -> SortAlgorithmType.Bubble
-                    1 -> SortAlgorithmType.Select
-                    2 -> SortAlgorithmType.Insert
-                    3 -> SortAlgorithmType.Shell
-                    4 -> SortAlgorithmType.Merge
-                    else -> SortAlgorithmType.Bubble
+                    0 -> SortAlgorithm.Type.Bubble
+                    1 -> SortAlgorithm.Type.Select
+                    2 -> SortAlgorithm.Type.Insert
+                    3 -> SortAlgorithm.Type.Shell
+                    4 -> SortAlgorithm.Type.Merge
+                    else -> SortAlgorithm.Type.Bubble
                 }
                 sortView?.setAlgorithm(algo)
             }
@@ -48,9 +48,5 @@ class SortActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-    }
-
-    enum class SortAlgorithmType {
-        Bubble, Select, Insert, Shell, Merge
     }
 }
