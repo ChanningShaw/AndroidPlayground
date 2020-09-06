@@ -24,6 +24,8 @@ class MyApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        val handler = MyCrashHandler()
+        Thread.setDefaultUncaughtExceptionHandler(handler)
         instance = this
         appSp = getSharedPreferences("app_sp", Context.MODE_PRIVATE)
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {

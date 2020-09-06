@@ -10,14 +10,12 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import com.wedream.demo.planegeometry.reset
-import com.wedream.demo.sort.SortAlgorithm.SLEEP_TIME
+import com.wedream.demo.sort.AlgorithmRunner.Companion.DELAY_TIME
 import com.wedream.demo.util.ArrayUtils
-import com.wedream.demo.util.LogUtils.log
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
-import kotlin.math.log2
+import kotlinx.coroutines.launch
 
 class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: Int) :
     View(context, attrs, defStyle) {
@@ -25,15 +23,15 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
     constructor(context: Context) : this(context, null, 0)
 
     private var data = emptyArray<Int>()
+    private var tempData = emptyArray<Int>()
     private var elements = arrayListOf<RectF>()
+    private var tempElements = arrayListOf<RectF>()
     private var paintDefault = Paint()
     private var paintSelected1 = Paint()
     private var paintSelected2 = Paint()
     private var textPaint = Paint()
-    private var pos1 = -1
-    private var pos2 = -1
-    private var tempRect = RectF(0f, 0f, 0f, 0f)
-    private var moveToTemp = false
+    private var pos1 = Pair(0, 0)
+    private var pos2 = Pair(0, 0)
     private var text = ""
 
     private var algo = SortAlgorithm.Type.Bubble
@@ -43,6 +41,9 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
         const val EL_GAP = 5
         const val DIVIDE_GAP = 20
         const val EL_SIZE = 10
+
+        const val UPPER_INDEX = 0
+        const val LOWER_INDEX = 1
     }
 
     init {
@@ -57,7 +58,7 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
     override fun onDraw(canvas: Canvas?) {
         canvas?.let { c ->
             for (i in elements.indices) {
-                when (i) {
+                when (Pair(UPPER_INDEX, i)) {
                     pos1 -> {
                         c.drawRect(elements[i], paintSelected1)
                     }
@@ -69,8 +70,18 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
                     }
                 }
             }
-            if (!moveToTemp) {
-                c.drawRect(tempRect, paintDefault)
+            for (i in tempElements.indices) {
+                when (Pair(LOWER_INDEX, i)) {
+                    pos1 -> {
+                        c.drawRect(tempElements[i], paintSelected1)
+                    }
+                    pos2 -> {
+                        c.drawRect(tempElements[i], paintSelected2)
+                    }
+                    else -> {
+                        c.drawRect(tempElements[i], paintDefault)
+                    }
+                }
             }
             if (text.isNotEmpty()) {
                 val textWidth = textPaint.measureText(text)
@@ -99,9 +110,9 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
 
     fun reset() {
         data = ArrayUtils.randomArray(EL_SIZE)
-        pos1 = -1
-        pos2 = -1
-        moveToTemp = false
+        pos1 = Pair(-1, -1)
+        pos2 = Pair(-1, -1)
+        text = ""
         initElements()
         invalidate()
     }
@@ -120,14 +131,28 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
         }
     }
 
+    private fun resetTempElements() {
+        tempElements.clear()
+        val viewHeight = getElementHeight()
+        val w = getElementWidth()
+        val max = data.max() ?: return
+        var left = 0f
+        for (i in tempData.indices) {
+            val e = tempData[i]
+            val top = height - e * 1.0f / max * viewHeight
+            tempElements.add(RectF(left, top, left + w, height.toFloat()))
+            left += (w + EL_GAP)
+        }
+    }
+
     fun startSort() {
         val flow = AlgorithmRunner().startSort(data, algo)
         GlobalScope.launch(Dispatchers.Main) {
             flow.collect {
                 when (it) {
                     is AlgorithmAction.SwapAction -> {
-                        pos1 = it.p1
-                        pos2 = it.p2
+                        pos1 = Pair(UPPER_INDEX, it.p1)
+                        pos2 = Pair(UPPER_INDEX, it.p2)
                         initElements()
                         val rect1 = elements[it.p1]
                         val rect2 = elements[it.p2]
@@ -136,26 +161,32 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
                         invalidate()
                     }
                     is AlgorithmAction.CopyAction -> {
-                        pos1 = it.from
-                        moveToTemp = false
                         initElements()
-                        if (it.from < 0 || it.to < 0) {
-                            if (it.from < 0) {
-                                val targetRect = elements[it.to]
-                                animatorRect(tempRect, moveToPos(tempRect, it.to))
-                                targetRect.reset()
-                            } else {
-                                val originRect = elements[it.from]
-                                val targetRect = moveToTemp(originRect)
-                                animatorRect(originRect, targetRect)
-                                tempRect.set(targetRect)
-                                moveToTemp = true
+                        when (it) {
+                            is AlgorithmAction.ImportCopyAction -> {
+                                pos1 = Pair(LOWER_INDEX, it.from)
+                                tempData = it.data
+                                resetTempElements()
+                                val originRect = tempElements[it.from]
+                                elements[it.to].reset()
+                                animatorRect(originRect, moveToPos(originRect, it.to, false))
                             }
-                        } else {
-                            val fromRect = elements[it.from]
-                            val toRect = elements[it.to]
-                            toRect.reset()
-                            animatorRect(fromRect, moveToPos(fromRect, it.to))
+                            is AlgorithmAction.ExportCopyAction -> {
+                                pos1 = Pair(UPPER_INDEX, it.from)
+                                tempData = it.data
+                                resetTempElements()
+                                val originRect = elements[it.from]
+                                tempElements[it.to].reset()
+                                animatorRect(originRect, moveToPos(originRect, it.to, true))
+                            }
+                            else -> {
+                                resetTempElements()
+                                pos1 = Pair(UPPER_INDEX, it.from)
+                                val fromRect = elements[it.from]
+                                val toRect = elements[it.to]
+                                toRect.reset()
+                                animatorRect(fromRect, moveToPos(fromRect, it.to, false))
+                            }
                         }
                         invalidate()
                     }
@@ -164,9 +195,8 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
                         invalidate()
                     }
                     is AlgorithmAction.FinishAction -> {
-                        pos1 = -1
-                        pos2 = -1
-                        moveToTemp = false
+                        pos1 = Pair(-1, -1)
+                        pos2 = Pair(-1, -1)
                         invalidate()
                     }
                 }
@@ -178,22 +208,20 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
         this.algo = algo
     }
 
-    private fun moveToTemp(rect: RectF): RectF {
-        val w = getElementWidth()
-        val l = width * 0.5f - w * 0.5f
-        return RectF(l, height - rect.height(), l + w, height.toFloat())
-    }
-
-    private fun moveToPos(rect: RectF, to: Int): RectF {
+    private fun moveToPos(rect: RectF, to: Int, isTemp: Boolean): RectF {
         val w = getElementWidth()
         val l = (w + EL_GAP) * to
         val viewHeight = getElementHeight()
-        return RectF(l, viewHeight - rect.height(), l + w, viewHeight)
+        return if (isTemp) {
+            RectF(l, height - rect.height(), l + w, height.toFloat())
+        } else {
+            RectF(l, viewHeight - rect.height(), l + w, viewHeight)
+        }
     }
 
     private fun animatorRectHorizontal(originRect: RectF, targetRect: RectF) {
         val moveAnimator = ValueAnimator.ofFloat(1f)
-        moveAnimator.duration = SLEEP_TIME - 200
+        moveAnimator.duration = DELAY_TIME - 200
         val left = originRect.left
         val right = originRect.right
         moveAnimator.addUpdateListener {
@@ -207,17 +235,19 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
 
     private fun animatorRect(originRect: RectF, targetRect: RectF) {
         val moveAnimator = ValueAnimator.ofFloat(1f)
-        moveAnimator.duration = SLEEP_TIME - 200
+        moveAnimator.duration = DELAY_TIME - 200
         val left = originRect.left
         val top = originRect.top
         val right = originRect.right
         val bottom = originRect.bottom
+        val rect = RectF(targetRect)
+        targetRect.reset()
         moveAnimator.addUpdateListener {
             val progress = it.animatedFraction
-            originRect.left = left + (targetRect.left - left) * progress
-            originRect.top = top + (targetRect.top - top) * progress
-            originRect.right = right + (targetRect.right - right) * progress
-            originRect.bottom = bottom + (targetRect.bottom - bottom) * progress
+            originRect.left = left + (rect.left - left) * progress
+            originRect.top = top + (rect.top - top) * progress
+            originRect.right = right + (rect.right - right) * progress
+            originRect.bottom = bottom + (rect.bottom - bottom) * progress
             invalidate()
         }
         moveAnimator.start()

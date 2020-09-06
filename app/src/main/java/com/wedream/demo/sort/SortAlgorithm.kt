@@ -4,8 +4,6 @@ import android.util.Log
 
 object SortAlgorithm {
 
-    const val SLEEP_TIME = 700L
-
     enum class Type {
         Bubble, Select, Insert, Shell, Merge
     }
@@ -74,13 +72,25 @@ object SortAlgorithm {
         for (i in data.indices) {
             var preIndex = i - 1;
             current = data[i]
-            channel.sendAction(AlgorithmAction.CopyAction(i, -1))
+            channel.sendAction(
+                AlgorithmAction.ExportCopyAction(
+                    i,
+                    0,
+                    arrayOf(current)
+                )
+            )
             while (preIndex >= 0 && data[preIndex] > current) {
                 channel.sendAction(AlgorithmAction.CopyAction(preIndex, preIndex + 1))
                 data[preIndex + 1] = data[preIndex]
                 preIndex--
             }
-            channel.sendAction(AlgorithmAction.CopyAction(-1, preIndex + 1))
+            channel.sendAction(
+                AlgorithmAction.ImportCopyAction(
+                    0,
+                    preIndex + 1,
+                    arrayOf(current)
+                )
+            )
             data[preIndex + 1] = current;
         }
         channel.sendAction(AlgorithmAction.FinishAction)
@@ -110,14 +120,26 @@ object SortAlgorithm {
         channel: AlgorithmRunner.ChannelWrap
     ) {
         val inserted = data[i]
-        channel.sendAction(AlgorithmAction.CopyAction(i, -1))
+        channel.sendAction(
+            AlgorithmAction.ExportCopyAction(
+                i,
+                0,
+                arrayOf(inserted)
+            )
+        )
         var j = i - gap
         while (j >= 0 && inserted < data[j]) {
             channel.sendAction(AlgorithmAction.CopyAction(j, j + gap))
             data[j + gap] = data[j]
             j -= gap
         }
-        channel.sendAction(AlgorithmAction.CopyAction(-1, j + gap))
+        channel.sendAction(
+            AlgorithmAction.ImportCopyAction(
+                0,
+                j + gap,
+                arrayOf(inserted)
+            )
+        )
         data[j + gap] = inserted
     }
 
@@ -135,29 +157,33 @@ object SortAlgorithm {
         var start2 = mid + 1
         mergeSort(arr, result, start1, mid, channel)
         mergeSort(arr, result, start2, end, channel)
+        channel.sendAction(AlgorithmAction.MessageAction("start = $start, end = $end"))
         var k = start
         while (start1 <= mid && start2 <= end) {
             result[k++] = if (arr[start1] < arr[start2]) {
-                channel.sendAction(AlgorithmAction.CopyAction(start1, k))
+                channel.sendAction(AlgorithmAction.ExportCopyAction(start1, k, result))
                 arr[start1++]
             } else {
-                channel.sendAction(AlgorithmAction.CopyAction(start2, k))
+                channel.sendAction(AlgorithmAction.ExportCopyAction(start2, k, result))
                 arr[start2++]
             }
         }
         while (start1 <= mid) {
-            channel.sendAction(AlgorithmAction.CopyAction(start1, k))
+            channel.sendAction(AlgorithmAction.ExportCopyAction(start1, k, result))
             result[k++] = arr[start1++]
         }
         while (start2 <= end) {
-            channel.sendAction(AlgorithmAction.CopyAction(start2, k))
+            channel.sendAction(AlgorithmAction.ExportCopyAction(start2, k, result))
             result[k++] = arr[start2++]
         }
         k = start
+        channel.sendAction(AlgorithmAction.MessageAction("start = $start, end = $end，回填数据"))
         while (k <= end) {
+            channel.sendAction(AlgorithmAction.ImportCopyAction(k, k, result))
             arr[k] = result[k]
             k++
         }
+        channel.sendAction(AlgorithmAction.FinishAction)
     }
 
     fun swap(i: Int, j: Int, data: Array<Int>) {
