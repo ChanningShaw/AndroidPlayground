@@ -8,17 +8,22 @@ import kotlinx.coroutines.flow.receiveAsFlow
 class AlgorithmRunner {
 
     private val channelWarp = ChannelWrap()
+    private var scope: Job? = null
 
     companion object {
-        const val DELAY_TIME = 800L
+        const val DELAY_TIME = 1500L
     }
 
     fun startSort(arr: Array<Int>, algo: SortAlgorithm.Type): Flow<AlgorithmAction> {
-        val a = GlobalScope.launch(Dispatchers.IO) {
+        scope = GlobalScope.launch(Dispatchers.IO) {
             SortAlgorithm.sort(arr, channelWarp, algo)
             SortAlgorithm.print(arr)
         }
         return channelWarp.getChannel().receiveAsFlow()
+    }
+
+    fun cancel() {
+        scope?.cancel()
     }
 
     class ChannelWrap {

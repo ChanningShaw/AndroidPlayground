@@ -27,21 +27,23 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
     private var elements = arrayListOf<RectF>()
     private var tempElements = arrayListOf<RectF>()
     private var paintDefault = Paint()
+    private var paintPivot = Paint()
     private var paintSelected1 = Paint()
     private var paintSelected2 = Paint()
     private var textPaint = Paint()
     private var pos1 = Pair(0, 0)
     private var pos2 = Pair(0, 0)
     private var text = ""
+    private var pivot = -1
+
 
     private var algo = SortAlgorithm.Type.Bubble
-
+    private var runner = AlgorithmRunner()
 
     companion object {
         const val EL_GAP = 5
         const val DIVIDE_GAP = 20
         const val EL_SIZE = 10
-
         const val UPPER_INDEX = 0
         const val LOWER_INDEX = 1
     }
@@ -52,6 +54,7 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
         paintSelected1.color = Color.parseColor("#436EEE")
         paintSelected2.color = Color.parseColor("#551A8B")
         textPaint.color = Color.BLACK
+        paintPivot.color = Color.YELLOW
         textPaint.textSize = 60f
     }
 
@@ -66,7 +69,11 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
                         c.drawRect(elements[i], paintSelected2)
                     }
                     else -> {
-                        c.drawRect(elements[i], paintDefault)
+                        if (i == pivot) {
+                            c.drawRect(elements[i], paintPivot)
+                        } else {
+                            c.drawRect(elements[i], paintDefault)
+                        }
                     }
                 }
             }
@@ -109,9 +116,11 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
     }
 
     fun reset() {
+        runner.cancel()
         data = ArrayUtils.randomArray(EL_SIZE)
         pos1 = Pair(-1, -1)
         pos2 = Pair(-1, -1)
+        pivot = -1
         text = ""
         initElements()
         invalidate()
@@ -146,7 +155,7 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
     }
 
     fun startSort() {
-        val flow = AlgorithmRunner().startSort(data, algo)
+        val flow = runner.startSort(data, algo)
         GlobalScope.launch(Dispatchers.Main) {
             flow.collect {
                 when (it) {
@@ -158,7 +167,6 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
                         val rect2 = elements[it.p2]
                         animatorRectHorizontal(rect1, RectF(rect2))
                         animatorRectHorizontal(rect2, RectF(rect1))
-                        invalidate()
                     }
                     is AlgorithmAction.CopyAction -> {
                         initElements()
@@ -188,7 +196,6 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
                                 animatorRect(fromRect, moveToPos(fromRect, it.to, false))
                             }
                         }
-                        invalidate()
                     }
                     is AlgorithmAction.MessageAction -> {
                         text = it.msg
@@ -197,9 +204,12 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
                     is AlgorithmAction.FinishAction -> {
                         pos1 = Pair(-1, -1)
                         pos2 = Pair(-1, -1)
-                        invalidate()
+                    }
+                    is AlgorithmAction.PivotAction -> {
+                        pivot = it.i
                     }
                 }
+                invalidate()
             }
         }
     }

@@ -33,12 +33,13 @@ class SortActivity : AppCompatActivity() {
                 position: Int,
                 id: Long
             ) {
-                var algo = when (position) {
+                val algo = when (position) {
                     0 -> SortAlgorithm.Type.Bubble
                     1 -> SortAlgorithm.Type.Select
                     2 -> SortAlgorithm.Type.Insert
                     3 -> SortAlgorithm.Type.Shell
                     4 -> SortAlgorithm.Type.Merge
+                    5 -> SortAlgorithm.Type.Quick
                     else -> SortAlgorithm.Type.Bubble
                 }
                 sortView?.setAlgorithm(algo)

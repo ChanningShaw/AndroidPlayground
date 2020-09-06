@@ -6,5 +6,6 @@
         <item>insert</item>
         <item>shell</item>
         <item>merge</item>
+        <item>quick</item>
     </string-array>
 </resources>

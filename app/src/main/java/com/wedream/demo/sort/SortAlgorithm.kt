@@ -2,10 +2,11 @@ package com.wedream.demo.sort
 
 import android.util.Log
 
+
 object SortAlgorithm {
 
     enum class Type {
-        Bubble, Select, Insert, Shell, Merge
+        Bubble, Select, Insert, Shell, Merge, Quick
     }
 
     suspend fun sort(data: Array<Int>, channel: AlgorithmRunner.ChannelWrap, algorithm: Type) {
@@ -25,6 +26,9 @@ object SortAlgorithm {
             Type.Merge -> {
                 val temp = Array(data.size) { 0 }
                 mergeSort(data, temp, 0, data.size - 1, channel)
+            }
+            Type.Quick -> {
+                quickSort(data, 0, data.size - 1, channel)
             }
         }
     }
@@ -70,7 +74,7 @@ object SortAlgorithm {
     suspend fun insertSort(data: Array<Int>, channel: AlgorithmRunner.ChannelWrap) {
         var current: Int
         for (i in data.indices) {
-            var preIndex = i - 1;
+            var preIndex = i - 1
             current = data[i]
             channel.sendAction(
                 AlgorithmAction.ExportCopyAction(
@@ -91,7 +95,7 @@ object SortAlgorithm {
                     arrayOf(current)
                 )
             )
-            data[preIndex + 1] = current;
+            data[preIndex + 1] = current
         }
         channel.sendAction(AlgorithmAction.FinishAction)
     }
@@ -190,6 +194,52 @@ object SortAlgorithm {
         val temp = data[i]
         data[i] = data[j]
         data[j] = temp
+    }
+
+    suspend fun quickSort(
+        arr: Array<Int>,
+        left: Int,
+        right: Int,
+        channel: AlgorithmRunner.ChannelWrap
+    ) {
+        if (left < right) {
+            channel.sendAction(AlgorithmAction.MessageAction("left = $left, right = $right"))
+            //获取中轴元素所处的位置
+            val mid = partition(arr, left, right, channel)
+            //进行分割
+            quickSort(arr, left, mid - 1, channel)
+            quickSort(arr, mid + 1, right, channel)
+        }
+        channel.sendAction(AlgorithmAction.FinishAction)
+    }
+
+    private suspend fun partition(
+        arr: Array<Int>,
+        left: Int,
+        right: Int,
+        channel: AlgorithmRunner.ChannelWrap
+    ): Int {
+        //选取中轴元素
+        val pivot = arr[left]
+        channel.sendAction(AlgorithmAction.PivotAction(left))
+        var i = left + 1
+        var j = right
+        channel.sendAction(AlgorithmAction.MessageAction("left = $left, right = $right, pivot = $pivot"))
+        while (true) {
+            // 向右找到第一个小于等于 pivot 的元素位置
+            while (i <= j && arr[i] <= pivot) i++
+            // 向左找到第一个大于等于 pivot 的元素位置
+            while (i <= j && arr[j] >= pivot) j--
+            if (i >= j) break
+            //交换两个元素的位置，使得左边的元素不大于pivot,右边的不小于pivot
+            channel.sendAction(AlgorithmAction.SwapAction(i, j))
+            swap(i, j, arr)
+        }
+        channel.sendAction(AlgorithmAction.SwapAction(j, left))
+        arr[left] = arr[j]
+        // 使中轴元素处于有序的位置
+        arr[j] = pivot
+        return j
     }
 
     fun print(data: Array<Int>) {

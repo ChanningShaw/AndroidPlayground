@@ -30,6 +30,7 @@ sealed class AlgorithmAction {
         var data: Array<Int> = emptyArray()
     ) : CopyAction(from, to)
 
+    open class PivotAction(var i: Int) : AlgorithmAction()
     open class SwapAction(var p1: Int, var p2: Int) : AlgorithmAction()
     object FinishAction : AlgorithmAction()
 }
