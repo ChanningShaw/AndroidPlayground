@@ -12,9 +12,15 @@ import android.view.View
 import com.wedream.demo.planegeometry.reset
 import com.wedream.demo.sort.SortAlgorithm.SLEEP_TIME
 import com.wedream.demo.util.ArrayUtils
+import com.wedream.demo.util.LogUtils.log
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlin.math.log2
 
 class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: Int) :
-    View(context, attrs, defStyle), AlgorithmRunner.SortListener {
+    View(context, attrs, defStyle) {
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context) : this(context, null, 0)
 
@@ -115,66 +121,61 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
     }
 
     fun startSort() {
-        Thread {
-            SortAlgorithm.sort(data, this, algo)
-            SortAlgorithm.print(data)
-        }.start()
+        val flow = AlgorithmRunner().startSort(data, algo)
+        GlobalScope.launch(Dispatchers.Main) {
+            flow.collect {
+                when (it) {
+                    is AlgorithmAction.SwapAction -> {
+                        pos1 = it.p1
+                        pos2 = it.p2
+                        initElements()
+                        val rect1 = elements[it.p1]
+                        val rect2 = elements[it.p2]
+                        animatorRectHorizontal(rect1, RectF(rect2))
+                        animatorRectHorizontal(rect2, RectF(rect1))
+                        invalidate()
+                    }
+                    is AlgorithmAction.CopyAction -> {
+                        pos1 = it.from
+                        moveToTemp = false
+                        initElements()
+                        if (it.from < 0 || it.to < 0) {
+                            if (it.from < 0) {
+                                val targetRect = elements[it.to]
+                                animatorRect(tempRect, moveToPos(tempRect, it.to))
+                                targetRect.reset()
+                            } else {
+                                val originRect = elements[it.from]
+                                val targetRect = moveToTemp(originRect)
+                                animatorRect(originRect, targetRect)
+                                tempRect.set(targetRect)
+                                moveToTemp = true
+                            }
+                        } else {
+                            val fromRect = elements[it.from]
+                            val toRect = elements[it.to]
+                            toRect.reset()
+                            animatorRect(fromRect, moveToPos(fromRect, it.to))
+                        }
+                        invalidate()
+                    }
+                    is AlgorithmAction.MessageAction -> {
+                        text = it.msg
+                        invalidate()
+                    }
+                    is AlgorithmAction.FinishAction -> {
+                        pos1 = -1
+                        pos2 = -1
+                        moveToTemp = false
+                        invalidate()
+                    }
+                }
+            }
+        }
     }
 
     fun setAlgorithm(algo: SortAlgorithm.Type) {
         this.algo = algo
-    }
-
-    override fun onSwap(i1: Int, i2: Int) {
-        post {
-            pos1 = i1
-            pos2 = i2
-            initElements()
-            val rect1 = elements[i1]
-            val rect2 = elements[i2]
-            animatorRectHorizontal(rect1, RectF(rect2))
-            animatorRectHorizontal(rect2, RectF(rect1))
-            invalidate()
-        }
-    }
-
-    override fun onFinish() {
-        pos1 = -1
-        pos2 = -1
-        moveToTemp = false
-        invalidate()
-    }
-
-    override fun onMove(from: Int, to: Int) {
-        post {
-            pos1 = from
-            moveToTemp = false
-            initElements()
-            if (from < 0 || to < 0) {
-                if (from < 0) {
-                    val targetRect = elements[to]
-                    animatorRect(tempRect, moveToPos(tempRect, to))
-                    targetRect.reset()
-                } else {
-                    val originRect = elements[from]
-                    val targetRect = moveToTemp(originRect)
-                    animatorRect(originRect, targetRect)
-                    tempRect.set(targetRect)
-                    moveToTemp = true
-                }
-            } else {
-                val fromRect = elements[from]
-                val toRect = elements[to]
-                toRect.reset()
-                animatorRect(fromRect, moveToPos(fromRect, to))
-            }
-            invalidate()
-        }
-    }
-
-    override fun onMessage(msg: String) {
-        text = msg
-        invalidate()
     }
 
     private fun moveToTemp(rect: RectF): RectF {

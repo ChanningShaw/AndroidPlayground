@@ -1,35 +1,34 @@
 package com.wedream.demo.sort
 
-import android.os.HandlerThread
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 
 class AlgorithmRunner {
-    private var listener: SortListener = object: SortListener{
-        override fun onSwap(p1: Int, p2: Int) {
-        }
 
-        override fun onMove(from: Int, to: Int) {
-        }
+    private val channelWarp = ChannelWrap()
 
-        override fun onFinish() {
-        }
-
-        override fun onMessage(msg: String) {
-        }
-    }
-
-    fun startSort(arr: Array<Int>, algo: SortAlgorithm.Type) {
-        var t = HandlerThread("algorithm_runner")
-        t.start()
-        Thread {
-            SortAlgorithm.sort(arr, listener, algo)
+    fun startSort(arr: Array<Int>, algo: SortAlgorithm.Type): Flow<AlgorithmAction> {
+        GlobalScope.launch(Dispatchers.IO) {
+            SortAlgorithm.sort(arr, channelWarp, algo)
             SortAlgorithm.print(arr)
-        }.start()
+        }
+        return channelWarp.getChannel().receiveAsFlow()
     }
 
-    interface SortListener {
-        fun onSwap(p1: Int, p2: Int)
-        fun onMove(from: Int, to: Int)
-        fun onFinish()
-        fun onMessage(msg: String)
+    class ChannelWrap {
+        private val channel = Channel<AlgorithmAction>()
+        suspend fun sendAction(action: AlgorithmAction) {
+            channel.send(action)
+            delay(800)
+        }
+
+        fun getChannel(): Channel<AlgorithmAction> {
+            return channel
+        }
     }
 }
