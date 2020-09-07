@@ -22,6 +22,15 @@ class SortActivity : AppCompatActivity() {
         findViewById<Button>(R.id.start).setOnClickListener {
             sortView?.startSort()
         }
+        findViewById<Button>(R.id.pause).setOnClickListener {
+            it as Button
+            sortView?.togglePause()
+            if (sortView?.isRunning() == true) {
+                it.text = "继续"
+            } else {
+                it.text = "暂停"
+            }
+        }
         findViewById<Spinner>(R.id.algo_selector).onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {

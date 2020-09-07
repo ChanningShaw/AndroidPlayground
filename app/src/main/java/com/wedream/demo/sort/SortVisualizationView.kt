@@ -214,6 +214,14 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
         }
     }
 
+    fun togglePause(){
+        runner.togglePause()
+    }
+
+    fun isRunning(): Boolean {
+        return runner.isRunning()
+    }
+
     fun setAlgorithm(algo: SortAlgorithm.Type) {
         this.algo = algo
     }
