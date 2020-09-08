@@ -241,10 +241,4 @@ object SortAlgorithm {
         arr[j] = pivot
         return j
     }
-
-    fun print(data: Array<Int>) {
-        data.forEach {
-            Log.e("xcm", "$it")
-        }
-    }
 }

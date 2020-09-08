@@ -9,10 +9,11 @@ import com.wedream.demo.category.CategoryAdapter
 import com.wedream.demo.common.CommonAdapter
 import com.wedream.demo.kotlin.CoroutineActivity
 import com.wedream.demo.kotlin.FlowActivity
-import com.wedream.demo.render.DrawTextDemoActivity
-import com.wedream.demo.render.MatrixDemoActivity
 import com.wedream.demo.planegeometry.PlaneGeometryActivity
 import com.wedream.demo.render.DrawPathActivity
+import com.wedream.demo.render.DrawTextDemoActivity
+import com.wedream.demo.render.MatrixDemoActivity
+import com.wedream.demo.render.WaveViewActivity
 import com.wedream.demo.sort.SortActivity
 
 class MainActivity : AppCompatActivity() {
@@ -25,7 +26,8 @@ class MainActivity : AppCompatActivity() {
             CoroutineActivity::class.java,
             FlowActivity::class.java,
             SortActivity::class.java,
-            DrawPathActivity::class.java
+            DrawPathActivity::class.java,
+            WaveViewActivity::class.java
         )
     }
 

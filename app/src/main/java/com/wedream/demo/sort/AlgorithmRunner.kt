@@ -1,5 +1,7 @@
 package com.wedream.demo.sort
 
+import com.wedream.demo.util.ArrayUtils
+import com.wedream.demo.util.print
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -19,7 +21,7 @@ class AlgorithmRunner {
     fun startSort(arr: Array<Int>, algo: SortAlgorithm.Type): Flow<AlgorithmAction> {
         job = GlobalScope.launch(Dispatchers.IO) {
             SortAlgorithm.sort(arr, channelWarp, algo)
-            SortAlgorithm.print(arr)
+            arr.print()
         }
         started = true
         return channelWarp.getChannel().receiveAsFlow()

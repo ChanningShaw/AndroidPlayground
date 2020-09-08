@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <Button
+    android:id="@+id/bt_random"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="随机"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <Button
+    android:id="@+id/bt_benchmark1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="弱拍测试集"
+    app:layout_constraintStart_toEndOf="@id/bt_random"
+    app:layout_constraintTop_toTopOf="parent" />
+
+
+  <Button
+    android:id="@+id/bt_benchmark2"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="测试集二"
+    app:layout_constraintStart_toEndOf="@id/bt_benchmark1"
+    app:layout_constraintTop_toTopOf="@id/bt_benchmark1" />
+
+  <Button
+    android:id="@+id/bt_linear"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="线性"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/bt_random" />
+
+
+    <Button
+      android:id="@+id/bt_square"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="平方"
+      app:layout_constraintStart_toEndOf="@id/bt_linear"
+      app:layout_constraintTop_toTopOf="@id/bt_linear" />
+
+  <Button
+    android:id="@+id/bt_rank_linear"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="排位线性"
+    app:layout_constraintStart_toEndOf="@id/bt_square"
+    app:layout_constraintTop_toTopOf="@id/bt_square" />
+
+  <Button
+    android:id="@+id/bt_rank_square"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="排位平方"
+    app:layout_constraintStart_toEndOf="@id/bt_rank_linear"
+    app:layout_constraintTop_toTopOf="@id/bt_rank_linear" />
+
+<Button
+  android:id="@+id/bt_center_cubic"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content"
+  android:text="中心三次方"
+  app:layout_constraintStart_toStartOf="parent"
+  app:layout_constraintTop_toBottomOf="@id/bt_linear" />
+
+
+  <com.wedream.demo.render.WaveView
+    android:id="@+id/wave_view"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:layout_centerInParent="true"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <SeekBar
+    android:id="@+id/seek"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:max="100"
+    android:progress="50"
+    app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
