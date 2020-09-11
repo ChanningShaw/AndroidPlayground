@@ -22,7 +22,6 @@ class WaveView(context: Context, attrs: AttributeSet?, defStyle: Int) : View(con
     init {
         paint.isAntiAlias = true
         paint.color = Color.parseColor("#9F70DA")
-//        paint.style = Paint.Style.FILL
     }
 
     override fun onDraw(canvas: Canvas?) {
@@ -127,11 +126,21 @@ class WaveView(context: Context, attrs: AttributeSet?, defStyle: Int) : View(con
                     }
                 }
             }
-            Type.Center_Cubic -> {
+            Type.UpCubic -> {
                 val h = height * 0.5f
                 for (i in data.indices) {
                     val x = data[i] / maxValue
                     points[i] = (4 * x * x * x - 6 * x * x + 3 * x) * h
+                    if (points[i] < 1f) {
+                        points[i] = 1f
+                    }
+                }
+            }
+            Type.DownCubic -> {
+                val h = height * 0.5f
+                for (i in data.indices) {
+                    val x = data[i] / maxValue
+                    points[i] = (-2 * x * x * x + 3 * x * x) * h
                     if (points[i] < 1f) {
                         points[i] = 1f
                     }
@@ -142,6 +151,6 @@ class WaveView(context: Context, attrs: AttributeSet?, defStyle: Int) : View(con
     }
 
     enum class Type {
-        Linear, Square, RankLinear, RankSquare, Center_Cubic
+        Linear, Square, RankLinear, RankSquare, UpCubic, DownCubic
     }
 }

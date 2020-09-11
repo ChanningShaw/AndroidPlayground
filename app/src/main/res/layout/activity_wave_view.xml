@@ -62,13 +62,21 @@
     app:layout_constraintStart_toEndOf="@id/bt_rank_linear"
     app:layout_constraintTop_toTopOf="@id/bt_rank_linear" />
 
-<Button
-  android:id="@+id/bt_center_cubic"
-  android:layout_width="wrap_content"
-  android:layout_height="wrap_content"
-  android:text="中心三次方"
-  app:layout_constraintStart_toStartOf="parent"
-  app:layout_constraintTop_toBottomOf="@id/bt_linear" />
+  <Button
+    android:id="@+id/bt_up_cubic"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="下沉三次方"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/bt_linear" />
+
+  <Button
+    android:id="@+id/bt_down_cubic"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="上拉三次方"
+    app:layout_constraintStart_toEndOf="@id/bt_up_cubic"
+    app:layout_constraintTop_toTopOf="@id/bt_up_cubic" />
 
 
   <com.wedream.demo.render.WaveView

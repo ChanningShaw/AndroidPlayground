@@ -1,6 +1,5 @@
 package com.wedream.demo.sort
 
-import com.wedream.demo.util.ArrayUtils
 import com.wedream.demo.util.print
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel

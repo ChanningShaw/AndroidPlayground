@@ -41,8 +41,11 @@ class WaveViewActivity : AppCompatActivity() {
         findViewById<Button>(R.id.bt_rank_linear).setOnClickListener {
             waveView?.setType(WaveView.Type.RankLinear)
         }
-        findViewById<Button>(R.id.bt_center_cubic).setOnClickListener {
-            waveView?.setType(WaveView.Type.Center_Cubic)
+        findViewById<Button>(R.id.bt_up_cubic).setOnClickListener {
+            waveView?.setType(WaveView.Type.UpCubic)
+        }
+        findViewById<Button>(R.id.bt_down_cubic).setOnClickListener {
+            waveView?.setType(WaveView.Type.DownCubic)
         }
         findViewById<Button>(R.id.bt_benchmark1).setOnClickListener {
             waveView?.setData(benchMark1)
