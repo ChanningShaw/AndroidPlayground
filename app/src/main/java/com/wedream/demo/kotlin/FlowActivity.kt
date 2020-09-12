@@ -122,8 +122,8 @@ class FlowActivity : AppCompatActivity() {
                 var channel = produce {
                     for (x in 1..5) send(x * x)
                 }
-                channel.consumeEach { log(it) }
-                log("Done!")
+                channel.consumeEach { log { it } }
+                log { "Done!" }
             }
         }
 
@@ -143,7 +143,8 @@ class FlowActivity : AppCompatActivity() {
                 launch { sendString(channel, "foo", 200L) }
                 launch { sendString(channel, "BAR!", 500L) }
                 repeat(6) { // receive first six
-                    log(channel.receive())
+                    val e = channel.receive()
+                    log { e }
                 }
                 coroutineContext.cancelChildren() // cancel all children to let main finish
             }
@@ -222,7 +223,7 @@ class FlowActivity : AppCompatActivity() {
 
     private fun CoroutineScope.launchProcessor(id: Int, channel: ReceiveChannel<Int>) = launch {
         for (msg in channel) {
-            log("Processor #$id received $msg")
+            log { "Processor #$id received $msg" }
         }
     }
 
