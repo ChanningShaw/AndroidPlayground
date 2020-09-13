@@ -8,4 +8,8 @@
         <item>merge</item>
         <item>quick</item>
     </string-array>
+
+    <string-array name="linked_list_algorithm">
+        <item>delete_last_k</item>
+    </string-array>
 </resources>

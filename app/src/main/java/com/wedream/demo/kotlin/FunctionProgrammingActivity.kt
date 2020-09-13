@@ -26,9 +26,11 @@ class FunctionProgrammingActivity : AppCompatActivity() {
 
         }
 
-        let1 {
-
+        var a = let1 {
+            1
+            "a"
         }
+        log { a.javaClass.canonicalName }
     }
 
 

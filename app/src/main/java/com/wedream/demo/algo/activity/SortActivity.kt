@@ -1,4 +1,4 @@
-package com.wedream.demo.sort
+package com.wedream.demo.algo.activity
 
 import android.os.Bundle
 import android.view.View
@@ -7,25 +7,43 @@ import android.widget.Button
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
+import com.wedream.demo.algo.AlgorithmRunner
+import com.wedream.demo.algo.algo.SortAlgorithm
+import com.wedream.demo.algo.view.SortVisualizationView
+import com.wedream.demo.util.ArrayUtils
 
 class SortActivity : AppCompatActivity() {
 
     var sortView: SortVisualizationView? = null
+    var data = emptyArray<Int>()
+
+    private var runner = AlgorithmRunner()
+    var algo = SortAlgorithm.Type.Bubble
+
+    companion object {
+        const val EL_SIZE = 10
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sort)
         sortView = findViewById(R.id.sort_view)
         findViewById<Button>(R.id.reset).setOnClickListener {
-            sortView?.reset()
+            data = ArrayUtils.randomArray(EL_SIZE)
+            runner.cancel()
+            sortView?.reset(data)
         }
         findViewById<Button>(R.id.start).setOnClickListener {
-            sortView?.startSort()
+            sortView?.let {
+                runner.start(it) { channel ->
+                    SortAlgorithm.sort(data, channel, algo)
+                }
+            }
         }
         findViewById<Button>(R.id.pause).setOnClickListener {
             it as Button
-            sortView?.togglePause()
-            if (sortView?.isRunning() == true) {
+            runner.togglePause()
+            if (runner.isRunning()) {
                 it.text = "继续"
             } else {
                 it.text = "暂停"
@@ -51,7 +69,7 @@ class SortActivity : AppCompatActivity() {
                     5 -> SortAlgorithm.Type.Quick
                     else -> SortAlgorithm.Type.Bubble
                 }
-                sortView?.setAlgorithm(algo)
+                this@SortActivity.algo = algo
             }
         }
     }

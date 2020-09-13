@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import com.wedream.demo.MainActivity
-import com.wedream.demo.app.MyApplication.ApplicationHolder.instance
 
 class MyApplication : Application() {
 
@@ -16,17 +15,13 @@ class MyApplication : Application() {
         const val KEY_LAST_RESUME_ACTIVITY = "key_last_resume_activity"
     }
 
-    object ApplicationHolder {
-        lateinit var instance: MyApplication
-    }
-
     private lateinit var appSp: SharedPreferences
 
     override fun onCreate() {
         super.onCreate()
         val handler = MyCrashHandler()
         Thread.setDefaultUncaughtExceptionHandler(handler)
-        instance = this
+        ApplicationHolder.instance = this
         appSp = getSharedPreferences("app_sp", Context.MODE_PRIVATE)
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
             override fun onActivityPaused(activity: Activity) {
@@ -66,4 +61,12 @@ class MyApplication : Application() {
             ComponentName(splits[0], splits[1])
         }
     }
+
+    fun cleanLastResumeActivity() {
+        appSp.edit().remove(KEY_LAST_RESUME_ACTIVITY).apply()
+    }
+}
+
+object ApplicationHolder {
+    lateinit var instance: MyApplication
 }

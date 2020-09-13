@@ -36,7 +36,7 @@
 
     </LinearLayout>
 
-    <com.wedream.demo.sort.SortVisualizationView
+    <com.wedream.demo.algo.view.SortVisualizationView
         android:id="@+id/sort_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"

@@ -1,9 +1,10 @@
-package com.wedream.demo.sort
+package com.wedream.demo.algo
 
-import com.wedream.demo.util.print
+import com.wedream.demo.algo.action.AlgorithmAction
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 
 class AlgorithmRunner {
@@ -17,10 +18,27 @@ class AlgorithmRunner {
         const val DELAY_TIME = 800L
     }
 
-    fun startSort(arr: Array<Int>, algo: SortAlgorithm.Type): Flow<AlgorithmAction> {
+    /**
+     * 启动一个算法演示
+     */
+    fun start(
+        listener: ActionListener,
+        block: suspend (ChannelWrap) -> Unit
+    ): Flow<AlgorithmAction> {
+        val flow = launch(block)
+        GlobalScope.launch(Dispatchers.Main) {
+            flow.collect {
+                listener.onAction(it)
+            }
+        }
+        return flow
+    }
+
+    private fun launch(
+        block: suspend (ChannelWrap) -> Unit
+    ): Flow<AlgorithmAction> {
         job = GlobalScope.launch(Dispatchers.IO) {
-            SortAlgorithm.sort(arr, channelWarp, algo)
-            arr.print()
+            block(channelWarp)
         }
         started = true
         return channelWarp.getChannel().receiveAsFlow()

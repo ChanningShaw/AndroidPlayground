@@ -20,8 +20,13 @@
         <activity android:name=".render.MatrixDemoActivity" />
         <activity android:name=".render.DrawTextDemoActivity" />
         <activity android:name=".planegeometry.PlaneGeometryActivity" />
-        <activity android:name=".sort.SortActivity" /><activity android:name=".kotlin.CoroutineActivity" /><activity android:name=".kotlin.FlowActivity" /><activity android:name=".render.DrawPathActivity" /><activity android:name=".render.WaveViewActivity" />
+        <activity android:name=".algo.activity.SortActivity" />
+        <activity android:name=".kotlin.CoroutineActivity" />
+        <activity android:name=".kotlin.FlowActivity" />
+        <activity android:name=".render.DrawPathActivity" />
+        <activity android:name=".render.WaveViewActivity" />
         <activity android:name=".kotlin.FunctionProgrammingActivity" />
+        <activity android:name=".algo.activity.LinkedListActivity" />
     </application>
 
 </manifest>

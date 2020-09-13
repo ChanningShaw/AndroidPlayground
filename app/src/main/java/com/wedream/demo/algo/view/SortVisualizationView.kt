@@ -1,4 +1,4 @@
-package com.wedream.demo.sort
+package com.wedream.demo.algo.view
 
 import android.animation.ValueAnimator
 import android.content.Context
@@ -8,17 +8,14 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.MotionEvent
-import android.view.View
+import com.wedream.demo.R
 import com.wedream.demo.planegeometry.reset
-import com.wedream.demo.sort.AlgorithmRunner.Companion.DELAY_TIME
-import com.wedream.demo.util.ArrayUtils
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import com.wedream.demo.algo.AlgorithmRunner.Companion.DELAY_TIME
+import com.wedream.demo.algo.VisualizationView
+import com.wedream.demo.algo.action.*
 
 class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: Int) :
-    View(context, attrs, defStyle) {
+    VisualizationView(context, attrs, defStyle) {
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context) : this(context, null, 0)
 
@@ -36,23 +33,18 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
     private var text = ""
     private var pivot = -1
 
-
-    private var algo = SortAlgorithm.Type.Bubble
-    private var runner = AlgorithmRunner()
-
     companion object {
         const val EL_GAP = 5
         const val DIVIDE_GAP = 20
-        const val EL_SIZE = 10
         const val UPPER_INDEX = 0
         const val LOWER_INDEX = 1
     }
 
     init {
         paintDefault.style = Paint.Style.FILL_AND_STROKE
-        paintDefault.color = Color.parseColor("#3CB371")
-        paintSelected1.color = Color.parseColor("#436EEE")
-        paintSelected2.color = Color.parseColor("#551A8B")
+        paintDefault.color = context.resources.getColor(R.color.color_green)
+        paintSelected1.color = context.resources.getColor(R.color.color_blue)
+        paintSelected2.color = context.resources.getColor(R.color.color_violet)
         textPaint.color = Color.BLACK
         paintPivot.color = Color.YELLOW
         textPaint.textSize = 60f
@@ -115,9 +107,8 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
         return true
     }
 
-    fun reset() {
-        runner.cancel()
-        data = ArrayUtils.randomArray(EL_SIZE)
+    fun reset(data: Array<Int>) {
+        this.data = data
         pos1 = Pair(-1, -1)
         pos2 = Pair(-1, -1)
         pivot = -1
@@ -154,77 +145,61 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
         }
     }
 
-    fun startSort() {
-        val flow = runner.startSort(data, algo)
-        GlobalScope.launch(Dispatchers.Main) {
-            flow.collect {
-                when (it) {
-                    is AlgorithmAction.SwapAction -> {
-                        pos1 = Pair(UPPER_INDEX, it.p1)
-                        pos2 = Pair(UPPER_INDEX, it.p2)
-                        initElements()
-                        val rect1 = elements[it.p1]
-                        val rect2 = elements[it.p2]
-                        animatorRectHorizontal(rect1, RectF(rect2))
-                        animatorRectHorizontal(rect2, RectF(rect1))
+    override fun onAction(action: AlgorithmAction) {
+        when (action) {
+            is SwapAction -> {
+                pos1 = Pair(UPPER_INDEX, action.p1)
+                pos2 = Pair(UPPER_INDEX, action.p2)
+                initElements()
+                val rect1 = elements[action.p1]
+                val rect2 = elements[action.p2]
+                animatorRectHorizontal(rect1, RectF(rect2))
+                animatorRectHorizontal(rect2, RectF(rect1))
+            }
+            is CopyAction -> {
+                initElements()
+                when (action) {
+                    is ImportCopyAction -> {
+                        pos1 = Pair(LOWER_INDEX, action.from)
+                        tempData = action.data
+                        resetTempElements()
+                        val originRect = tempElements[action.from]
+                        elements[action.to].reset()
+                        animateRect(originRect, moveToPos(originRect, action.to, false))
                     }
-                    is AlgorithmAction.CopyAction -> {
-                        initElements()
-                        when (it) {
-                            is AlgorithmAction.ImportCopyAction -> {
-                                pos1 = Pair(LOWER_INDEX, it.from)
-                                tempData = it.data
-                                resetTempElements()
-                                val originRect = tempElements[it.from]
-                                elements[it.to].reset()
-                                animatorRect(originRect, moveToPos(originRect, it.to, false))
-                            }
-                            is AlgorithmAction.ExportCopyAction -> {
-                                pos1 = Pair(UPPER_INDEX, it.from)
-                                tempData = it.data
-                                resetTempElements()
-                                val originRect = elements[it.from]
-                                tempElements[it.to].reset()
-                                animatorRect(originRect, moveToPos(originRect, it.to, true))
-                            }
-                            else -> {
-                                resetTempElements()
-                                pos1 = Pair(UPPER_INDEX, it.from)
-                                val fromRect = elements[it.from]
-                                val toRect = elements[it.to]
-                                toRect.reset()
-                                animatorRect(fromRect, moveToPos(fromRect, it.to, false))
-                            }
-                        }
+                    is ExportCopyAction -> {
+                        pos1 = Pair(UPPER_INDEX, action.from)
+                        tempData = action.data
+                        resetTempElements()
+                        val originRect = elements[action.from]
+                        tempElements[action.to].reset()
+                        animateRect(originRect, moveToPos(originRect, action.to, true))
                     }
-                    is AlgorithmAction.MessageAction -> {
-                        text = it.msg
-                        invalidate()
-                    }
-                    is AlgorithmAction.FinishAction -> {
-                        pos1 = Pair(-1, -1)
-                        pos2 = Pair(-1, -1)
-                    }
-                    is AlgorithmAction.PivotAction -> {
-                        pivot = it.i
+                    else -> {
+                        resetTempElements()
+                        pos1 = Pair(UPPER_INDEX, action.from)
+                        val fromRect = elements[action.from]
+                        val toRect = elements[action.to]
+                        toRect.reset()
+                        animateRect(fromRect, moveToPos(fromRect, action.to, false))
                     }
                 }
+            }
+            is AlgorithmAction.MessageAction -> {
+                text = action.msg
                 invalidate()
             }
+            is AlgorithmAction.FinishAction -> {
+                pos1 = Pair(-1, -1)
+                pos2 = Pair(-1, -1)
+            }
+            is PivotAction -> {
+                pivot = action.i
+            }
         }
+        invalidate()
     }
 
-    fun togglePause(){
-        runner.togglePause()
-    }
-
-    fun isRunning(): Boolean {
-        return runner.isRunning()
-    }
-
-    fun setAlgorithm(algo: SortAlgorithm.Type) {
-        this.algo = algo
-    }
 
     private fun moveToPos(rect: RectF, to: Int, isTemp: Boolean): RectF {
         val w = getElementWidth()
@@ -251,7 +226,7 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
         moveAnimator.start()
     }
 
-    private fun animatorRect(originRect: RectF, targetRect: RectF) {
+    private fun animateRect(originRect: RectF, targetRect: RectF) {
         val moveAnimator = ValueAnimator.ofFloat(1f)
         moveAnimator.duration = DELAY_TIME - 200
         val left = originRect.left

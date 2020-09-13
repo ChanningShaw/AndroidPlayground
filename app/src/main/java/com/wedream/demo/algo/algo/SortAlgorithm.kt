@@ -1,6 +1,7 @@
-package com.wedream.demo.sort
+package com.wedream.demo.algo.algo
 
-import android.util.Log
+import com.wedream.demo.algo.AlgorithmRunner
+import com.wedream.demo.algo.action.*
 
 
 object SortAlgorithm {
@@ -9,26 +10,50 @@ object SortAlgorithm {
         Bubble, Select, Insert, Shell, Merge, Quick
     }
 
-    suspend fun sort(data: Array<Int>, channel: AlgorithmRunner.ChannelWrap, algorithm: Type) {
+    suspend fun sort(
+        data: Array<Int>,
+        channel: AlgorithmRunner.ChannelWrap,
+        algorithm: Type
+    ) {
         when (algorithm) {
             Type.Bubble -> {
-                bubbleSort(data, channel)
+                bubbleSort(
+                    data,
+                    channel
+                )
             }
             Type.Select -> {
-                selectSort(data, channel)
+                selectSort(
+                    data,
+                    channel
+                )
             }
             Type.Insert -> {
-                insertSort(data, channel)
+                insertSort(
+                    data,
+                    channel
+                )
             }
             Type.Shell -> {
                 shellSort(data, channel)
             }
             Type.Merge -> {
                 val temp = Array(data.size) { 0 }
-                mergeSort(data, temp, 0, data.size - 1, channel)
+                mergeSort(
+                    data,
+                    temp,
+                    0,
+                    data.size - 1,
+                    channel
+                )
             }
             Type.Quick -> {
-                quickSort(data, 0, data.size - 1, channel)
+                quickSort(
+                    data,
+                    0,
+                    data.size - 1,
+                    channel
+                )
             }
         }
     }
@@ -38,7 +63,11 @@ object SortAlgorithm {
             var hasSwap = false
             for (j in 0 until data.size - i - 1) {
                 if (data[j] > data[j + 1]) {
-                    channel.sendAction(AlgorithmAction.SwapAction(j, j + 1))
+                    channel.sendAction(
+                        SwapAction(
+                            j, j + 1
+                        )
+                    )
                     swap(j, j + 1, data)
                     hasSwap = true
                 }
@@ -65,7 +94,7 @@ object SortAlgorithm {
                     minIndex = j
                 }
             }
-            channel.sendAction(AlgorithmAction.SwapAction(i, minIndex))
+            channel.sendAction(SwapAction(i, minIndex))
             swap(i, minIndex, data)
         }
         channel.sendAction(AlgorithmAction.FinishAction)
@@ -76,25 +105,13 @@ object SortAlgorithm {
         for (i in data.indices) {
             var preIndex = i - 1
             current = data[i]
-            channel.sendAction(
-                AlgorithmAction.ExportCopyAction(
-                    i,
-                    0,
-                    arrayOf(current)
-                )
-            )
+            channel.sendAction(ExportCopyAction(i, 0, arrayOf(current)))
             while (preIndex >= 0 && data[preIndex] > current) {
-                channel.sendAction(AlgorithmAction.CopyAction(preIndex, preIndex + 1))
+                channel.sendAction(CopyAction(preIndex, preIndex + 1))
                 data[preIndex + 1] = data[preIndex]
                 preIndex--
             }
-            channel.sendAction(
-                AlgorithmAction.ImportCopyAction(
-                    0,
-                    preIndex + 1,
-                    arrayOf(current)
-                )
-            )
+            channel.sendAction(ImportCopyAction(0, preIndex + 1, arrayOf(current)))
             data[preIndex + 1] = current
         }
         channel.sendAction(AlgorithmAction.FinishAction)
@@ -110,7 +127,12 @@ object SortAlgorithm {
         while (gap > 0) {
             channel.sendAction(AlgorithmAction.MessageAction("gap = $gap"))
             for (i in gap until data.size) {
-                insertI(data, gap, i, channel)
+                insertI(
+                    data,
+                    gap,
+                    i,
+                    channel
+                )
             }
             gap /= 2
         }
@@ -124,26 +146,14 @@ object SortAlgorithm {
         channel: AlgorithmRunner.ChannelWrap
     ) {
         val inserted = data[i]
-        channel.sendAction(
-            AlgorithmAction.ExportCopyAction(
-                i,
-                0,
-                arrayOf(inserted)
-            )
-        )
+        channel.sendAction(ExportCopyAction(i, 0, arrayOf(inserted)))
         var j = i - gap
         while (j >= 0 && inserted < data[j]) {
-            channel.sendAction(AlgorithmAction.CopyAction(j, j + gap))
+            channel.sendAction(CopyAction(j, j + gap))
             data[j + gap] = data[j]
             j -= gap
         }
-        channel.sendAction(
-            AlgorithmAction.ImportCopyAction(
-                0,
-                j + gap,
-                arrayOf(inserted)
-            )
-        )
+        channel.sendAction(ImportCopyAction(0, j + gap, arrayOf(inserted)))
         data[j + gap] = inserted
     }
 
@@ -159,31 +169,43 @@ object SortAlgorithm {
         val mid = (len shr 1) + start
         var start1 = start
         var start2 = mid + 1
-        mergeSort(arr, result, start1, mid, channel)
-        mergeSort(arr, result, start2, end, channel)
+        mergeSort(
+            arr,
+            result,
+            start1,
+            mid,
+            channel
+        )
+        mergeSort(
+            arr,
+            result,
+            start2,
+            end,
+            channel
+        )
         channel.sendAction(AlgorithmAction.MessageAction("start = $start, end = $end"))
         var k = start
         while (start1 <= mid && start2 <= end) {
             result[k++] = if (arr[start1] < arr[start2]) {
-                channel.sendAction(AlgorithmAction.ExportCopyAction(start1, k, result))
+                channel.sendAction(ExportCopyAction(start1, k, result))
                 arr[start1++]
             } else {
-                channel.sendAction(AlgorithmAction.ExportCopyAction(start2, k, result))
+                channel.sendAction(ExportCopyAction(start2, k, result))
                 arr[start2++]
             }
         }
         while (start1 <= mid) {
-            channel.sendAction(AlgorithmAction.ExportCopyAction(start1, k, result))
+            channel.sendAction(ExportCopyAction(start1, k, result))
             result[k++] = arr[start1++]
         }
         while (start2 <= end) {
-            channel.sendAction(AlgorithmAction.ExportCopyAction(start2, k, result))
+            channel.sendAction(ExportCopyAction(start2, k, result))
             result[k++] = arr[start2++]
         }
         k = start
         channel.sendAction(AlgorithmAction.MessageAction("start = $start, end = $end，回填数据"))
         while (k <= end) {
-            channel.sendAction(AlgorithmAction.ImportCopyAction(k, k, result))
+            channel.sendAction(ImportCopyAction(k, k, result))
             arr[k] = result[k]
             k++
         }
@@ -205,10 +227,25 @@ object SortAlgorithm {
         if (left < right) {
             channel.sendAction(AlgorithmAction.MessageAction("left = $left, right = $right"))
             //获取中轴元素所处的位置
-            val mid = partition(arr, left, right, channel)
+            val mid = partition(
+                arr,
+                left,
+                right,
+                channel
+            )
             //进行分割
-            quickSort(arr, left, mid - 1, channel)
-            quickSort(arr, mid + 1, right, channel)
+            quickSort(
+                arr,
+                left,
+                mid - 1,
+                channel
+            )
+            quickSort(
+                arr,
+                mid + 1,
+                right,
+                channel
+            )
         }
         channel.sendAction(AlgorithmAction.FinishAction)
     }
@@ -221,7 +258,7 @@ object SortAlgorithm {
     ): Int {
         //选取中轴元素
         val pivot = arr[left]
-        channel.sendAction(AlgorithmAction.PivotAction(left))
+        channel.sendAction(PivotAction(left))
         var i = left + 1
         var j = right
         channel.sendAction(AlgorithmAction.MessageAction("left = $left, right = $right, pivot = $pivot"))
@@ -232,10 +269,10 @@ object SortAlgorithm {
             while (i <= j && arr[j] >= pivot) j--
             if (i >= j) break
             //交换两个元素的位置，使得左边的元素不大于pivot,右边的不小于pivot
-            channel.sendAction(AlgorithmAction.SwapAction(i, j))
+            channel.sendAction(SwapAction(i, j))
             swap(i, j, arr)
         }
-        channel.sendAction(AlgorithmAction.SwapAction(j, left))
+        channel.sendAction(SwapAction(j, left))
         arr[left] = arr[j]
         // 使中轴元素处于有序的位置
         arr[j] = pivot
