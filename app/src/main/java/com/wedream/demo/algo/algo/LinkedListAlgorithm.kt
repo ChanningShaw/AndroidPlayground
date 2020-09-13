@@ -2,6 +2,7 @@ package com.wedream.demo.algo.algo
 
 import com.wedream.demo.algo.AlgorithmRunner
 import com.wedream.demo.algo.action.AlgorithmAction
+import com.wedream.demo.algo.action.DeleteAction
 import com.wedream.demo.algo.action.MoveAction
 import com.wedream.demo.algo.structure.LinkedList
 import com.wedream.demo.util.LogUtils.log
@@ -69,18 +70,64 @@ object LinkedListAlgorithm {
             cur = cur.next
             channel.sendAction(MoveAction(cur))
         }
+        channel.sendAction(AlgorithmAction.MessageAction("k = $lastKth"))
         // 倒数第k个就是头结点
         if (lastKth == 0) {
+            channel.sendAction(DeleteAction(linkedList.head))
             linkedList.head = head?.next
         }
         if (lastKth < 0) {
             cur = head
             channel.sendAction(MoveAction(cur))
             while (++lastKth != 0) {
+                channel.sendAction(AlgorithmAction.MessageAction("k = $lastKth"))
                 cur = cur?.next
                 channel.sendAction(MoveAction(cur))
             }
+            channel.sendAction(AlgorithmAction.MessageAction("k = $lastKth"))
+            channel.sendAction(DeleteAction(cur?.next))
             cur?.next = cur?.next?.next
+        }
+        channel.sendAction(AlgorithmAction.FinishAction)
+    }
+
+    suspend fun deleteK(
+        linkedList: LinkedList<Int>,
+        k: Int,
+        channel: AlgorithmRunner.ChannelWrap
+    ) {
+        if (linkedList.isEmpty() || k < 1) {
+            return
+        }
+        channel.sendAction(
+            AlgorithmAction.MessageAction(
+                "删除第${k}个元素",
+                delayTime = AlgorithmAction.DEFAULT_DELAY_TIME
+            )
+        )
+        channel.sendAction(AlgorithmAction.MessageAction("k = $k"))
+        val head = linkedList.head
+        var cur = head
+        channel.sendAction(MoveAction(cur))
+        if (k == 1) {
+            channel.sendAction(DeleteAction(linkedList.head))
+            linkedList.head = head?.next
+            channel.sendAction(AlgorithmAction.FinishAction)
+        } else {
+            // k >= 2
+            var kth = k - 2
+            channel.sendAction(AlgorithmAction.MessageAction("index = $kth"))
+            while (cur != null) {
+                if (kth == 0) {
+                    channel.sendAction(DeleteAction(cur.next))
+                    cur.next = cur.next?.next
+                    break
+                }
+                kth--
+                channel.sendAction(AlgorithmAction.MessageAction("index = $kth"))
+                cur = cur.next
+                channel.sendAction(MoveAction(cur))
+            }
         }
         channel.sendAction(AlgorithmAction.FinishAction)
     }

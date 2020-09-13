@@ -52,7 +52,21 @@ class LinkedListActivity : AppCompatActivity() {
                     0 -> {
                         algorithmCall = { channel ->
                             val random = Random(System.currentTimeMillis())
-                            LinkedListAlgorithm.deleteLastK(data, random.nextInt(EL_SIZE), channel)
+                            LinkedListAlgorithm.deleteK(
+                                data,
+                                random.nextInt(1, EL_SIZE + 1),
+                                channel
+                            )
+                        }
+                    }
+                    1 -> {
+                        algorithmCall = { channel ->
+                            val random = Random(System.currentTimeMillis())
+                            LinkedListAlgorithm.deleteLastK(
+                                data,
+                                random.nextInt(1, EL_SIZE + 1),
+                                channel
+                            )
                         }
                     }
                     else -> {

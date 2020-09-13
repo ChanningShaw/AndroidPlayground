@@ -1,11 +1,16 @@
 package com.wedream.demo.algo.view
 
+import android.animation.Animator
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import com.wedream.demo.R
+import com.wedream.demo.algo.AlgorithmRunner
 import com.wedream.demo.algo.action.AlgorithmAction
 import com.wedream.demo.algo.VisualizationView
+import com.wedream.demo.algo.action.AlgorithmAction.Companion.DEFAULT_DELAY_TIME
+import com.wedream.demo.algo.action.DeleteAction
 import com.wedream.demo.algo.action.MoveAction
 import com.wedream.demo.algo.algo.forEach
 import com.wedream.demo.algo.structure.LinkedList
@@ -23,15 +28,18 @@ class LinkedListVisualizationView(context: Context, attrs: AttributeSet?, defSty
 
     private var paint = Paint()
     private var selectPaint = Paint()
+    private var deletePaint = Paint()
     private var numPaint = Paint()
     private var textPaint = Paint()
     private var arrowPaint = Paint()
 
     private var currentSelectedNode: LinkedList.Node<Int>? = null
+    private var deletedNode: LinkedList.Node<Int>? = null
     private var text = ""
 
     init {
         paint.color = context.resources.getColor(R.color.color_green)
+        deletePaint.color = context.resources.getColor(R.color.color_green)
         selectPaint.color = context.resources.getColor(R.color.color_violet)
         numPaint.color = Color.WHITE
         numPaint.textSize = 40f
@@ -57,14 +65,25 @@ class LinkedListVisualizationView(context: Context, attrs: AttributeSet?, defSty
             val y = height * 0.5f
             var x = gap + RADIUS
             linkedList.forEach { index: Int, node: LinkedList.Node<Int> ->
-                if (node == currentSelectedNode) {
-                    it.drawCircleWithText(
-                        x, y, RADIUS, selectPaint, node.value.toString(), textPaint
-                    )
-                } else {
-                    it.drawCircleWithText(
-                        x, y, RADIUS, paint, node.value.toString(), textPaint
-                    )
+                when (node) {
+                    deletedNode -> {
+                        textPaint.alpha = deletePaint.alpha
+                        it.drawCircleWithText(
+                            x, y, RADIUS, deletePaint, node.value.toString(), textPaint
+                        )
+                    }
+                    currentSelectedNode -> {
+                        textPaint.alpha = 255
+                        it.drawCircleWithText(
+                            x, y, RADIUS, selectPaint, node.value.toString(), textPaint
+                        )
+                    }
+                    else -> {
+                        textPaint.alpha = 255
+                        it.drawCircleWithText(
+                            x, y, RADIUS, paint, node.value.toString(), textPaint
+                        )
+                    }
                 }
 
                 if (index != size - 1) {
@@ -87,6 +106,31 @@ class LinkedListVisualizationView(context: Context, attrs: AttributeSet?, defSty
             }
             is AlgorithmAction.MessageAction -> {
                 text = action.msg
+            }
+            is DeleteAction -> {
+                val moveAnimator = ValueAnimator.ofFloat(1f)
+                moveAnimator.duration = DEFAULT_DELAY_TIME - 100
+                moveAnimator.addUpdateListener {
+                    deletePaint.alpha = (255 * (1f - it.animatedFraction)).toInt()
+                    invalidate()
+                }
+                moveAnimator.addListener(object : Animator.AnimatorListener {
+                    override fun onAnimationRepeat(animation: Animator?) {
+                    }
+
+                    override fun onAnimationEnd(animation: Animator?) {
+                        deletePaint.alpha = 255
+                    }
+
+                    override fun onAnimationCancel(animation: Animator?) {
+                    }
+
+                    override fun onAnimationStart(animation: Animator?) {
+                    }
+
+                })
+                deletedNode = action.node
+                moveAnimator.start()
             }
         }
         invalidate()

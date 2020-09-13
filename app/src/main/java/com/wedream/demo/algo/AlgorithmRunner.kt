@@ -14,10 +14,6 @@ class AlgorithmRunner {
     private var started = false
     private var running = false
 
-    companion object {
-        const val DELAY_TIME = 800L
-    }
-
     /**
      * 启动一个算法演示
      */
@@ -68,7 +64,7 @@ class AlgorithmRunner {
         suspend fun sendAction(action: AlgorithmAction) {
             pauseIfNeed()
             channel.send(action)
-            delay(DELAY_TIME)
+            delay(action.delayTime)
         }
 
         fun getChannel(): Channel<AlgorithmAction> {

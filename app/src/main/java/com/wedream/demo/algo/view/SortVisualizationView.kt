@@ -10,9 +10,9 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import com.wedream.demo.R
 import com.wedream.demo.planegeometry.reset
-import com.wedream.demo.algo.AlgorithmRunner.Companion.DELAY_TIME
 import com.wedream.demo.algo.VisualizationView
 import com.wedream.demo.algo.action.*
+import com.wedream.demo.algo.action.AlgorithmAction.Companion.DEFAULT_DELAY_TIME
 
 class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: Int) :
     VisualizationView(context, attrs, defStyle) {
@@ -214,7 +214,7 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
 
     private fun animatorRectHorizontal(originRect: RectF, targetRect: RectF) {
         val moveAnimator = ValueAnimator.ofFloat(1f)
-        moveAnimator.duration = DELAY_TIME - 200
+        moveAnimator.duration = DEFAULT_DELAY_TIME - 200
         val left = originRect.left
         val right = originRect.right
         moveAnimator.addUpdateListener {
@@ -228,7 +228,7 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
 
     private fun animateRect(originRect: RectF, targetRect: RectF) {
         val moveAnimator = ValueAnimator.ofFloat(1f)
-        moveAnimator.duration = DELAY_TIME - 200
+        moveAnimator.duration = DEFAULT_DELAY_TIME - 200
         val left = originRect.left
         val top = originRect.top
         val right = originRect.right
