@@ -1,13 +1,11 @@
-package com.wedream.demo.kotlin
+package com.wedream.demo.concurrent.kotlin
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
 import com.wedream.demo.util.LogUtils.log
-import kotlinx.coroutines.CoroutineScope
 
 class FunctionProgrammingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

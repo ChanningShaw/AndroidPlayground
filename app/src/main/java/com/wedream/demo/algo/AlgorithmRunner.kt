@@ -60,6 +60,8 @@ class AlgorithmRunner {
 
     class ChannelWrap {
         private val channel = Channel<AlgorithmAction>()
+
+        @Volatile
         private var pause = false
         suspend fun sendAction(action: AlgorithmAction) {
             pauseIfNeed()

@@ -1,17 +1,15 @@
 package com.wedream.demo
 
-import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.wedream.demo.algo.activity.LinkedListActivity
-import com.wedream.demo.app.MyApplication
 import com.wedream.demo.category.CategoryAdapter
 import com.wedream.demo.common.CommonAdapter
-import com.wedream.demo.kotlin.CoroutineActivity
-import com.wedream.demo.kotlin.FlowActivity
-import com.wedream.demo.kotlin.FunctionProgrammingActivity
+import com.wedream.demo.concurrent.kotlin.CoroutineActivity
+import com.wedream.demo.concurrent.kotlin.FlowActivity
+import com.wedream.demo.concurrent.kotlin.FunctionProgrammingActivity
 import com.wedream.demo.planegeometry.PlaneGeometryActivity
 import com.wedream.demo.render.DrawPathActivity
 import com.wedream.demo.render.DrawTextDemoActivity
@@ -19,6 +17,7 @@ import com.wedream.demo.render.MatrixDemoActivity
 import com.wedream.demo.render.WaveViewActivity
 import com.wedream.demo.algo.activity.SortActivity
 import com.wedream.demo.app.ApplicationHolder
+import com.wedream.demo.concurrent.rxjava.RxJavaDemoActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,7 +32,8 @@ class MainActivity : AppCompatActivity() {
             LinkedListActivity::class.java,
             DrawPathActivity::class.java,
             WaveViewActivity::class.java,
-            FunctionProgrammingActivity::class.java
+            FunctionProgrammingActivity::class.java,
+            RxJavaDemoActivity::class.java
         )
     }
 
