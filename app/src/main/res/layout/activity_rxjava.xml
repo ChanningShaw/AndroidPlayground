@@ -51,4 +51,77 @@
     android:text="zip"
     app:layout_constraintStart_toEndOf="@id/bt_flat_map"
     app:layout_constraintTop_toTopOf="@id/bt_flat_map" />
+
+  <Button
+    android:id="@+id/cold_observable"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="cold_observable"
+    app:layout_constraintStart_toEndOf="@id/bt_zip"
+    app:layout_constraintTop_toTopOf="@id/bt_flat_map" />
+
+  <Button
+    android:id="@+id/hot_observable"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="hot_observable"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/bt_flat_map" />
+
+  <Button
+    android:id="@+id/async_subject"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="async_subject"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/hot_observable" />
+
+  <Button
+    android:id="@+id/behavior_subject"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="behavior_subject"
+    app:layout_constraintStart_toEndOf="@id/async_subject"
+    app:layout_constraintTop_toBottomOf="@id/hot_observable" />
+
+  <Button
+    android:id="@+id/replay_subject"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="replay_subject"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/behavior_subject" />
+
+  <Button
+    android:id="@+id/publish_subject"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="publish_subject"
+    app:layout_constraintStart_toEndOf="@id/replay_subject"
+    app:layout_constraintTop_toBottomOf="@id/behavior_subject" />
+
+  <Button
+    android:id="@+id/flowable_consumer"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="flowable_consumer"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/replay_subject" />
+
+  <Button
+    android:id="@+id/flowable_subscriber"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="FlowableSubscriber"
+    app:layout_constraintStart_toEndOf="@id/flowable_consumer"
+    app:layout_constraintTop_toBottomOf="@id/replay_subject" />
+
+  <Button
+    android:id="@+id/stop_all"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="stop_all"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
