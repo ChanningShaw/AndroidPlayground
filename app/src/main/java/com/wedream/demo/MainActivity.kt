@@ -17,7 +17,9 @@ import com.wedream.demo.render.MatrixDemoActivity
 import com.wedream.demo.render.WaveViewActivity
 import com.wedream.demo.algo.activity.SortActivity
 import com.wedream.demo.app.ApplicationHolder
+import com.wedream.demo.concurrent.JavaExecutorActivity
 import com.wedream.demo.concurrent.rxjava.RxJavaDemoActivity
+import com.wedream.demo.jni.HelloJNIActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,7 +35,9 @@ class MainActivity : AppCompatActivity() {
             DrawPathActivity::class.java,
             WaveViewActivity::class.java,
             FunctionProgrammingActivity::class.java,
-            RxJavaDemoActivity::class.java
+            RxJavaDemoActivity::class.java,
+            JavaExecutorActivity::class.java,
+            HelloJNIActivity::class.java
         )
     }
 
