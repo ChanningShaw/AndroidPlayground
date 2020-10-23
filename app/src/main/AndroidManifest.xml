@@ -28,7 +28,9 @@
         <activity android:name="com.wedream.demo.concurrent.kotlin.FunctionProgrammingActivity" />
         <activity android:name=".algo.activity.LinkedListActivity" />
         <activity android:name=".concurrent.rxjava.RxJavaDemoActivity" />
-        <activity android:name=".concurrent.JavaExecutorActivity" /><activity android:name=".jni.HelloJNIActivity" />
+        <activity android:name=".concurrent.JavaExecutorActivity" />
+        <activity android:name=".jni.HelloJNIActivity" />
+        <activity android:name=".jni.GL2JNIActivity" />
     </application>
 
 </manifest>
