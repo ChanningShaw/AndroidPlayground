@@ -119,8 +119,7 @@ bool setupGraphics(int w, int h) {
     }
     gvPositionHandle = glGetAttribLocation(gProgram, "vPosition");
     checkGlError("glGetAttribLocation");
-    LOGI("glGetAttribLocation(\"vPosition\") = %d\n",
-            gvPositionHandle);
+    LOGI("glGetAttribLocation(\"vPosition\") = %d\n",gvPositionHandle);
 
     glViewport(0, 0, w, h);
     checkGlError("glViewport");

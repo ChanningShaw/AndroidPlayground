@@ -89,10 +89,16 @@ class GL2JNIView : GLSurfaceView {
         }
     }
 
-    private class ConfigChooser(// Subclasses can adjust these values:
-        protected var mRedSize: Int, protected var mGreenSize: Int, protected var mBlueSize: Int,
-        protected var mAlphaSize: Int, protected var mDepthSize: Int, protected var mStencilSize: Int) : EGLConfigChooser {
-        override fun chooseConfig(egl: EGL10, display: EGLDisplay): EGLConfig {
+    private class ConfigChooser(
+        // Subclasses can adjust these values:
+        var mRedSize: Int,
+        var mGreenSize: Int,
+        var mBlueSize: Int,
+        var mAlphaSize: Int,
+        var mDepthSize: Int,
+        var mStencilSize: Int
+    ) : EGLConfigChooser {
+        override fun chooseConfig(egl: EGL10, display: EGLDisplay): EGLConfig? {
 
             /* Get the number of minimally matching EGL configurations
              */
@@ -109,7 +115,7 @@ class GL2JNIView : GLSurfaceView {
                 printConfigs(egl, display, configs)
             }
             /* Now return the "best" one
-             */return chooseConfig(egl, display, configs)!!
+             */return chooseConfig(egl, display, configs)
         }
 
         fun chooseConfig(egl: EGL10, display: EGLDisplay,

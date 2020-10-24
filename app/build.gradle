@@ -14,6 +14,17 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        externalNativeBuild {    //defaultConfig中添加
+            cmake {
+                cppFlags ""
+                arguments "-DANDROID_STL=c++_shared"
+            }
+        }
+
+        ndk {      //defaultConfig中添加
+            abiFilters "armeabi-v7a", "arm64-v8a"
+        }
     }
 
     buildTypes {
@@ -33,6 +44,13 @@ android {
         cmake {
             path "src/main/cpp/CMakeLists.txt"
             version "3.10.2"
+        }
+    }
+
+    sourceSets {
+        main {
+            jni.srcDirs = []
+            jniLibs.srcDir "src/main/libs"
         }
     }
 }

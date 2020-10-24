@@ -31,6 +31,7 @@
         <activity android:name=".concurrent.JavaExecutorActivity" />
         <activity android:name=".jni.HelloJNIActivity" />
         <activity android:name=".jni.GL2JNIActivity" />
+        <activity android:name=".render.FontDemoActivity" />
     </application>
 
 </manifest>

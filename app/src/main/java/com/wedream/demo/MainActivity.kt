@@ -11,16 +11,13 @@ import com.wedream.demo.concurrent.kotlin.CoroutineActivity
 import com.wedream.demo.concurrent.kotlin.FlowActivity
 import com.wedream.demo.concurrent.kotlin.FunctionProgrammingActivity
 import com.wedream.demo.planegeometry.PlaneGeometryActivity
-import com.wedream.demo.render.DrawPathActivity
-import com.wedream.demo.render.DrawTextDemoActivity
-import com.wedream.demo.render.MatrixDemoActivity
-import com.wedream.demo.render.WaveViewActivity
 import com.wedream.demo.algo.activity.SortActivity
 import com.wedream.demo.app.ApplicationHolder
 import com.wedream.demo.concurrent.JavaExecutorActivity
 import com.wedream.demo.concurrent.rxjava.RxJavaDemoActivity
 import com.wedream.demo.jni.GL2JNIActivity
 import com.wedream.demo.jni.HelloJNIActivity
+import com.wedream.demo.render.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -39,7 +36,8 @@ class MainActivity : AppCompatActivity() {
             RxJavaDemoActivity::class.java,
             JavaExecutorActivity::class.java,
             HelloJNIActivity::class.java,
-            GL2JNIActivity::class.java
+            GL2JNIActivity::class.java,
+            FontDemoActivity::class.java
         )
     }
 

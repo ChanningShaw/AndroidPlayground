@@ -5,6 +5,13 @@
 
 cmake_minimum_required(VERSION 3.4.1)
 
+# 添加并设置库头文件
+set(CMAKE_VERBOSE_MAKEFILE on)
+set(libs ${CMAKE_SOURCE_DIR}/libs)
+
+# 解决shared library text segment is not shareable
+#set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wall -v -Wl,--no-warn-shared-textrel")
+
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
 # You can define multiple libraries, and CMake builds them for you.
@@ -43,6 +50,8 @@ target_link_libraries( # Specifies the target library.
                        # included in the NDK.
                        ${log-lib} )
 
+# ########gl2jni#############
+
 # now build app's shared lib
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
 
@@ -54,3 +63,34 @@ target_link_libraries(gl2jni
         log
         EGL
         GLESv2)
+
+########gl2jni#############
+
+########freetype#############
+
+#定义变量LIB_DIR, ${CMAKE_CURRENT_SOURCE_DIR}表示当前文件所在的目录
+set(LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../libs)
+
+message(WARNING ${LIB_DIR})
+
+add_library(libfreetype STATIC IMPORTED )  #添加预编译静态库，只需要告诉CMAKE导入项目即可
+
+set_target_properties(libfreetype
+        PROPERTIES IMPORTED_LOCATION
+        LIB_DIR/${ANDROID_ABI}/libfreetype.a)
+
+# 添加并设置静态库路径
+add_library(
+        freetypewrap
+        SHARED
+        free_type.cpp)   #对应/src/main/cpp/下的CPP源码，此处采用JNI_OnLoad函数注册。
+
+# 3.添加并设置静态库连接，预构建库与本地库相关联：
+target_link_libraries( # Specifies the target library.
+        freetypewrap
+        libfreetype
+
+        # Links the target library to the log library
+        # included in the NDK.
+        ${log-lib} )
+########freetype#############
