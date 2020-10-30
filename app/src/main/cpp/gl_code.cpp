@@ -9,10 +9,8 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cmath>
+#include "util/LogUtil.h"
 
-#define  LOG_TAG    "libgl2jni"
-#define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
-#define  LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
 
 static void printGLString(const char *name, GLenum s) {
     const char *v = (const char *) glGetString(s);
@@ -85,12 +83,13 @@ GLuint createProgram(const char* pVertexSource, const char* pFragmentSource) {
         GLint linkStatus = GL_FALSE;
         glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
         if (linkStatus != GL_TRUE) {
+            // 如果没有link成功，输出log
             GLint bufLength = 0;
             glGetProgramiv(program, GL_INFO_LOG_LENGTH, &bufLength);
             if (bufLength) {
                 char* buf = (char*) malloc(bufLength);
                 if (buf) {
-                    glGetProgramInfoLog(program, bufLength, NULL, buf);
+                    glGetProgramInfoLog(program, bufLength, nullptr, buf);
                     LOGE("Could not link program:\n%s\n", buf);
                     free(buf);
                 }
@@ -117,6 +116,7 @@ bool setupGraphics(int w, int h) {
         LOGE("Could not create program.");
         return false;
     }
+    // glGetAttribLocation查询由program指定的先前链接的程序对象，用于name指定的属性变量，并返回绑定到该属性变量的通用顶点属性的索引
     gvPositionHandle = glGetAttribLocation(gProgram, "vPosition");
     checkGlError("glGetAttribLocation");
     LOGI("glGetAttribLocation(\"vPosition\") = %d\n",gvPositionHandle);
@@ -126,8 +126,9 @@ bool setupGraphics(int w, int h) {
     return true;
 }
 
-const GLfloat gTriangleVertices[] = { 0.0f, 0.5f, -0.5f, -0.5f,
-        0.5f, -0.5f };
+const GLfloat gTriangleVertices[] = {0.0f, 0.5f,
+                                     -0.5f, -0.5f,
+                                     0.5f, -0.5f};
 
 void renderFrame() {
     static float grey;
@@ -135,6 +136,7 @@ void renderFrame() {
     if (grey > 1.0f) {
         grey = 0.0f;
     }
+    // 前一个函数设置好清除颜色，后者利用前一个函数设置好的当前清除颜色设置窗口颜色
     glClearColor(grey, grey, grey, 1.0f);
     checkGlError("glClearColor");
     glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
@@ -142,7 +144,7 @@ void renderFrame() {
 
     glUseProgram(gProgram);
     checkGlError("glUseProgram");
-
+    // gvPositionHandle表示定点位置，2表示数据的维度， gTriangleVertices定点坐标
     glVertexAttribPointer(gvPositionHandle, 2, GL_FLOAT, GL_FALSE, 0, gTriangleVertices);
     checkGlError("glVertexAttribPointer");
     glEnableVertexAttribArray(gvPositionHandle);

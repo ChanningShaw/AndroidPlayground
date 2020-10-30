@@ -18,6 +18,7 @@ import com.wedream.demo.concurrent.rxjava.RxJavaDemoActivity
 import com.wedream.demo.jni.GL2JNIActivity
 import com.wedream.demo.jni.HelloJNIActivity
 import com.wedream.demo.render.*
+import com.wedream.demo.render.gl3.GLColorActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,7 +38,8 @@ class MainActivity : AppCompatActivity() {
             JavaExecutorActivity::class.java,
             HelloJNIActivity::class.java,
             GL2JNIActivity::class.java,
-            FontDemoActivity::class.java
+            FontDemoActivity::class.java,
+            GLColorActivity::class.java
         )
     }
 

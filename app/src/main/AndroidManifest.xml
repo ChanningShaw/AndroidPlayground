@@ -2,36 +2,37 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.wedream.demo">
 
-    <application
-      android:name=".app.MyApplication"
-      android:allowBackup="true"
-      android:icon="@mipmap/ic_launcher"
-      android:label="@string/app_name"
-      android:roundIcon="@mipmap/ic_launcher_round"
-      android:supportsRtl="true"
-      android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+  <application
+    android:name=".app.MyApplication"
+    android:allowBackup="true"
+    android:icon="@mipmap/ic_launcher"
+    android:label="@string/app_name"
+    android:roundIcon="@mipmap/ic_launcher_round"
+    android:supportsRtl="true"
+    android:theme="@style/AppTheme">
+      <activity android:name=".MainActivity">
+          <intent-filter>
+              <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".render.MatrixDemoActivity" />
-        <activity android:name=".render.DrawTextDemoActivity" />
-        <activity android:name=".planegeometry.PlaneGeometryActivity" />
-        <activity android:name=".algo.activity.SortActivity" />
-        <activity android:name="com.wedream.demo.concurrent.kotlin.CoroutineActivity" />
-        <activity android:name="com.wedream.demo.concurrent.kotlin.FlowActivity" />
-        <activity android:name=".render.DrawPathActivity" />
-        <activity android:name=".render.WaveViewActivity" />
-        <activity android:name="com.wedream.demo.concurrent.kotlin.FunctionProgrammingActivity" />
-        <activity android:name=".algo.activity.LinkedListActivity" />
-        <activity android:name=".concurrent.rxjava.RxJavaDemoActivity" />
-        <activity android:name=".concurrent.JavaExecutorActivity" />
-        <activity android:name=".jni.HelloJNIActivity" />
-        <activity android:name=".jni.GL2JNIActivity" />
-        <activity android:name=".render.FontDemoActivity" />
-    </application>
+              <category android:name="android.intent.category.LAUNCHER" />
+          </intent-filter>
+      </activity>
+      <activity android:name=".render.MatrixDemoActivity" />
+      <activity android:name=".render.DrawTextDemoActivity" />
+      <activity android:name=".planegeometry.PlaneGeometryActivity" />
+      <activity android:name=".algo.activity.SortActivity" />
+      <activity android:name="com.wedream.demo.concurrent.kotlin.CoroutineActivity" />
+      <activity android:name="com.wedream.demo.concurrent.kotlin.FlowActivity" />
+      <activity android:name=".render.DrawPathActivity" />
+      <activity android:name=".render.WaveViewActivity" />
+      <activity android:name="com.wedream.demo.concurrent.kotlin.FunctionProgrammingActivity" />
+      <activity android:name=".algo.activity.LinkedListActivity" />
+      <activity android:name=".concurrent.rxjava.RxJavaDemoActivity" />
+      <activity android:name=".concurrent.JavaExecutorActivity" />
+      <activity android:name=".jni.HelloJNIActivity" />
+      <activity android:name=".jni.GL2JNIActivity" />
+      <activity android:name=".render.FontDemoActivity" />
+      <activity android:name=".render.gl3.GLColorActivity" />
+  </application>
 
 </manifest>
