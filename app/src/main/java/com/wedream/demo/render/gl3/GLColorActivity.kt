@@ -24,7 +24,7 @@ class GLColorActivity : AbsGLSurfaceActivity() {
     }
 
     override fun bindRenderer(): GLSurfaceView.Renderer {
-        return RectangleRenderer()
+        return VertexArrayRenderer()
     }
 
     override fun onDestroy() {
