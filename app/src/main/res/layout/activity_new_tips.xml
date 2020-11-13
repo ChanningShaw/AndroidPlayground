@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <FrameLayout
+    android:id="@+id/fl1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <TextView
+      android:id="@+id/tv1"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="AAAA"
+      android:textSize="30sp" />
+
+  </FrameLayout>
+
+  <FrameLayout
+    android:id="@+id/fl2"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="10dp"
+    app:layout_constraintStart_toEndOf="@id/fl1"
+    app:layout_constraintTop_toTopOf="@id/fl1">
+
+  <TextView
+    android:id="@+id/tv2"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="BBBB"
+    android:textSize="30sp" />
+
+  </FrameLayout>
+
+  <FrameLayout
+    android:id="@+id/fl3"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="10dp"
+    app:layout_constraintStart_toEndOf="@id/fl2"
+    app:layout_constraintTop_toTopOf="@id/fl2">
+
+  <TextView
+    android:id="@+id/tv3"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="CCCC"
+    android:textSize="30sp" />
+  </FrameLayout>
+
+
+    <FrameLayout
+      android:id="@+id/fl4"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="10dp"
+      app:layout_constraintStart_toEndOf="@id/fl3"
+      app:layout_constraintTop_toTopOf="@id/fl3">
+
+  <TextView
+    android:id="@+id/tv4"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="DDDD"
+    android:textSize="30sp" />
+  </FrameLayout>
+
+  <FrameLayout
+    android:id="@+id/fl5"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_constraintStart_toStartOf="@id/fl1"
+    app:layout_constraintTop_toBottomOf="@id/fl1">
+
+  <TextView
+    android:id="@+id/tv5"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="EEEE"
+    android:textSize="30sp" />
+
+  </FrameLayout>
+
+  <FrameLayout
+    android:id="@+id/fl6"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="10dp"
+    app:layout_constraintStart_toEndOf="@id/fl5"
+    app:layout_constraintTop_toTopOf="@id/fl5">
+
+  <TextView
+    android:id="@+id/tv6"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="FFFF"
+    android:textSize="30sp" />
+  </FrameLayout>
+
+
+    <FrameLayout
+      android:id="@+id/fl7"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="10dp"
+      app:layout_constraintStart_toEndOf="@id/fl6"
+      app:layout_constraintTop_toTopOf="@id/fl6">
+
+  <TextView
+    android:id="@+id/tv7"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="GGGG"
+    android:textSize="30sp" />
+  </FrameLayout>
+
+  <FrameLayout
+    android:id="@+id/fl8"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="10dp"
+    app:layout_constraintStart_toEndOf="@id/fl7"
+    app:layout_constraintTop_toTopOf="@id/fl7">
+
+      <TextView
+        android:id="@+id/tv8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="HHHH"
+        android:textSize="30sp" />
+    </FrameLayout>
+
+  <LinearLayout
+    android:id="@+id/ll"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/fl5" />
+
+  <EditText
+    android:id="@+id/tv_add_node"
+    android:layout_width="100dp"
+    android:layout_height="wrap_content"
+    android:hint="输入父节点标号"
+    android:inputType="number"
+    android:textSize="20sp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toStartOf="@id/bt_add" />
+
+  <Button
+    android:id="@+id/bt_add"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="添加新节点"
+    android:textSize="20sp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,6 +6,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import com.tencent.mmkv.MMKV
 import com.wedream.demo.MainActivity
 
 class MyApplication : Application() {
@@ -19,6 +20,7 @@ class MyApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        MMKV.initialize(this)
         val handler = MyCrashHandler()
         Thread.setDefaultUncaughtExceptionHandler(handler)
         ApplicationHolder.instance = this
