@@ -4,6 +4,7 @@ import android.content.Context
 import android.opengl.GLSurfaceView
 import android.util.AttributeSet
 import com.wedream.demo.util.LogUtils.log
+import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 
@@ -17,25 +18,22 @@ class MyGLSurfaceView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
         get() = mNativeRender
 
     class MyGLRender internal constructor(myNativeRender: MyNativeRender) : Renderer {
-        private val mNativeRender: MyNativeRender
+        private val mNativeRender: MyNativeRender = myNativeRender
         override fun onSurfaceCreated(gl: GL10, config: EGLConfig) {
-            log{ "onSurfaceCreated() called with: gl = [$gl], config = [$config]" }
+            log { "onSurfaceCreated() called with: gl = [$gl], config = [$config]" }
             mNativeRender.native_OnSurfaceCreated()
         }
 
         override fun onSurfaceChanged(gl: GL10, width: Int, height: Int) {
-            log{ "onSurfaceChanged() called with: gl = [$gl], width = [$width], height = [$height]"}
+            log { "onSurfaceChanged() called with: gl = [$gl], width = [$width], height = [$height]" }
             mNativeRender.native_OnSurfaceChanged(width, height)
         }
 
         override fun onDrawFrame(gl: GL10) {
-            log {"onDrawFrame() called with: gl = [$gl]" }
+            log { "onDrawFrame() called with: gl = [$gl]" }
             mNativeRender.native_OnDrawFrame()
         }
 
-        init {
-            mNativeRender = myNativeRender
-        }
     }
 
     companion object {

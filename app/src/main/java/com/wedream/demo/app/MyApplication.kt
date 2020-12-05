@@ -22,7 +22,7 @@ class MyApplication : Application() {
         super.onCreate()
         MMKV.initialize(this)
         val handler = MyCrashHandler()
-        Thread.setDefaultUncaughtExceptionHandler(handler)
+//        Thread.setDefaultUncaughtExceptionHandler(handler)
         ApplicationHolder.instance = this
         appSp = getSharedPreferences("app_sp", Context.MODE_PRIVATE)
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {

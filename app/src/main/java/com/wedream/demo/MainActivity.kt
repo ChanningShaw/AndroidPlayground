@@ -20,6 +20,7 @@ import com.wedream.demo.planegeometry.PlaneGeometryActivity
 import com.wedream.demo.render.*
 import com.wedream.demo.render.gl3.GLColorActivity
 import com.wedream.demo.view.NewTipsActivity
+import com.wedream.demo.view.TabLayoutActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,7 +42,8 @@ class MainActivity : AppCompatActivity() {
             GL2JNIActivity::class.java,
             FontDemoActivity::class.java,
             GLColorActivity::class.java,
-            NewTipsActivity::class.java
+            NewTipsActivity::class.java,
+            TabLayoutActivity::class.java
         )
     }
 

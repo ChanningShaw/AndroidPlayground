@@ -14,7 +14,7 @@ class CategoryAdapter(context: Context) : CommonAdapter<Class<*>, CategoryAdapte
     }
 
     override fun getItemLayout(): Int {
-        return R.layout.category_list_item
+        return R.layout.item_category_list
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {

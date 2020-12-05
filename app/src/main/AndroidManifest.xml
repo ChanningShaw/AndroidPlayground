@@ -32,7 +32,7 @@
       <activity android:name=".jni.HelloJNIActivity" />
       <activity android:name=".jni.GL2JNIActivity" />
       <activity android:name=".render.FontDemoActivity" />
-      <activity android:name=".render.gl3.GLColorActivity" /><activity android:name=".view.NewTipsActivity" />
+      <activity android:name=".render.gl3.GLColorActivity" /><activity android:name=".view.NewTipsActivity" /><activity android:name=".view.TabLayoutActivity" />
   </application>
 
 </manifest>
