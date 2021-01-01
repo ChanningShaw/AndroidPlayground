@@ -29,6 +29,8 @@ class KyTabLayout(context: Context, attrs: AttributeSet?, defStyle: Int) : Horiz
     private var currentSelect = 0
     private var minHeight = -1
 
+    private var layoutConfig = KyTabLayoutConfig()
+
     private var listener: OnTabClickListener? = null
 
     companion object {
@@ -125,6 +127,10 @@ class KyTabLayout(context: Context, attrs: AttributeSet?, defStyle: Int) : Horiz
         indicator.layoutParams = params
         indicator.setBackgroundResource(config.bgRes)
         indicator.invalidate()
+    }
+
+    fun setLayoutConfig(config: KyTabLayoutConfig) {
+        this.layoutConfig = config
     }
 
     fun setTabMinWidth(value: Int) {

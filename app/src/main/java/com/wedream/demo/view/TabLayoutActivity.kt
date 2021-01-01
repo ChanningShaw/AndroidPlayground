@@ -17,13 +17,14 @@ class TabLayoutActivity : AppCompatActivity() {
             val tab = tabLayout.newTab(t)
             tabLayout.addTab(tab)
         }
-//        val tab = tabLayout.ImageTab(R.drawable.mat_image)
-//        tabLayout.setIndicatorConfig(IndicatorConfig.Build().width(50).build())
-//        tabLayout.addTab(tab)
-//        for (i in 1..20) {
-//            val tab = tabLayout.newTab(i.toString())
-//            tabLayout.addTab(tab)
-//        }
+        val tab = tabLayout.ImageTab(R.drawable.mat_image)
+        tabLayout.setIndicatorConfig(IndicatorConfig.Build().width(50).build())
+        tabLayout.addTab(tab)
+        for (i in 1..20) {
+            val tab = tabLayout.newTab(i.toString())
+            tabLayout.addTab(tab)
+        }
+
         tabLayout.setOnTabClickListener(object : KyTabLayout.OnTabClickListener {
             override fun onTabClick(tab: KyTabLayout.Tab, index: Int) {
                 if (index == 4) {

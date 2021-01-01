@@ -21,6 +21,7 @@ import com.wedream.demo.render.*
 import com.wedream.demo.render.gl3.GLColorActivity
 import com.wedream.demo.view.NewTipsActivity
 import com.wedream.demo.view.TabLayoutActivity
+import com.wedream.demo.view.ViewPagerActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -43,7 +44,8 @@ class MainActivity : AppCompatActivity() {
             FontDemoActivity::class.java,
             GLColorActivity::class.java,
             NewTipsActivity::class.java,
-            TabLayoutActivity::class.java
+            TabLayoutActivity::class.java,
+            ViewPagerActivity::class.java
         )
     }
 
