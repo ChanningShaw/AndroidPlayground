@@ -1,5 +1,6 @@
 package com.wedream.demo.view.multitrack
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.RectF
 import android.view.View
@@ -10,19 +11,21 @@ import com.wedream.demo.view.multitrack.SegmentRecycler.Companion.DEFAULT_TRACK_
 import com.wedream.demo.view.multitrack.base.AbsSegmentRecyclerAdapter
 import com.wedream.demo.view.multitrack.base.SegmentData
 
-class TextSegmentAdapter(val context: Context) : AbsSegmentRecyclerAdapter<AbsSegmentRecyclerAdapter.ViewHolder>() {
+class TextSegmentAdapter<T : SegmentData>(val context: Context) : AbsSegmentRecyclerAdapter<AbsSegmentRecyclerAdapter.ViewHolder>() {
 
-    private val segments = mutableListOf<SegmentData>()
+    private val segments = mutableListOf<T>()
     private val levels = mutableSetOf<Int>()
     private var currentSelectId = -1L
     private var currentOperateId = -1L
     private var oldZ = 0f
+    private var lastOperateSegment: T? = null
+    private val rollbackAnimator = ValueAnimator.ofFloat(0f, 1f)
 
     companion object {
         const val FOCUS_Z = 10f
     }
 
-    fun setData(data: List<SegmentData>) {
+    fun setData(data: List<T>) {
         this.segments.clear()
         this.segments.addAll(data)
         levels.clear()
@@ -53,15 +56,19 @@ class TextSegmentAdapter(val context: Context) : AbsSegmentRecyclerAdapter<AbsSe
         holder.width = segmentData.end - segmentData.start
         val itemView = holder.itemView
         itemView.tag = segmentData
-        if (segmentData.isSelected) {
-            itemView.z = FOCUS_Z
-            itemView.setBackgroundResource(R.color.red_dot_color)
-        } else if (currentOperateId == segmentData.id) {
-            itemView.setBackgroundResource(R.color.marker_text_style_b_color)
-            itemView.z = FOCUS_Z
-        } else {
-            itemView.z = oldZ
-            itemView.setBackgroundResource(R.color.marker_text_style_b_color)
+        when {
+            segmentData.isSelected -> {
+                itemView.z = FOCUS_Z
+                itemView.setBackgroundResource(R.color.red_dot_color)
+            }
+            currentOperateId == segmentData.id -> {
+                itemView.setBackgroundResource(R.color.marker_text_style_b_color)
+                itemView.z = FOCUS_Z
+            }
+            else -> {
+                itemView.z = oldZ
+                itemView.setBackgroundResource(R.color.marker_text_style_b_color)
+            }
         }
         if (itemView is SegmentView) {
             itemView.setSegmentEventListener(segmentEventListener)
@@ -70,11 +77,13 @@ class TextSegmentAdapter(val context: Context) : AbsSegmentRecyclerAdapter<AbsSe
 
     private var segmentEventListener = object : SegmentView.SegmentEventListener {
         override fun onActionDown(view: SegmentView) {
+            val segmentData = view.tag as T
+            lastOperateSegment = segmentData.copy()
             handleHorizontalTouchEvent(true)
         }
 
         override fun onMove(view: SegmentView, deltaX: Float, deltaY: Float) {
-            val segmentData = view.tag as SegmentData
+            val segmentData = view.tag as TextSegmentData
             if (checkOverlap(segmentData.id, deltaX, deltaY)) {
                 view.alpha = 0.3f
             } else if (segmentData.id == currentOperateId) {
@@ -104,17 +113,24 @@ class TextSegmentAdapter(val context: Context) : AbsSegmentRecyclerAdapter<AbsSe
         }
 
         override fun onActionUp(view: SegmentView, deltaX: Float, deltaY: Float) {
-            val data = (view.tag as SegmentData)
+            val data = (view.tag as T)
             if (data.id == currentOperateId) {
                 currentOperateId = -1L
                 view.alpha = 1.0f
                 view.z = oldZ
             }
             handleHorizontalTouchEvent(false)
+            if (checkOverlap(data.id, deltaX, deltaY)) {
+                // 位置有重叠，不能放置，做回弹动画
+                lastOperateSegment?.let {
+                    doRollback(data, it)
+                    lastOperateSegment = null
+                }
+            }
         }
 
         override fun onLongPress(view: SegmentView) {
-            val data = (view.tag as SegmentData)
+            val data = (view.tag as T)
             currentOperateId = data.id
             view.alpha = 0.8f
             oldZ = view.z
@@ -128,12 +144,17 @@ class TextSegmentAdapter(val context: Context) : AbsSegmentRecyclerAdapter<AbsSe
                     notifyItemChanged(it.id)
                 }
             }
-            val data = (view.tag as SegmentData)
+            val data = (view.tag as T)
             data.isSelected = true
             currentSelectId = data.id
             oldZ = view.z
             notifyItemChanged(currentSelectId)
         }
+    }
+
+    private fun doRollback(current: T, old: T) {
+        current.set(old)
+        notifyItemChanged(current.id)
     }
 
     /**
@@ -182,7 +203,3 @@ inline fun <T, R> Iterable<T>.mapDistinct(transform: (T) -> R): List<R> {
         map.add(transform(item))
     return map.toList()
 }
-
-//fun RectF.isOverLapWith(other: RectF): Boolean {
-//    return !(left > other.right || top > other.bottom || right < other.left || bottom < other.top)
-//}

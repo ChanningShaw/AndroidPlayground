@@ -21,7 +21,7 @@ class TrackActivity : AppCompatActivity() {
     private var leftView: View? = null
     private var rightView: View? = null
     private var screenWidth = 0
-    private var adapter: TextSegmentAdapter? = null
+    private var adapter: TextSegmentAdapter<TextSegmentData>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +37,7 @@ class TrackActivity : AppCompatActivity() {
 
         trackContainer?.notifyHorizontalScroll(dip2pix(200), +screenWidth - dip2pix(200))
 
-        val list = mutableListOf<SegmentData>()
+        val list = mutableListOf<TextSegmentData>()
         var start = 0
         val length = 200
         val margin = 10
