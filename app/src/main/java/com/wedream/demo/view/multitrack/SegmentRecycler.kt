@@ -65,7 +65,7 @@ class SegmentRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : S
     private fun updateVisibleItem() {
         for (holder in segmentHolders.values) {
             val view = holder.itemView
-            view.setBackgroundResource(if (showItemVisible(view)) R.color.marker_text_style_b_color else R.color.color_green)
+            view.visibility = (if (showItemVisible(view)) VISIBLE else GONE)
         }
     }
 

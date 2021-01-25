@@ -10,6 +10,7 @@ import android.widget.HorizontalScrollView
 import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
 import com.wedream.demo.util.AndroidUtils.dip2pix
+import com.wedream.demo.util.LogUtils.log
 import com.wedream.demo.view.multitrack.base.SegmentData
 
 
@@ -36,15 +37,6 @@ class TrackActivity : AppCompatActivity() {
 
         trackContainer?.notifyHorizontalScroll(dip2pix(200), +screenWidth - dip2pix(200))
 
-        horizontalScrollView?.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
-            val width = leftView?.width ?: 0
-            Log.e("xcm", "scrollX = $scrollX, scrollY = $scrollY, oldScrollX = $oldScrollX, oldScrollY = $oldScrollY")
-            trackContainer?.notifyHorizontalScroll(scrollX + width, scrollX + screenWidth - width)
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
         val list = mutableListOf<SegmentData>()
         var start = 0
         val length = 200
@@ -58,5 +50,15 @@ class TrackActivity : AppCompatActivity() {
         adapter = TextSegmentAdapter(this)
         trackContainer?.setAdapter(adapter!!)
         adapter?.setData(list)
+
+        horizontalScrollView?.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            val width = leftView?.width ?: 0
+            Log.e("xcm", "scrollX = $scrollX, scrollY = $scrollY, oldScrollX = $oldScrollX, oldScrollY = $oldScrollY")
+            trackContainer?.notifyHorizontalScroll(scrollX + width, scrollX + screenWidth - width)
+        }
+
+        trackContainer?.setOnClickListener {
+            log { "trackContainer onClick" }
+        }
     }
 }

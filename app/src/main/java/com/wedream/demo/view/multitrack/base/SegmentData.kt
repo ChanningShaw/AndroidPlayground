@@ -4,6 +4,9 @@ abstract class SegmentData(val id: Long,
                            var trackLevel: Int,
                            var start: Int,
                            var end: Int){
+
+    var isSelected = false
+
     fun update(deltaTrackLevel: Int, deltaStart: Int, deltaEnd: Int) {
         this.trackLevel += deltaTrackLevel
         this.start += deltaStart

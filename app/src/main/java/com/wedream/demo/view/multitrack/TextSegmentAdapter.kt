@@ -1,7 +1,6 @@
 package com.wedream.demo.view.multitrack
 
 import android.content.Context
-import android.graphics.Rect
 import android.graphics.RectF
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +14,13 @@ class TextSegmentAdapter(val context: Context) : AbsSegmentRecyclerAdapter<AbsSe
 
     private val segments = mutableListOf<SegmentData>()
     private val levels = mutableSetOf<Int>()
+    private var currentSelectId = -1L
+    private var currentOperateId = -1L
+    private var oldZ = 0f
+
+    companion object {
+        const val FOCUS_Z = 10f
+    }
 
     fun setData(data: List<SegmentData>) {
         this.segments.clear()
@@ -46,54 +52,94 @@ class TextSegmentAdapter(val context: Context) : AbsSegmentRecyclerAdapter<AbsSe
         holder.y = segmentData.trackLevel * (DEFAULT_TRACK_HEIGHT + DEFAULT_TRACK_MARGIN)
         holder.width = segmentData.end - segmentData.start
         val itemView = holder.itemView
-        itemView.setBackgroundResource(R.color.marker_text_style_b_color)
+        itemView.tag = segmentData
+        if (segmentData.isSelected) {
+            itemView.z = FOCUS_Z
+            itemView.setBackgroundResource(R.color.red_dot_color)
+        } else if (currentOperateId == segmentData.id) {
+            itemView.setBackgroundResource(R.color.marker_text_style_b_color)
+            itemView.z = FOCUS_Z
+        } else {
+            itemView.z = oldZ
+            itemView.setBackgroundResource(R.color.marker_text_style_b_color)
+        }
         if (itemView is SegmentView) {
-            itemView.setSegmentEventListener(object : SegmentView.SegmentEventListener {
-                override fun onActionDown() {
-                    handleHorizontalTouchEvent(true)
-                }
+            itemView.setSegmentEventListener(segmentEventListener)
+        }
+    }
 
-                override fun onMove(deltaX: Float, deltaY: Float) {
-                    if (checkOverlap(segmentData.id, deltaX, deltaY)) {
-                        itemView.alpha = 0.3f
-                    } else {
-                        itemView.alpha = 1.0f
-                    }
-                    if (deltaY < -(DEFAULT_TRACK_HEIGHT / 2 + DEFAULT_TRACK_MARGIN)) {
-                        if (segmentData.trackLevel == 0) {
-                            segmentData.update(0, deltaX.toInt(), deltaX.toInt())
-                        } else {
-                            // 移到上一个轨道
-                            segmentData.update(-1, deltaX.toInt(), deltaX.toInt())
-                        }
-                    } else if (deltaY >= -(DEFAULT_TRACK_HEIGHT / 2 + DEFAULT_TRACK_MARGIN) && deltaY <= DEFAULT_TRACK_HEIGHT / 2 + DEFAULT_TRACK_MARGIN) {
-                        segmentData.update(0, deltaX.toInt(), deltaX.toInt())
-                    } else {
-                        if (segmentData.trackLevel == levels.size - 1) {
-                            // 向下新增一个轨道
-                            levels.add(segmentData.trackLevel + 1)
-                            notifyTrackInsert(segmentData.trackLevel + 1)
-                            segmentData.update(1, deltaX.toInt(), deltaX.toInt())
-                        } else {
-                            // 直接移到下一个轨道
-                            segmentData.update(1, deltaX.toInt(), deltaX.toInt())
-                        }
-                    }
-                    notifyItemChanged(segmentId)
-                }
+    private var segmentEventListener = object : SegmentView.SegmentEventListener {
+        override fun onActionDown(view: SegmentView) {
+            handleHorizontalTouchEvent(true)
+        }
 
-                override fun onActionUp(deltaX: Float, deltaY: Float) {
-
-                    handleHorizontalTouchEvent(false)
+        override fun onMove(view: SegmentView, deltaX: Float, deltaY: Float) {
+            val segmentData = view.tag as SegmentData
+            if (checkOverlap(segmentData.id, deltaX, deltaY)) {
+                view.alpha = 0.3f
+            } else if (segmentData.id == currentOperateId) {
+                view.alpha = 0.8f
+            }
+            if (deltaY < -(DEFAULT_TRACK_HEIGHT / 2 + DEFAULT_TRACK_MARGIN)) {
+                if (segmentData.trackLevel == 0) {
+                    segmentData.update(0, deltaX.toInt(), deltaX.toInt())
+                } else {
+                    // 移到上一个轨道
+                    segmentData.update(-1, deltaX.toInt(), deltaX.toInt())
                 }
-            })
+            } else if (deltaY >= -(DEFAULT_TRACK_HEIGHT / 2 + DEFAULT_TRACK_MARGIN) && deltaY <= DEFAULT_TRACK_HEIGHT / 2 + DEFAULT_TRACK_MARGIN) {
+                segmentData.update(0, deltaX.toInt(), deltaX.toInt())
+            } else {
+                if (segmentData.trackLevel == levels.size - 1) {
+                    // 向下新增一个轨道
+                    levels.add(segmentData.trackLevel + 1)
+                    notifyTrackInsert(segmentData.trackLevel + 1)
+                    segmentData.update(1, deltaX.toInt(), deltaX.toInt())
+                } else {
+                    // 直接移到下一个轨道
+                    segmentData.update(1, deltaX.toInt(), deltaX.toInt())
+                }
+            }
+            notifyItemChanged(segmentData.id)
+        }
+
+        override fun onActionUp(view: SegmentView, deltaX: Float, deltaY: Float) {
+            val data = (view.tag as SegmentData)
+            if (data.id == currentOperateId) {
+                currentOperateId = -1L
+                view.alpha = 1.0f
+                view.z = oldZ
+            }
+            handleHorizontalTouchEvent(false)
+        }
+
+        override fun onLongPress(view: SegmentView) {
+            val data = (view.tag as SegmentData)
+            currentOperateId = data.id
+            view.alpha = 0.8f
+            oldZ = view.z
+            view.z = FOCUS_Z
+        }
+
+        override fun onClick(view: SegmentView) {
+            segments.forEach {
+                if (it.id == currentSelectId) {
+                    it.isSelected = false
+                    notifyItemChanged(it.id)
+                }
+            }
+            val data = (view.tag as SegmentData)
+            data.isSelected = true
+            currentSelectId = data.id
+            oldZ = view.z
+            notifyItemChanged(currentSelectId)
         }
     }
 
     /**
      * 重叠检查
      */
-    private fun checkOverlap(segmentId: Long, deltaX: Float, deltaY: Float): Boolean {
+    private fun checkOverlap(segmentId: Long, deltaX: Float = 0f, deltaY: Float = 0f): Boolean {
         val segmentData = segments.find { it.id == segmentId } ?: return false
         val rect = getSegmentBounds(segmentData, deltaX, deltaY)
         for (data in segments) {
@@ -120,9 +166,7 @@ class TextSegmentAdapter(val context: Context) : AbsSegmentRecyclerAdapter<AbsSe
         return segments.map { it.id }
     }
 
-    class TextTrackHolder(itemView: View) : AbsSegmentRecyclerAdapter.ViewHolder(itemView){
-
-    }
+    class TextTrackHolder(itemView: View) : AbsSegmentRecyclerAdapter.ViewHolder(itemView)
 }
 
 inline fun <T, R> Iterable<T>.mapIf(predict: (T) -> Boolean, transform: (T) -> R): List<R> {
