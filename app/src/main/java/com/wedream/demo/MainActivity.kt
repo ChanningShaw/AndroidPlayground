@@ -22,6 +22,7 @@ import com.wedream.demo.render.gl3.GLColorActivity
 import com.wedream.demo.view.NewTipsActivity
 import com.wedream.demo.view.TabLayoutActivity
 import com.wedream.demo.view.ViewPagerActivity
+import com.wedream.demo.view.multitrack.TrackActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -45,7 +46,8 @@ class MainActivity : AppCompatActivity() {
             GLColorActivity::class.java,
             NewTipsActivity::class.java,
             TabLayoutActivity::class.java,
-            ViewPagerActivity::class.java
+            ViewPagerActivity::class.java,
+            TrackActivity::class.java
         )
     }
 

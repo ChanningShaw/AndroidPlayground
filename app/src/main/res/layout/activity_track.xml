@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <HorizontalScrollView
+    android:id="@+id/horizontal_scrollview"
+    android:layout_width="match_parent"
+    android:layout_height="300dp"
+    android:layout_centerInParent="true"
+    android:orientation="horizontal">
+
+      <com.wedream.demo.view.multitrack.SegmentRecycler
+        android:id="@+id/track_container"
+        android:layout_width="2000dp"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+          android:id="@+id/track_container_inner"
+          android:layout_width="2000dp"
+          android:layout_height="match_parent" />
+
+      </com.wedream.demo.view.multitrack.SegmentRecycler>
+  </HorizontalScrollView>
+
+  <View
+    android:id="@+id/left_view"
+    android:layout_width="200dp"
+    android:layout_height="match_parent"
+    android:layout_alignParentStart="true"
+    android:alpha="0.3"
+    android:background="@color/color_blue" />
+
+  <View
+    android:id="@+id/right_view"
+    android:layout_width="200dp"
+    android:layout_height="match_parent"
+    android:layout_alignParentEnd="true"
+    android:alpha="0.3"
+    android:background="@color/color_blue" />
+</RelativeLayout>

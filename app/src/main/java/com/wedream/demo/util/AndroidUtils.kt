@@ -2,6 +2,7 @@ package com.wedream.demo.util
 
 import android.content.pm.PackageManager
 import com.wedream.demo.app.ApplicationHolder
+import kotlin.math.roundToInt
 
 object AndroidUtils {
     /**
@@ -19,5 +20,9 @@ object AndroidUtils {
             e.printStackTrace()
         }
         return versionCode
+    }
+
+    fun dip2pix(dip: Int): Int {
+        return (ApplicationHolder.instance.resources.displayMetrics.density * dip).roundToInt()
     }
 }

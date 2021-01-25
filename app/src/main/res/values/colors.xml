@@ -7,7 +7,10 @@
     <color name="color_green">#3CB371</color>
     <color name="color_blue">#436EEE</color>
     <color name="color_violet">#551A8B</color>
+    <color name="color_gray">#66888888</color>
 
   <!-- 新功能提示 -->
   <color name="red_dot_color">#F91C1B</color>
+
+  <color name="marker_text_style_b_color">#9E5CE6</color>
 </resources>
