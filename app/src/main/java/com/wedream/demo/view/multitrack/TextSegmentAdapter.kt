@@ -1,6 +1,5 @@
 package com.wedream.demo.view.multitrack
 
-import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.RectF
 import android.view.View
@@ -19,7 +18,6 @@ class TextSegmentAdapter<T : SegmentData>(val context: Context) : AbsSegmentRecy
     private var currentOperateId = -1L
     private var oldZ = 0f
     private var lastOperateSegment: T? = null
-    private val rollbackAnimator = ValueAnimator.ofFloat(0f, 1f)
 
     companion object {
         const val FOCUS_Z = 10f
@@ -70,6 +68,13 @@ class TextSegmentAdapter<T : SegmentData>(val context: Context) : AbsSegmentRecy
                 itemView.setBackgroundResource(R.color.marker_text_style_b_color)
             }
         }
+        if (checkOverlap(segmentData.id)) {
+            itemView.alpha = 0.2f
+        } else if (segmentData.id == currentOperateId) {
+            itemView.alpha = 0.6f
+        } else {
+            itemView.alpha = 1.0f
+        }
         if (itemView is SegmentView) {
             itemView.setSegmentEventListener(segmentEventListener)
         }
@@ -84,11 +89,6 @@ class TextSegmentAdapter<T : SegmentData>(val context: Context) : AbsSegmentRecy
 
         override fun onMove(view: SegmentView, deltaX: Float, deltaY: Float) {
             val segmentData = view.tag as TextSegmentData
-            if (checkOverlap(segmentData.id, deltaX, deltaY)) {
-                view.alpha = 0.3f
-            } else if (segmentData.id == currentOperateId) {
-                view.alpha = 0.8f
-            }
             if (deltaY < -(DEFAULT_TRACK_HEIGHT / 2 + DEFAULT_TRACK_MARGIN)) {
                 if (segmentData.trackLevel == 0) {
                     segmentData.update(0, deltaX.toInt(), deltaX.toInt())
@@ -164,7 +164,7 @@ class TextSegmentAdapter<T : SegmentData>(val context: Context) : AbsSegmentRecy
         val segmentData = segments.find { it.id == segmentId } ?: return false
         val rect = getSegmentBounds(segmentData, deltaX, deltaY)
         for (data in segments) {
-            if (data.id != segmentId && rect.intersect(getSegmentBounds(data, 0f, 0f))) {
+            if (data.id != segmentId && rect.intersect(getSegmentBounds(data))) {
                 return true
             }
         }

@@ -49,7 +49,6 @@ abstract class AbsSegmentRecyclerAdapter<H : AbsSegmentRecyclerAdapter.ViewHolde
         observable.notifyItemChanged(segmentId)
     }
 
-
     fun handleHorizontalTouchEvent(handle: Boolean) {
         observable.handleHorizontalTouchEvent(handle)
     }

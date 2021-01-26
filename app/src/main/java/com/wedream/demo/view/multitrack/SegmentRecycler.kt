@@ -93,6 +93,7 @@ class SegmentRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : S
 
     private fun updateViews() {
         val adapter = segmentAdapter ?: return
+        trackContainerInner.removeAllViews()
         insertTrack(adapter.getTrackLevels())
         insertSegment(adapter.getSegmentIds())
     }
