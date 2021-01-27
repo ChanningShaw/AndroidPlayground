@@ -11,8 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
 import com.wedream.demo.util.AndroidUtils.dip2pix
 import com.wedream.demo.util.LogUtils.log
-import com.wedream.demo.view.multitrack.base.SegmentData
-
+import com.wedream.demo.view.multitrack.base.MultiTrackAdapter
 
 class TrackActivity : AppCompatActivity() {
 
@@ -21,7 +20,7 @@ class TrackActivity : AppCompatActivity() {
     private var leftView: View? = null
     private var rightView: View? = null
     private var screenWidth = 0
-    private var adapter: TextSegmentAdapter<TextSegmentData>? = null
+    private var adapter: MultiTrackAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,17 +36,17 @@ class TrackActivity : AppCompatActivity() {
 
         trackContainer?.notifyHorizontalScroll(dip2pix(200), +screenWidth - dip2pix(200))
 
-        val list = mutableListOf<TextSegmentData>()
+        val list = mutableListOf<TrackElementData>()
         var start = 0
         val length = 200
         val margin = 10
         var end = start + length
         for (i in 0..1) {
-            list.add(TextSegmentData(i.toLong(), 0, start, end))
+            list.add(TrackElementData(i.toLong() + 100000, i, start, end))
             start += (length + margin)
             end += (length + margin)
         }
-        adapter = TextSegmentAdapter(this)
+        adapter = MultiTrackAdapter(this)
         trackContainer?.setAdapter(adapter!!)
         adapter?.setData(list)
 

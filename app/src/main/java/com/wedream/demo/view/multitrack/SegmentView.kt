@@ -41,7 +41,6 @@ class SegmentView(context: Context, attrs: AttributeSet?, defStyle: Int) : Frame
         if (event == null) {
             return false
         }
-        log { event.action }
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 downX = event.x

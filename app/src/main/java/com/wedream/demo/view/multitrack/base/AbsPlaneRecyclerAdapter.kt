@@ -3,29 +3,18 @@ package com.wedream.demo.view.multitrack.base
 import android.database.Observable
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
 
-abstract class AbsSegmentRecyclerAdapter<H : AbsSegmentRecyclerAdapter.ViewHolder> {
+abstract class AbsPlaneRecyclerAdapter<H : AbsPlaneRecyclerAdapter.ViewHolder> {
 
     private val observable = AdapterDataObservable()
 
-    abstract fun onCreateTrackHolder(parent: ViewGroup, trackType: Int): H
+    abstract fun onCreateElementHolder(parent: ViewGroup, viewType: Int): H
 
-    abstract fun onCreateSegmentHolder(parent: ViewGroup, viewType: Int): H
+    abstract fun onBindElementHolder(holder: H, id: Long)
 
-    abstract fun onBindTrackHolder(holder: H, trackLevel: Int)
+    abstract fun getElementIds(): List<Long>
 
-    abstract fun onBindSegmentHolder(holder: H, segmentId: Long)
-
-    abstract fun getTrackLevels(): List<Int>
-
-    abstract fun getSegmentIds(): List<Long>
-
-    open fun getTrackType(trackLevel: Int): Int {
-        return 0
-    }
-
-    open fun getSegmentType(segmentId: Long): Int {
+    open fun getElementType(id: Long): Int {
         return 0
     }
 
@@ -41,12 +30,12 @@ abstract class AbsSegmentRecyclerAdapter<H : AbsSegmentRecyclerAdapter.ViewHolde
         observable.notifyChanged()
     }
 
-    fun notifyTrackInsert(trackLevel: Int) {
-        observable.notifyTrackInsert(trackLevel)
+    fun notifyItemChanged(id: Long) {
+        observable.notifyItemChanged(id)
     }
 
-    fun notifyItemChanged(segmentId: Long) {
-        observable.notifyItemChanged(segmentId)
+    fun notifyItemInserted(id: Long) {
+        observable.notifyItemInserted(id)
     }
 
     fun handleHorizontalTouchEvent(handle: Boolean) {
@@ -60,15 +49,15 @@ abstract class AbsSegmentRecyclerAdapter<H : AbsSegmentRecyclerAdapter.ViewHolde
             }
         }
 
-        fun notifyTrackInsert(trackLevel: Int) {
-            for (i in mObservers.indices.reversed()) {
-                mObservers[i].onTrackInserted(listOf(trackLevel))
-            }
-        }
-
         fun notifyItemChanged(id: Long) {
             for (i in mObservers.indices.reversed()) {
                 mObservers[i].onItemChanged(listOf(id))
+            }
+        }
+
+        fun notifyItemInserted(id: Long) {
+            for (i in mObservers.indices.reversed()) {
+                mObservers[i].onItemInserted(listOf(id))
             }
         }
 
@@ -81,15 +70,6 @@ abstract class AbsSegmentRecyclerAdapter<H : AbsSegmentRecyclerAdapter.ViewHolde
 
     abstract class AdapterDataObserver {
         open fun onChanged() {
-        }
-
-
-        open fun onTrackInserted(trackLevels: List<Int>) {
-
-        }
-
-        open fun onTrackRemoved(trackLevels: List<Int>) {
-
         }
 
         open fun onItemChanged(ids: List<Long>) {
@@ -107,10 +87,14 @@ abstract class AbsSegmentRecyclerAdapter<H : AbsSegmentRecyclerAdapter.ViewHolde
         }
     }
 
-    abstract class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+    abstract class ViewHolder(val itemView: View){
         var x = 0
         var y = 0
         var width = 0
         var height = 0
+
+        override fun toString(): String {
+            return "ViewHolder: x = $x, y = $y, width = $width, height = $height"
+        }
     }
 }

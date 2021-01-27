@@ -1,26 +1,22 @@
 package com.wedream.demo.view.multitrack.base
 
-abstract class SegmentData(open val id: Long,
-                           open var trackLevel: Int,
+abstract class ElementData(open val id: Long,
                            open var start: Int,
                            open var end: Int){
 
     var isSelected = false
 
-    fun update(deltaTrackLevel: Int, deltaStart: Int, deltaEnd: Int) {
-        this.trackLevel += deltaTrackLevel
+    open fun updateRange(deltaStart: Int, deltaEnd: Int) {
         this.start += deltaStart
         this.end += deltaEnd
     }
 
-    fun set(trackLevel: Int, start: Int, end: Int) {
-        this.trackLevel = trackLevel
+    open fun setRange(start: Int, end: Int) {
         this.start = start
         this.end = end
     }
 
-    fun set(other: SegmentData) {
-        this.trackLevel = other.trackLevel
+    open fun set(other: ElementData) {
         this.start = other.start
         this.end = other.end
     }
