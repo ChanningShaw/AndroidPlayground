@@ -41,7 +41,7 @@ class TrackActivity : AppCompatActivity() {
         val margin = 10
         var end = start + length
         for (i in 0..1) {
-            list.add(TrackElementData(i.toLong() + 100000, i, start, end))
+            list.add(TrackElementData(i.toLong() + 100000, start, end - start, i))
             start += (length + margin)
             end += (length + margin)
         }

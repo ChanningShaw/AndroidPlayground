@@ -1,36 +1,34 @@
 package com.wedream.demo.view.multitrack.base
 
-abstract class ElementData(private val id: Long,
-                           private var start: Int,
-                           private var end: Int){
+import android.graphics.Rect
+
+abstract class ElementData(val id: Long){
+
+     var left: Int = 0
+     var top: Int = 0
+     var width: Int = 0
+     var height: Int = 0
+
+    constructor(id: Long, left: Int, top: Int, width: Int, height: Int) : this(id) {
+        this.left = left
+        this.top = top
+        this.width = width
+        this.height = height
+    }
+
+    constructor(id: Long, rect: Rect) : this(id, rect.left, rect.top, rect.width(), rect.height())
 
     private var isSelected = false
 
     fun horizontalMoveBy(deltaX: Int) {
-        this.start += deltaX
-        this.end += deltaX
-    }
-
-    fun setRange(start: Int, end: Int) {
-        this.start = start
-        this.end = end
+        this.left += deltaX
     }
 
     open fun set(other: ElementData) {
-        this.start = other.start
-        this.end = other.end
-    }
-
-    fun getId(): Long {
-        return id
-    }
-
-    fun getStart(): Int {
-        return start
-    }
-
-    fun getEnd(): Int {
-        return end
+        this.left = other.left
+        this.top = other.top
+        this.width = other.width
+        this.height = other.height
     }
 
     fun isSelect(): Boolean {
@@ -41,8 +39,12 @@ abstract class ElementData(private val id: Long,
         this.isSelected = select
     }
 
-    fun length(): Int {
-        return end - start
+    fun right(): Int {
+        return left + width
+    }
+
+    fun bottom(): Int {
+        return top + height
     }
 
     abstract  fun <T> copy(): T
