@@ -38,6 +38,10 @@ abstract class AbsPlaneRecyclerAdapter<H : AbsPlaneRecyclerAdapter.ViewHolder> {
         observable.notifyItemInserted(id)
     }
 
+    fun notifyItemRemoved(id: Long) {
+        observable.notifyItemRemoved(id)
+    }
+
     fun handleHorizontalTouchEvent(handle: Boolean) {
         observable.handleHorizontalTouchEvent(handle)
     }
@@ -58,6 +62,12 @@ abstract class AbsPlaneRecyclerAdapter<H : AbsPlaneRecyclerAdapter.ViewHolder> {
         fun notifyItemInserted(id: Long) {
             for (i in mObservers.indices.reversed()) {
                 mObservers[i].onItemInserted(listOf(id))
+            }
+        }
+
+        fun notifyItemRemoved(id: Long) {
+            for (i in mObservers.indices.reversed()) {
+                mObservers[i].onItemRemoved(listOf(id))
             }
         }
 

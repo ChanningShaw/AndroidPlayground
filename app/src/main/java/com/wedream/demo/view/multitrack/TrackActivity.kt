@@ -3,7 +3,6 @@ package com.wedream.demo.view.multitrack
 import android.content.Context
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.HorizontalScrollView
@@ -37,7 +36,7 @@ class TrackActivity : AppCompatActivity() {
         trackContainer?.notifyHorizontalScroll(dip2pix(200), +screenWidth - dip2pix(200))
 
         val list = mutableListOf<TrackElementData>()
-        var start = 0
+        var start = 1000
         val length = 200
         val margin = 10
         var end = start + length
@@ -52,7 +51,6 @@ class TrackActivity : AppCompatActivity() {
 
         horizontalScrollView?.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
             val width = leftView?.width ?: 0
-            Log.e("xcm", "scrollX = $scrollX, scrollY = $scrollY, oldScrollX = $oldScrollX, oldScrollY = $oldScrollY")
             trackContainer?.notifyHorizontalScroll(scrollX + width, scrollX + screenWidth - width)
         }
 

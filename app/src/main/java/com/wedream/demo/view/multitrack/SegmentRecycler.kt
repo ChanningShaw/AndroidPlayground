@@ -28,6 +28,8 @@ class SegmentRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : S
     companion object {
         const val DEFAULT_TRACK_HEIGHT = 100
         const val DEFAULT_TRACK_MARGIN = 20
+        const val DEFAULT_SLIDER_WIDTH = 100
+        const val DEFAULT_SLIDER_MARGIN = 50
     }
 
     override fun onFinishInflate() {
@@ -72,6 +74,10 @@ class SegmentRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : S
             insertElements(ids)
         }
 
+        override fun onItemRemoved(ids: List<Long>) {
+            handleItemRemoved(ids)
+        }
+
         override fun handleHorizontalTouchEvent(handle: Boolean) {
             handleHorizontalEvent = handle
         }
@@ -98,6 +104,15 @@ class SegmentRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : S
         }
     }
 
+    private fun handleItemRemoved(ids: List<Long>) {
+        for (id in ids) {
+            val holder = elementHolders.remove(id)
+            holder?.let {
+                trackContainerInner.removeView(holder.itemView)
+            }
+        }
+    }
+
     private fun handleItemChanged(ids: List<Long>) {
         for (id in ids) {
             val adapter = segmentAdapter ?: return
@@ -111,7 +126,6 @@ class SegmentRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : S
                              id: Long) {
         adapter.onBindElementHolder(holder, id)
         val params = holder.itemView.layoutParams as MarginLayoutParams
-        log { "margins = ${holder.x}, ${holder.y}" }
         params.setMargins(holder.x, holder.y, 0, 0)
         holder.itemView.layoutParams = params
     }

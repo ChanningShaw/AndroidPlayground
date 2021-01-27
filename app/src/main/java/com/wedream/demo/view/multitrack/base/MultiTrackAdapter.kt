@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.wedream.demo.R
 import com.wedream.demo.util.LogUtils.log
+import com.wedream.demo.view.multitrack.*
+import com.wedream.demo.view.multitrack.SegmentRecycler.Companion.DEFAULT_SLIDER_MARGIN
+import com.wedream.demo.view.multitrack.SegmentRecycler.Companion.DEFAULT_SLIDER_WIDTH
 import com.wedream.demo.view.multitrack.SegmentRecycler.Companion.DEFAULT_TRACK_HEIGHT
 import com.wedream.demo.view.multitrack.SegmentRecycler.Companion.DEFAULT_TRACK_MARGIN
-import com.wedream.demo.view.multitrack.SegmentView
-import com.wedream.demo.view.multitrack.TrackElementData
-import com.wedream.demo.view.multitrack.TrackView
 
 class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlaneRecyclerAdapter.ViewHolder>() {
 
@@ -19,7 +19,6 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
     private val levels = mutableSetOf<Int>()
     private var currentSelectId = -1L
     private var currentOperateId = -1L
-    private var oldZ = 0f
     private var lastOperateSegment: TrackElementData? = null
 
     companion object {
@@ -30,28 +29,32 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
         const val ELEMENT_TYPE_SLIDER = 2
         const val ELEMENT_TYPE_LEFT_DRAGGER = 3
         const val ELEMENT_TYPE_RIGHT_DRAGGER = 4
+
+        const val ID_SLIDER = -1L
+        const val ID_LEFT_DRAGGER = -2L
+        const val ID_RIGHT_DRAGGER = -3L
     }
 
     fun setData(data: List<TrackElementData>) {
         elements.clear()
         levels.clear()
         for (d in data) {
-            elements[d.id] = d
-            elements[d.trackLevel.toLong()] = TrackElementData(d.trackLevel.toLong(), d.trackLevel, 0, 0)
-            levels.add(d.trackLevel)
+            elements[d.getId()] = d
+            elements[d.getTrackLevel().toLong()] = TrackElementData(d.getTrackLevel().toLong(), d.getTrackLevel(), 0, 0)
+            levels.add(d.getTrackLevel())
         }
         notifyDataSetChanged()
     }
 
     override fun getElementType(id: Long): Int {
         when (id) {
-            -1L -> {
+            ID_SLIDER -> {
                 return ELEMENT_TYPE_SLIDER
             }
-            -2L -> {
+            ID_LEFT_DRAGGER -> {
                 return ELEMENT_TYPE_LEFT_DRAGGER
             }
-            -3L -> {
+            ID_RIGHT_DRAGGER -> {
                 return ELEMENT_TYPE_RIGHT_DRAGGER
             }
             in 0..1000L -> {
@@ -66,7 +69,9 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
     override fun onCreateElementHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         when (viewType) {
             ELEMENT_TYPE_SLIDER -> {
-                return TextTrackHolder(SegmentView(context))
+                return TextTrackHolder(SliderView(context).apply {
+                    setSegmentEventListener(sliderEventListener)
+                })
             }
             ELEMENT_TYPE_LEFT_DRAGGER -> {
                 return TextTrackHolder(SegmentView(context))
@@ -89,7 +94,9 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
         val elementData = elements[id] ?: return
         when (getElementType(id)) {
             ELEMENT_TYPE_SLIDER -> {
-
+                elements[currentSelectId]?.let {
+                    onBindSliderHolder(elementData, holder)
+                }
             }
             ELEMENT_TYPE_LEFT_DRAGGER -> {
 
@@ -107,32 +114,31 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
     }
 
     private fun onBindSegmentHolder(elementData: TrackElementData, holder: ViewHolder){
-        holder.x = elementData.start
-        holder.y = elementData.trackLevel * (DEFAULT_TRACK_HEIGHT + DEFAULT_TRACK_MARGIN)
+        holder.x = elementData.getStart()
+        holder.y = elementData.getTrackLevel() * (DEFAULT_TRACK_HEIGHT + DEFAULT_TRACK_MARGIN)
         holder.height = DEFAULT_TRACK_HEIGHT
-        holder.width = elementData.end - elementData.start
-        log { "onBindSegmentHolder :$holder" }
+        holder.width = elementData.length()
         val itemView = holder.itemView
         itemView.tag = elementData
         when {
-            elementData.isSelected -> {
+            elementData.isSelect() -> {
                 itemView.z = FOCUS_Z
                 itemView.setBackgroundResource(R.color.red_dot_color)
             }
-            currentOperateId == elementData.id -> {
+            currentOperateId == elementData.getId() -> {
                 itemView.setBackgroundResource(R.color.marker_text_style_b_color)
                 itemView.z = FOCUS_Z
             }
             else -> {
-                itemView.z = oldZ
+                itemView.z = 0.0f
                 itemView.setBackgroundResource(R.color.marker_text_style_b_color)
             }
         }
         when {
-            checkOverlap(elementData.id) -> {
+            checkOverlap(elementData.getId()) -> {
                 itemView.alpha = 0.2f
             }
-            elementData.id == currentOperateId -> {
+            elementData.getId() == currentOperateId -> {
                 itemView.alpha = 0.6f
             }
             else -> {
@@ -145,57 +151,69 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
         holder.width = FrameLayout.LayoutParams.MATCH_PARENT
         holder.height = DEFAULT_TRACK_HEIGHT
         holder.x = 0
-        holder.y = elementData.trackLevel * (DEFAULT_TRACK_HEIGHT + DEFAULT_TRACK_MARGIN)
+        holder.y = elementData.getTrackLevel() * (DEFAULT_TRACK_HEIGHT + DEFAULT_TRACK_MARGIN)
         log { "onBindTrackHolder :$holder" }
         holder.itemView.setBackgroundResource(R.color.color_gray)
     }
 
-    private var segmentEventListener = object : SegmentView.SegmentEventListener {
-        override fun onActionDown(view: SegmentView) {
+    private fun onBindSliderHolder(elementData: TrackElementData, holder: ViewHolder) {
+        holder.width = DEFAULT_SLIDER_WIDTH
+        holder.height = DEFAULT_TRACK_HEIGHT
+        holder.x = elementData.getStart()
+        holder.y = elementData.getTrackLevel() * (DEFAULT_TRACK_HEIGHT + DEFAULT_TRACK_MARGIN)
+        log { "onBindSliderHolder :$holder" }
+        holder.itemView.setBackgroundResource(R.color.red_dot_color)
+        holder.itemView.tag = elementData
+    }
+
+    private var segmentEventListener = object : ElementView.ElementEventListener {
+        override fun onActionDown(view: ElementView) {
             val segmentData = view.tag as TrackElementData
             lastOperateSegment = segmentData.copy()
             handleHorizontalTouchEvent(true)
         }
 
-        override fun onMove(view: SegmentView, deltaX: Float, deltaY: Float) {
-            val segmentData = view.tag as TrackElementData
+        override fun onMove(view: ElementView, deltaX: Float, deltaY: Float) {
+            if (!view.isLongPressed()) {
+                return
+            }
+            val elementData = view.tag as TrackElementData
             if (deltaY < -(DEFAULT_TRACK_HEIGHT / 2 + DEFAULT_TRACK_MARGIN)) {
-                if (segmentData.trackLevel == 0) {
-                    segmentData.updateRange(deltaX.toInt(), deltaX.toInt())
+                if (elementData.getTrackLevel() == 0) {
+                    elementData.horizontalMoveBy(deltaX.toInt())
                 } else {
                     // 移到上一个轨道
-                    segmentData.trackLevel -= 1
-                    segmentData.updateRange(deltaX.toInt(), deltaX.toInt())
+                    elementData.setTrackLevel(elementData.getTrackLevel() - 1)
+                    elementData.horizontalMoveBy(deltaX.toInt())
                 }
             } else if (deltaY >= -(DEFAULT_TRACK_HEIGHT / 2 + DEFAULT_TRACK_MARGIN) && deltaY <= DEFAULT_TRACK_HEIGHT / 2 + DEFAULT_TRACK_MARGIN) {
-                segmentData.updateRange(deltaX.toInt(), deltaX.toInt())
+                elementData.horizontalMoveBy(deltaX.toInt())
             } else {
-                if (segmentData.trackLevel == levels.size - 1) {
+                if (elementData.getTrackLevel() == levels.size - 1) {
                     // 向下新增一个轨道
-                    val newTrack = segmentData.trackLevel + 1
+                    val newTrack = elementData.getTrackLevel() + 1
                     elements[newTrack.toLong()] = TrackElementData(newTrack.toLong(), newTrack, 0, 0)
                     levels.add(newTrack)
                     notifyItemInserted(newTrack.toLong())
-                    segmentData.trackLevel = newTrack
-                    segmentData.updateRange(deltaX.toInt(), deltaX.toInt())
+                    elementData.setTrackLevel(newTrack)
+                    elementData.horizontalMoveBy(deltaX.toInt())
                 } else {
                     // 直接移到下一个轨道
-                    segmentData.trackLevel += 1
-                    segmentData.updateRange(deltaX.toInt(), deltaX.toInt())
+                    elementData.setTrackLevel(elementData.getTrackLevel() + 1)
+                    elementData.horizontalMoveBy(deltaX.toInt())
                 }
             }
-            notifyItemChanged(segmentData.id)
+            notifyItemChanged(elementData.getId())
         }
 
-        override fun onActionUp(view: SegmentView, deltaX: Float, deltaY: Float) {
+        override fun onActionUp(view: ElementView, deltaX: Float, deltaY: Float) {
             val data = (view.tag as TrackElementData)
-            if (data.id == currentOperateId) {
+            if (data.getId() == currentOperateId) {
                 currentOperateId = -1L
                 view.alpha = 1.0f
-                view.z = oldZ
             }
             handleHorizontalTouchEvent(false)
-            if (checkOverlap(data.id, deltaX, deltaY)) {
+            if (checkOverlap(data.getId(), deltaX, deltaY)) {
                 // 位置有重叠，不能放置，做回弹动画
                 lastOperateSegment?.let {
                     doRollback(data, it)
@@ -204,32 +222,79 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
             }
         }
 
-        override fun onLongPress(view: SegmentView) {
+        override fun onLongPress(view: ElementView) {
             val data = (view.tag as TrackElementData)
-            currentOperateId = data.id
+            currentOperateId = data.getId()
             view.alpha = 0.8f
-            oldZ = view.z
-            view.z = FOCUS_Z
+            unSelect()
+            notifyItemChanged(data.getId())
         }
 
-        override fun onClick(view: SegmentView) {
-            elements.forEach {
-                if (it.key == currentSelectId) {
-                    it.value.isSelected = false
-                    notifyItemChanged(it.key)
+        override fun onClick(view: ElementView) {
+            val data = (view.tag as TrackElementData)
+            select(data)
+        }
+    }
+
+    private val sliderEventListener = object : ElementView.ElementEventListener {
+        override fun onActionDown(view: ElementView) {
+            handleHorizontalTouchEvent(true)
+        }
+
+        override fun onMove(view: ElementView, deltaX: Float, deltaY: Float) {
+            // TODO 避免强转
+            val data = (view.tag as SliderData)
+            elements[data.getTargetSegmentId()]?.let {
+                // 重叠检测
+                if (!checkOverlap(it.getId(), deltaX, 0f)) {
+                    data.horizontalMoveBy(deltaX.toInt())
+                    notifyItemChanged(data.getId())
+                    it.horizontalMoveBy(deltaX.toInt())
+                    notifyItemChanged(it.getId())
                 }
             }
-            val data = (view.tag as TrackElementData)
-            data.isSelected = true
-            currentSelectId = data.id
-            oldZ = view.z
+        }
+
+        override fun onActionUp(view: ElementView, deltaX: Float, deltaY: Float) {
+            handleHorizontalTouchEvent(false)
+        }
+
+        override fun onLongPress(view: ElementView) {
+        }
+
+        override fun onClick(view: ElementView) {
+        }
+    }
+
+    private fun select(data: TrackElementData) {
+        unSelect()
+        currentSelectId = data.getId()
+        // 显示拖把和耳朵
+        data.setSelect(true)
+        notifyItemChanged(data.getId())
+        elements[ID_SLIDER] = SliderData(ID_SLIDER, data.getTrackLevel(),
+            data.getStart() - (DEFAULT_SLIDER_MARGIN + DEFAULT_SLIDER_WIDTH), data.getStart() - DEFAULT_SLIDER_MARGIN).apply {
+            setTargetSegmentId(data.getId())
+        }
+        notifyItemInserted(ID_SLIDER)
+    }
+
+    private fun unSelect() {
+        // 先把之前的反选
+        if (currentSelectId != -1L) {
+            elements[currentSelectId]?.setSelect(false)
             notifyItemChanged(currentSelectId)
+            currentSelectId = -1L
+            // 隐藏耳朵
+            elements.remove(ID_SLIDER)?.let {
+                notifyItemRemoved(it.getId())
+            }
         }
     }
 
     private fun doRollback(current: TrackElementData, old: TrackElementData) {
         current.set(old)
-        notifyItemChanged(current.id)
+        notifyItemChanged(current.getId())
     }
 
     /**
@@ -239,7 +304,8 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
         val segmentData = elements[segmentId] ?: return false
         val rect = getSegmentBounds(segmentData, deltaX, deltaY)
         for (data in elements.values) {
-            if (data.id != segmentId && rect.intersect(getSegmentBounds(data))) {
+            if (getElementType(data.getId()) != ELEMENT_TYPE_SEGMENT) continue
+            if (data.getId() != segmentId && rect.intersect(getSegmentBounds(data))) {
                 return true
             }
         }
@@ -247,9 +313,9 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
     }
 
     private fun getSegmentBounds(segmentData: TrackElementData, deltaX: Float = 0.0f, deltaY: Float = 0.0f): RectF {
-        val left = segmentData.start + deltaX
-        val top = segmentData.trackLevel * (DEFAULT_TRACK_HEIGHT + DEFAULT_TRACK_MARGIN) + deltaY
-        val right = segmentData.end + deltaX
+        val left = segmentData.getStart() + deltaX
+        val top = segmentData.getTrackLevel() * (DEFAULT_TRACK_HEIGHT + DEFAULT_TRACK_MARGIN) + deltaY
+        val right = segmentData.getEnd() + deltaX
         val bottom = top + (DEFAULT_TRACK_HEIGHT + DEFAULT_TRACK_MARGIN)
         return RectF(left, top, right, bottom)
     }
@@ -273,4 +339,4 @@ inline fun <T, R> Iterable<T>.mapDistinct(transform: (T) -> R): List<R> {
     for (item in this)
         map.add(transform(item))
     return map.toList()
-}
+    }
