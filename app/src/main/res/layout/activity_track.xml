@@ -13,9 +13,7 @@
       <com.wedream.demo.view.multitrack.SegmentRecycler
         android:id="@+id/track_container"
         android:layout_width="2000dp"
-        android:layout_height="match_parent"
-        android:clickable="true"
-        android:focusable="true">
+        android:layout_height="match_parent">
 
         <FrameLayout
           android:id="@+id/track_container_inner"

@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
 import com.wedream.demo.util.AndroidUtils.dip2pix
 import com.wedream.demo.util.LogUtils.log
-import com.wedream.demo.view.multitrack.base.MultiTrackAdapter
 
 class TrackActivity : AppCompatActivity() {
 
@@ -34,6 +33,11 @@ class TrackActivity : AppCompatActivity() {
         screenWidth = dm.widthPixels // 屏幕宽度（像素）
 
         trackContainer?.notifyHorizontalScroll(dip2pix(200), +screenWidth - dip2pix(200))
+        trackContainer?.setEventListener(object : SegmentRecycler.EventListener {
+            override fun onEmptyClick() {
+                adapter?.clearSelect()
+            }
+        })
 
         val list = mutableListOf<TrackElementData>()
         var start = 1000

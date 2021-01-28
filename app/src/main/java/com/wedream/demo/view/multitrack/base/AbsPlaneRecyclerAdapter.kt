@@ -103,6 +103,10 @@ abstract class AbsPlaneRecyclerAdapter<H : AbsPlaneRecyclerAdapter.ViewHolder> {
         var width = 0
         var height = 0
 
+        open fun bindData(){
+
+        }
+
         override fun toString(): String {
             return "ViewHolder: x = $x, y = $y, width = $width, height = $height"
         }

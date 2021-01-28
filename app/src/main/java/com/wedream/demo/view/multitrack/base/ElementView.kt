@@ -30,10 +30,6 @@ abstract class ElementView(context: Context, attrs: AttributeSet?, defStyle: Int
         const val CLICK_AREA = 25
     }
 
-    fun getElementEventListener(): ElementEventListener? {
-        return eventListener
-    }
-
     fun setSegmentEventListener(listener: ElementEventListener) {
         eventListener = listener
     }
@@ -41,6 +37,9 @@ abstract class ElementView(context: Context, attrs: AttributeSet?, defStyle: Int
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (event == null) {
+            return false
+        }
+        if (eventListener == null) {
             return false
         }
         when (event.action) {
@@ -52,20 +51,20 @@ abstract class ElementView(context: Context, attrs: AttributeSet?, defStyle: Int
                 val msg = Message.obtain()
                 msg.what = 0
                 myHandler.sendMessageDelayed(msg, LONG_PRESS_TIME)
-                getElementEventListener()?.onActionDown(this)
+                eventListener?.onActionDown(this)
             }
             MotionEvent.ACTION_MOVE -> {
-                getElementEventListener()?.onMove(this, event.x - downX, event.y - downY)
+                eventListener?.onMove(this, event.x - downX, event.y - downY)
             }
             MotionEvent.ACTION_UP -> {
                 if (System.currentTimeMillis() - downTime < LONG_PRESS_TIME) {
                     isLongPress = false
                     myHandler.removeMessages(0)
                     if (abs(downX - event.x) < CLICK_AREA && abs(downY - event.y) < CLICK_AREA) {
-                        getElementEventListener()?.onClick(this)
+                        eventListener?.onClick(this)
                     }
                 }
-                getElementEventListener()?.onActionUp(this, event.x - downX, event.y - downY)
+                eventListener?.onActionUp(this, event.x - downX, event.y - downY)
             }
             MotionEvent.ACTION_CANCEL -> {
                 isLongPress = false
@@ -76,7 +75,7 @@ abstract class ElementView(context: Context, attrs: AttributeSet?, defStyle: Int
     }
 
     private fun onLongPress() {
-        getElementEventListener()?.onLongPress(this)
+        eventListener?.onLongPress(this)
         isLongPress = true
     }
 

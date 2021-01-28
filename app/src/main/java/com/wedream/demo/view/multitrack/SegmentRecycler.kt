@@ -1,7 +1,6 @@
 package com.wedream.demo.view.multitrack
 
 import android.content.Context
-import android.graphics.Canvas
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
@@ -9,7 +8,6 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ScrollView
 import com.wedream.demo.R
-import com.wedream.demo.util.LogUtils.log
 import com.wedream.demo.view.multitrack.base.AbsPlaneRecyclerAdapter
 import com.wedream.demo.view.multitrack.base.ITrackContainer
 import com.wedream.demo.view.multitrack.base.ElementData
@@ -24,22 +22,11 @@ class SegmentRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : S
     private var visibleBoundLeft = 0
     private var visibleBoundRight = 0
     private var segmentAdapter: AbsPlaneRecyclerAdapter<AbsPlaneRecyclerAdapter.ViewHolder>? = null
-
-    companion object {
-        const val DEFAULT_TRACK_HEIGHT = 100
-        const val DEFAULT_TRACK_MARGIN = 20
-        const val DEFAULT_SLIDER_WIDTH = 100
-        const val DEFAULT_SLIDER_MARGIN = 50
-    }
+    private var listener: EventListener? = null
 
     override fun onFinishInflate() {
         super.onFinishInflate()
         trackContainerInner = findViewById<FrameLayout>(R.id.track_container_inner)
-    }
-
-    override fun onDraw(canvas: Canvas?) {
-        super.onDraw(canvas)
-        log { "trackContainerInner.height = ${trackContainerInner.height}" }
     }
 
     fun setAdapter(adapter: AbsPlaneRecyclerAdapter<AbsPlaneRecyclerAdapter.ViewHolder>) {
@@ -65,6 +52,7 @@ class SegmentRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : S
         return !(view.r() < visibleBoundLeft || view.l() > visibleBoundRight)
     }
 
+    // TODO 合并更新
     private val adapterDataObserver = object : AbsPlaneRecyclerAdapter.AdapterDataObserver() {
         override fun onChanged() {
             updateViews()
@@ -96,10 +84,8 @@ class SegmentRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : S
         for (id in ids) {
             val adapter = segmentAdapter ?: return
             val holder = adapter.onCreateElementHolder(trackContainerInner, adapter.getElementType(id))
-            adapter.onBindElementHolder(holder, id)
-            val params = FrameLayout.LayoutParams(holder.width, holder.height)
-            params.setMargins(holder.x, holder.y, 0, 0)
-            trackContainerInner.addView(holder.itemView, params)
+            updateHolder(adapter, holder, id)
+            trackContainerInner.addView(holder.itemView)
             elementHolders[id] = holder
         }
     }
@@ -125,8 +111,11 @@ class SegmentRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : S
                              holder: AbsPlaneRecyclerAdapter.ViewHolder,
                              id: Long) {
         adapter.onBindElementHolder(holder, id)
-        val params = holder.itemView.layoutParams as MarginLayoutParams
+        val params = holder.itemView.layoutParams as MarginLayoutParams?
+            ?: FrameLayout.LayoutParams(holder.width, holder.height)
         params.setMargins(holder.x, holder.y, 0, 0)
+        params.width = holder.width
+        params.height = holder.height
         holder.itemView.layoutParams = params
     }
 
@@ -135,8 +124,22 @@ class SegmentRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : S
         return super.onInterceptTouchEvent(ev)
     }
 
+    // 如果该方法被回调，说明子view没有处理事件
+    override fun onTouchEvent(ev: MotionEvent?): Boolean {
+        listener?.onEmptyClick()
+        return super.onTouchEvent(ev)
+    }
+
     fun handleHorizontalTouchEvent(value: Boolean) {
         handleHorizontalEvent = value
+    }
+
+    fun setEventListener(listener: EventListener){
+        this.listener = listener
+    }
+
+    interface EventListener {
+        fun onEmptyClick()
     }
 }
 

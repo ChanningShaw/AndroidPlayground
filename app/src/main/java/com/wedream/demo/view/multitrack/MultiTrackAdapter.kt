@@ -1,4 +1,4 @@
-package com.wedream.demo.view.multitrack.base
+package com.wedream.demo.view.multitrack
 
 import android.content.Context
 import android.graphics.RectF
@@ -8,11 +8,8 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.wedream.demo.R
 import com.wedream.demo.util.LogUtils.log
-import com.wedream.demo.view.multitrack.*
-import com.wedream.demo.view.multitrack.SegmentRecycler.Companion.DEFAULT_SLIDER_MARGIN
-import com.wedream.demo.view.multitrack.SegmentRecycler.Companion.DEFAULT_SLIDER_WIDTH
-import com.wedream.demo.view.multitrack.SegmentRecycler.Companion.DEFAULT_TRACK_HEIGHT
-import com.wedream.demo.view.multitrack.SegmentRecycler.Companion.DEFAULT_TRACK_MARGIN
+import com.wedream.demo.view.multitrack.base.AbsPlaneRecyclerAdapter
+import com.wedream.demo.view.multitrack.base.ElementView
 
 class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlaneRecyclerAdapter.ViewHolder>() {
 
@@ -34,6 +31,14 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
         const val ID_SLIDER = -1L
         const val ID_LEFT_DRAGGER = -2L
         const val ID_RIGHT_DRAGGER = -3L
+
+        const val DEFAULT_TRACK_HEIGHT = 100
+        const val DEFAULT_TRACK_MARGIN = 20
+        const val DEFAULT_SLIDER_WIDTH = 100
+        const val DEFAULT_SLIDER_MARGIN = 100
+        const val DEFAULT_DRAGGER_WIDTH = 50
+
+        const val MIN_ELEMENT_WITH = 10
     }
 
     fun setData(data: List<TrackElementData>) {
@@ -45,6 +50,10 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
             levels.add(d.trackLevel)
         }
         notifyDataSetChanged()
+    }
+
+    fun clearSelect() {
+        unSelect()
     }
 
     override fun getElementType(id: Long): Int {
@@ -75,10 +84,14 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
                 })
             }
             ELEMENT_TYPE_LEFT_DRAGGER -> {
-                return TextTrackHolder(SegmentView(context))
+                return TextTrackHolder(DraggerView(context).apply {
+                    setSegmentEventListener(draggerEventListener)
+                })
             }
             ELEMENT_TYPE_RIGHT_DRAGGER -> {
-                return TextTrackHolder(SegmentView(context))
+                return TextTrackHolder(DraggerView(context).apply {
+                    setSegmentEventListener(draggerEventListener)
+                })
             }
             ELEMENT_TYPE_TRACK -> {
                 return TextTrackHolder(TrackView(context))
@@ -100,10 +113,10 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
                 }
             }
             ELEMENT_TYPE_LEFT_DRAGGER -> {
-
+                onBindDraggerHolder(elementData, holder)
             }
             ELEMENT_TYPE_RIGHT_DRAGGER -> {
-
+                onBindDraggerHolder(elementData, holder)
             }
             ELEMENT_TYPE_TRACK -> {
                 onBindTrackHolder(elementData, holder)
@@ -124,15 +137,12 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
         when {
             elementData.isSelect() -> {
                 itemView.z = FOCUS_Z
-                itemView.setBackgroundResource(R.color.red_dot_color)
             }
             currentOperateId == elementData.id -> {
-                itemView.setBackgroundResource(R.color.marker_text_style_b_color)
                 itemView.z = FOCUS_Z
             }
             else -> {
                 itemView.z = 0.0f
-                itemView.setBackgroundResource(R.color.marker_text_style_b_color)
             }
         }
         when {
@@ -149,20 +159,21 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
     }
 
     private fun onBindTrackHolder(elementData: TrackElementData, holder: ViewHolder) {
-        holder.width = elementData.width
-        holder.height = elementData.height
-        holder.x = elementData.left
-        holder.y = elementData.top
+        elementData.bindHolder(holder)
         log { "onBindTrackHolder :$holder" }
         holder.itemView.setBackgroundResource(R.color.color_gray)
     }
 
     private fun onBindSliderHolder(elementData: TrackElementData, holder: ViewHolder) {
-        holder.width = elementData.width
-        holder.height = elementData.height
-        holder.x = elementData.left
-        holder.y = elementData.top
+        elementData.bindHolder(holder)
         log { "onBindSliderHolder :$holder" }
+        holder.itemView.setBackgroundResource(R.color.red_dot_color)
+        holder.itemView.tag = elementData
+    }
+
+    private fun onBindDraggerHolder(elementData: TrackElementData, holder: ViewHolder) {
+        elementData.bindHolder(holder)
+        log { "onBindDraggerHolder :$holder" }
         holder.itemView.setBackgroundResource(R.color.red_dot_color)
         holder.itemView.tag = elementData
     }
@@ -181,14 +192,14 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
             val elementData = view.tag as TrackElementData
             if (deltaY < -(DEFAULT_TRACK_HEIGHT / 2 + DEFAULT_TRACK_MARGIN)) {
                 if (elementData.trackLevel == 0) {
-                    elementData.horizontalMoveBy(deltaX.toInt())
+                    moveSegment(elementData, deltaX.toInt())
                 } else {
                     // 移到上一个轨道
                     elementData.trackLevel -= 1
-                    elementData.horizontalMoveBy(deltaX.toInt())
+                    moveSegment(elementData, deltaX.toInt())
                 }
             } else if (deltaY >= -(DEFAULT_TRACK_HEIGHT / 2 + DEFAULT_TRACK_MARGIN) && deltaY <= DEFAULT_TRACK_HEIGHT / 2 + DEFAULT_TRACK_MARGIN) {
-                elementData.horizontalMoveBy(deltaX.toInt())
+                moveSegment(elementData, deltaX.toInt())
             } else {
                 if (elementData.trackLevel == levels.size - 1) {
                     // 向下新增一个轨道
@@ -197,14 +208,13 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
                     levels.add(newTrack)
                     notifyItemInserted(newTrack.toLong())
                     elementData.trackLevel = newTrack
-                    elementData.horizontalMoveBy(deltaX.toInt())
+                    moveSegment(elementData, deltaX.toInt())
                 } else {
                     // 直接移到下一个轨道
                     elementData.trackLevel += 1
-                    elementData.horizontalMoveBy(deltaX.toInt())
+                    moveSegment(elementData, deltaX.toInt())
                 }
             }
-            notifyItemChanged(elementData.id)
         }
 
         override fun onActionUp(view: ElementView, deltaX: Float, deltaY: Float) {
@@ -244,13 +254,56 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
 
         override fun onMove(view: ElementView, deltaX: Float, deltaY: Float) {
             // TODO 避免强转
-            val data = (view.tag as SliderData)
-            elements[data.targetSegmentId]?.let {
+            val data = (view.tag as AttachElementData)
+            elements[data.targetId]?.let {
                 // 重叠检测
                 if (checkRemainRelativePosition(it.id, deltaX)) {
                     data.horizontalMoveBy(deltaX.toInt())
                     notifyItemChanged(data.id)
-                    it.horizontalMoveBy(deltaX.toInt())
+                    moveSegment(it, deltaX.toInt())
+                }
+            }
+        }
+
+        override fun onActionUp(view: ElementView, deltaX: Float, deltaY: Float) {
+            handleHorizontalTouchEvent(false)
+        }
+
+        override fun onLongPress(view: ElementView) {
+        }
+
+        override fun onClick(view: ElementView) {
+        }
+    }
+
+    private val draggerEventListener = object : ElementView.ElementEventListener {
+        override fun onActionDown(view: ElementView) {
+            handleHorizontalTouchEvent(true)
+        }
+
+        override fun onMove(view: ElementView, deltaX: Float, deltaY: Float) {
+            val data = (view.tag as DraggerElementData)
+            elements[data.targetId]?.let {
+                // 最小长度检测
+                if ((data.isLeft && it.width - deltaX.toInt() <= MIN_ELEMENT_WITH)
+                    || (!data.isLeft && it.width + deltaX.toInt() <= MIN_ELEMENT_WITH)) {
+                    return
+                }
+                // 重叠检测
+                if (checkRemainRelativePosition(it.id, deltaX)) {
+                    data.horizontalMoveBy(deltaX.toInt())
+                    notifyItemChanged(data.id)
+                    if (data.isLeft) {
+                        it.left += deltaX.toInt()
+                        it.width -= deltaX.toInt()
+                        // 拖把要跟着一起动
+                        elements[ID_SLIDER]?.let {
+                            it.horizontalMoveBy(deltaX.toInt())
+                            notifyItemChanged(ID_SLIDER)
+                        }
+                    } else {
+                        it.width += deltaX.toInt()
+                    }
                     notifyItemChanged(it.id)
                 }
             }
@@ -267,17 +320,41 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
         }
     }
 
+    private fun moveSegment(data: TrackElementData, deltaX: Int) {
+        data.horizontalMoveBy(deltaX)
+        // 耳朵跟着移到
+        elements[ID_LEFT_DRAGGER]?.let {
+            it.horizontalMoveBy(deltaX)
+            notifyItemChanged(it.id)
+        }
+        elements[ID_RIGHT_DRAGGER]?.let {
+            it.horizontalMoveBy(deltaX)
+            notifyItemChanged(it.id)
+        }
+        notifyItemChanged(data.id)
+    }
+
     private fun select(data: TrackElementData) {
         unSelect()
         currentSelectId = data.id
         // 显示拖把和耳朵
         data.setSelect(true)
         notifyItemChanged(data.id)
-        elements[ID_SLIDER] = SliderData(ID_SLIDER, data.left - (DEFAULT_SLIDER_MARGIN + DEFAULT_SLIDER_WIDTH),
+        elements[ID_SLIDER] = AttachElementData(ID_SLIDER, data.left - (DEFAULT_SLIDER_MARGIN + DEFAULT_SLIDER_WIDTH),
             DEFAULT_SLIDER_WIDTH, data.trackLevel).apply {
-            targetSegmentId = data.id
+            targetId = data.id
+        }
+        elements[ID_LEFT_DRAGGER] = DraggerElementData(ID_LEFT_DRAGGER, data.left - DEFAULT_DRAGGER_WIDTH,
+            DEFAULT_DRAGGER_WIDTH, data.trackLevel, true).apply {
+            targetId = data.id
+        }
+        elements[ID_RIGHT_DRAGGER] = DraggerElementData(ID_RIGHT_DRAGGER, data.right(),
+            DEFAULT_DRAGGER_WIDTH, data.trackLevel, false).apply {
+            targetId = data.id
         }
         notifyItemInserted(ID_SLIDER)
+        notifyItemInserted(ID_LEFT_DRAGGER)
+        notifyItemInserted(ID_RIGHT_DRAGGER)
     }
 
     private fun unSelect() {
@@ -286,10 +363,19 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
             elements[currentSelectId]?.setSelect(false)
             notifyItemChanged(currentSelectId)
             currentSelectId = -1L
-            // 隐藏耳朵
-            elements.remove(ID_SLIDER)?.let {
-                notifyItemRemoved(it.id)
-            }
+            removeAttachData()
+        }
+    }
+
+    private fun removeAttachData(){
+        elements.remove(ID_SLIDER)?.let {
+            notifyItemRemoved(it.id)
+        }
+        elements.remove(ID_LEFT_DRAGGER)?.let {
+            notifyItemRemoved(it.id)
+        }
+        elements.remove(ID_RIGHT_DRAGGER)?.let {
+            notifyItemRemoved(it.id)
         }
     }
 
@@ -323,8 +409,7 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
         for (data in elements.values) {
             if (getElementType(data.id) != ELEMENT_TYPE_SEGMENT
                 || data.trackLevel != segmentData.trackLevel
-                || data.id == segmentId
-            ) {
+                || data.id == segmentId) {
                 continue
             }
             val range = getHorizontalRange(data)
@@ -372,7 +457,7 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
         return elements.keys.toList()
     }
 
-    class TextTrackHolder(itemView: View) : AbsPlaneRecyclerAdapter.ViewHolder(itemView)
+    class TextTrackHolder(itemView: View) : ViewHolder(itemView)
 }
 
 inline fun <T, R> Iterable<T>.mapIf(predict: (T) -> Boolean, transform: (T) -> R): List<R> {
@@ -387,4 +472,11 @@ inline fun <T, R> Iterable<T>.mapDistinct(transform: (T) -> R): List<R> {
     for (item in this)
         map.add(transform(item))
     return map.toList()
-    }
+}
+
+fun TrackElementData.bindHolder(holder: AbsPlaneRecyclerAdapter.ViewHolder) {
+    holder.width = width
+    holder.height = height
+    holder.x = left
+    holder.y = top
+}

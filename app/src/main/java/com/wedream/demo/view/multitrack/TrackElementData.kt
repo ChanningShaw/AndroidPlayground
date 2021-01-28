@@ -30,7 +30,7 @@ open class TrackElementData(id: Long) : ElementData(id) {
     }
 
     override fun <T> copy(): T {
-        return TrackElementData(id, left, top, trackLevel) as T
+        return TrackElementData(id, left, width, trackLevel) as T
     }
 
     override fun set(other: ElementData) {
