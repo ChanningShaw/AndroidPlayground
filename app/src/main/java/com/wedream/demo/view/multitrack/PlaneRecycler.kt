@@ -8,11 +8,12 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ScrollView
 import com.wedream.demo.R
+import com.wedream.demo.util.LogUtils.log
 import com.wedream.demo.view.multitrack.base.AbsPlaneRecyclerAdapter
 import com.wedream.demo.view.multitrack.base.ITrackContainer
 import com.wedream.demo.view.multitrack.base.ElementData
 
-class SegmentRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : ScrollView(context, attrs, defStyle), ITrackContainer<ElementData> {
+class PlaneRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : ScrollView(context, attrs, defStyle), ITrackContainer<ElementData> {
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context) : this(context, null, 0)
 
@@ -24,11 +25,6 @@ class SegmentRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : S
     private var segmentAdapter: AbsPlaneRecyclerAdapter<AbsPlaneRecyclerAdapter.ViewHolder>? = null
     private var listener: EventListener? = null
 
-    override fun onFinishInflate() {
-        super.onFinishInflate()
-        trackContainerInner = findViewById<FrameLayout>(R.id.track_container_inner)
-    }
-
     fun setAdapter(adapter: AbsPlaneRecyclerAdapter<AbsPlaneRecyclerAdapter.ViewHolder>) {
         this.segmentAdapter = adapter
         this.segmentAdapter?.registerAdapterDataObserver(adapterDataObserver)
@@ -37,7 +33,7 @@ class SegmentRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : S
     fun notifyHorizontalScroll(left: Int, right: Int) {
         visibleBoundLeft = left
         visibleBoundRight = right
-        Log.e("xcm", "visibleBoundLeft = $visibleBoundLeft, visibleBoundRight = $visibleBoundRight")
+//        Log.e("xcm", "visibleBoundLeft = $visibleBoundLeft, visibleBoundRight = $visibleBoundRight")
         updateVisibleItem()
     }
 
@@ -58,6 +54,14 @@ class SegmentRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : S
             updateViews()
         }
 
+        override fun onItemChanged(ids: List<Long>) {
+            handleItemChanged(ids)
+        }
+
+        override fun onItemMoved(ids: List<Long>) {
+            handleItemMoved(ids)
+        }
+
         override fun onItemInserted(ids: List<Long>) {
             insertElements(ids)
         }
@@ -70,9 +74,6 @@ class SegmentRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : S
             handleHorizontalEvent = handle
         }
 
-        override fun onItemChanged(ids: List<Long>) {
-            handleItemChanged(ids)
-        }
     }
 
     private fun updateViews() {
@@ -107,6 +108,23 @@ class SegmentRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : S
         }
     }
 
+    private fun handleItemMoved(ids: List<Long>) {
+        handleItemChanged(ids)
+        ids.lastOrNull()?.let {
+            elementHolders[it]?.let {
+                scrollIfNeed(it)
+            }
+        }
+    }
+
+    private fun scrollIfNeed(holder: AbsPlaneRecyclerAdapter.ViewHolder) {
+        if (holder.y + holder.height < scrollY) {
+            scrollTo(0, holder.y)
+        } else if (holder.y > scrollY + height) {
+            scrollTo(0, holder.y + holder.height)
+        }
+    }
+
     private fun updateHolder(adapter: AbsPlaneRecyclerAdapter<AbsPlaneRecyclerAdapter.ViewHolder>,
                              holder: AbsPlaneRecyclerAdapter.ViewHolder,
                              id: Long) {
@@ -128,6 +146,23 @@ class SegmentRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : S
     override fun onTouchEvent(ev: MotionEvent?): Boolean {
         listener?.onEmptyClick()
         return super.onTouchEvent(ev)
+    }
+
+    override fun onFinishInflate() {
+        super.onFinishInflate()
+        trackContainerInner = findViewById<FrameLayout>(R.id.track_container_inner)
+    }
+
+    override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
+        log { "l = $l, t = $t, oldl = $oldl, oldt = $oldt, height = $height, scrollY = $scrollY"}
+        for (entry in elementHolders) {
+            val h = entry.value
+            if (h.y + h.height < t) {
+                log { "${entry.key} is invisible" }
+            } else if (h.y > t + height) {
+                log { "${entry.key} is invisible" }
+            }
+        }
     }
 
     fun handleHorizontalTouchEvent(value: Boolean) {

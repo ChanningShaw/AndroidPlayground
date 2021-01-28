@@ -13,7 +13,7 @@ import com.wedream.demo.util.LogUtils.log
 
 class TrackActivity : AppCompatActivity() {
 
-    private var trackContainer: SegmentRecycler? = null
+    private var trackContainer: PlaneRecycler? = null
     private var horizontalScrollView: HorizontalScrollView? = null
     private var leftView: View? = null
     private var rightView: View? = null
@@ -33,7 +33,7 @@ class TrackActivity : AppCompatActivity() {
         screenWidth = dm.widthPixels // 屏幕宽度（像素）
 
         trackContainer?.notifyHorizontalScroll(dip2pix(200), +screenWidth - dip2pix(200))
-        trackContainer?.setEventListener(object : SegmentRecycler.EventListener {
+        trackContainer?.setEventListener(object : PlaneRecycler.EventListener {
             override fun onEmptyClick() {
                 adapter?.clearSelect()
             }

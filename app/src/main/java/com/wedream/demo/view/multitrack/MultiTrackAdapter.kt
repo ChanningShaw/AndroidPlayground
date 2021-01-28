@@ -179,10 +179,15 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
     }
 
     private var segmentEventListener = object : ElementView.ElementEventListener {
+
+        // 一次移动只能添加一条轨道
+        private var hasAddedTrack = false
+
         override fun onActionDown(view: ElementView) {
             val segmentData = view.tag as TrackElementData
             lastOperateSegment = segmentData.copy()
             handleHorizontalTouchEvent(true)
+            hasAddedTrack = false
         }
 
         override fun onMove(view: ElementView, deltaX: Float, deltaY: Float) {
@@ -202,12 +207,15 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
                 moveSegment(elementData, deltaX.toInt())
             } else {
                 if (elementData.trackLevel == levels.size - 1) {
-                    // 向下新增一个轨道
-                    val newTrack = elementData.trackLevel + 1
-                    elements[newTrack.toLong()] = TrackElementData(newTrack.toLong(), 0, FrameLayout.LayoutParams.MATCH_PARENT, newTrack)
-                    levels.add(newTrack)
-                    notifyItemInserted(newTrack.toLong())
-                    elementData.trackLevel = newTrack
+                    if (!hasAddedTrack) {
+                        hasAddedTrack = true
+                        // 向下新增一个轨道
+                        val newTrack = elementData.trackLevel + 1
+                        elements[newTrack.toLong()] = TrackElementData(newTrack.toLong(), 0, FrameLayout.LayoutParams.MATCH_PARENT, newTrack)
+                        levels.add(newTrack)
+                        notifyItemInserted(newTrack.toLong())
+                        elementData.trackLevel = newTrack
+                    }
                     moveSegment(elementData, deltaX.toInt())
                 } else {
                     // 直接移到下一个轨道
@@ -259,7 +267,7 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
                 // 重叠检测
                 if (checkRemainRelativePosition(it.id, deltaX)) {
                     data.horizontalMoveBy(deltaX.toInt())
-                    notifyItemChanged(data.id)
+                    notifyItemMoved(data.id)
                     moveSegment(it, deltaX.toInt())
                 }
             }
@@ -292,19 +300,19 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
                 // 重叠检测
                 if (checkRemainRelativePosition(it.id, deltaX)) {
                     data.horizontalMoveBy(deltaX.toInt())
-                    notifyItemChanged(data.id)
+                    notifyItemMoved(data.id)
                     if (data.isLeft) {
                         it.left += deltaX.toInt()
                         it.width -= deltaX.toInt()
                         // 拖把要跟着一起动
                         elements[ID_SLIDER]?.let {
                             it.horizontalMoveBy(deltaX.toInt())
-                            notifyItemChanged(ID_SLIDER)
+                            notifyItemMoved(ID_SLIDER)
                         }
                     } else {
                         it.width += deltaX.toInt()
                     }
-                    notifyItemChanged(it.id)
+                    notifyItemMoved(it.id)
                 }
             }
         }
@@ -325,13 +333,13 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
         // 耳朵跟着移到
         elements[ID_LEFT_DRAGGER]?.let {
             it.horizontalMoveBy(deltaX)
-            notifyItemChanged(it.id)
+            notifyItemMoved(it.id)
         }
         elements[ID_RIGHT_DRAGGER]?.let {
             it.horizontalMoveBy(deltaX)
-            notifyItemChanged(it.id)
+            notifyItemMoved(it.id)
         }
-        notifyItemChanged(data.id)
+        notifyItemMoved(data.id)
     }
 
     private fun select(data: TrackElementData) {
@@ -381,7 +389,7 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
 
     private fun doRollback(current: TrackElementData, old: TrackElementData) {
         current.set(old)
-        notifyItemChanged(current.id)
+        notifyItemMoved(current.id)
     }
 
     /**

@@ -34,6 +34,10 @@ abstract class AbsPlaneRecyclerAdapter<H : AbsPlaneRecyclerAdapter.ViewHolder> {
         observable.notifyItemChanged(id)
     }
 
+    fun notifyItemMoved(id: Long) {
+        observable.notifyItemMoved(id)
+    }
+
     fun notifyItemInserted(id: Long) {
         observable.notifyItemInserted(id)
     }
@@ -56,6 +60,12 @@ abstract class AbsPlaneRecyclerAdapter<H : AbsPlaneRecyclerAdapter.ViewHolder> {
         fun notifyItemChanged(id: Long) {
             for (i in mObservers.indices.reversed()) {
                 mObservers[i].onItemChanged(listOf(id))
+            }
+        }
+
+        fun notifyItemMoved(id: Long) {
+            for (i in mObservers.indices.reversed()) {
+                mObservers[i].onItemMoved(listOf(id))
             }
         }
 
@@ -83,6 +93,10 @@ abstract class AbsPlaneRecyclerAdapter<H : AbsPlaneRecyclerAdapter.ViewHolder> {
         }
 
         open fun onItemChanged(ids: List<Long>) {
+
+        }
+
+        open fun onItemMoved(ids: List<Long>) {
 
         }
 

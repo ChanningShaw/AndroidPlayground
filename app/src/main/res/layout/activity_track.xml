@@ -10,7 +10,7 @@
     android:layout_centerInParent="true"
     android:orientation="horizontal">
 
-      <com.wedream.demo.view.multitrack.SegmentRecycler
+      <com.wedream.demo.view.multitrack.PlaneRecycler
         android:id="@+id/track_container"
         android:layout_width="2000dp"
         android:layout_height="match_parent">
@@ -20,7 +20,7 @@
           android:layout_width="2000dp"
           android:layout_height="match_parent" />
 
-      </com.wedream.demo.view.multitrack.SegmentRecycler>
+      </com.wedream.demo.view.multitrack.PlaneRecycler>
   </HorizontalScrollView>
 
   <View
