@@ -2,6 +2,7 @@ package com.wedream.demo.view.multitrack.base
 
 import android.content.Context
 import android.graphics.RectF
+import android.util.Range
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -246,7 +247,7 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
             val data = (view.tag as SliderData)
             elements[data.targetSegmentId]?.let {
                 // 重叠检测
-                if (!checkOverlap(it.id, deltaX, 0f)) {
+                if (checkRemainRelativePosition(it.id, deltaX)) {
                     data.horizontalMoveBy(deltaX.toInt())
                     notifyItemChanged(data.id)
                     it.horizontalMoveBy(deltaX.toInt())
@@ -312,12 +313,59 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
         return false
     }
 
+    /**
+     * 检查移动后同一个轨道的两个segment是否还保持同样的相对位置
+     */
+    private fun checkRemainRelativePosition(segmentId: Long, deltaX: Float = 0f): Boolean {
+        val segmentData = elements[segmentId] ?: return false
+        val originRange = getHorizontalRange(segmentData)
+        val newRange = getHorizontalRange(segmentData, deltaX)
+        for (data in elements.values) {
+            if (getElementType(data.id) != ELEMENT_TYPE_SEGMENT
+                || data.trackLevel != segmentData.trackLevel
+                || data.id == segmentId
+            ) {
+                continue
+            }
+            val range = getHorizontalRange(data)
+            if (checkRangedRelativePosition(originRange, range) != checkRangedRelativePosition(newRange, range)) {
+                return false
+            }
+        }
+        return true
+    }
+
+    /**
+     * 返回两个range的位置相关关系
+     *
+     * 如果 range1 在 range2 的左边， 返回-1
+     * 如果 range1 在 range2 的右边， 返回1
+     * 如果 range1 和 range2 相交，返回0
+     */
+    private fun checkRangedRelativePosition(range1: Range<Float>, range2: Range<Float>): Int {
+        return when {
+            range1.upper < range2.lower -> {
+                -1
+            }
+            range1.lower > range2.upper -> {
+                1
+            }
+            else -> {
+                0
+            }
+        }
+    }
+
     private fun getSegmentBounds(segmentData: TrackElementData, deltaX: Float = 0.0f, deltaY: Float = 0.0f): RectF {
         val left = segmentData.left + deltaX
         val top = segmentData.top + deltaY
         val right = left + segmentData.width
         val bottom = top + segmentData.height
         return RectF(left, top, right, bottom)
+    }
+
+    private fun getHorizontalRange(segmentData: TrackElementData, deltaX: Float = 0f): Range<Float> {
+        return Range(segmentData.left + deltaX, segmentData.right() + deltaX)
     }
 
     override fun getElementIds(): List<Long> {
