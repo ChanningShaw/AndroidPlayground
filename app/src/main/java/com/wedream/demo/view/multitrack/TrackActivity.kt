@@ -1,6 +1,7 @@
 package com.wedream.demo.view.multitrack
 
 import android.content.Context
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.View
@@ -39,6 +40,7 @@ class TrackActivity : AppCompatActivity() {
             }
         })
 
+
         val list = mutableListOf<TrackElementData>()
         var start = 1000
         val length = 200
@@ -51,6 +53,9 @@ class TrackActivity : AppCompatActivity() {
         }
         adapter = MultiTrackAdapter(this)
         trackContainer?.setAdapter(adapter!!)
+        trackContainer?.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+            adapter?.setBounds(Rect(left, top, right, bottom))
+        }
         adapter?.setData(list)
 
         horizontalScrollView?.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->

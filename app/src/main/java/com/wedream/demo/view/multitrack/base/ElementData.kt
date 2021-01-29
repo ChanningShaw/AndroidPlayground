@@ -20,8 +20,8 @@ abstract class ElementData(val id: Long){
 
     private var isSelected = false
 
-    fun horizontalMoveBy(deltaX: Int) {
-        this.left += deltaX
+    fun horizontalMoveBy(offset: Int) {
+        this.left += offset
     }
 
     open fun set(other: ElementData) {

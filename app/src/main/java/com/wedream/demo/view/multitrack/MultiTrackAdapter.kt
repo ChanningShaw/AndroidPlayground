@@ -1,7 +1,7 @@
 package com.wedream.demo.view.multitrack
 
 import android.content.Context
-import android.graphics.RectF
+import android.graphics.Rect
 import android.util.Range
 import android.view.View
 import android.view.ViewGroup
@@ -13,11 +13,14 @@ import com.wedream.demo.view.multitrack.base.ElementView
 
 class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlaneRecyclerAdapter.ViewHolder>() {
 
+    private val dataList = mutableListOf<TrackElementData>()
     private val elements = mutableMapOf<Long, TrackElementData>()
-    private val levels = mutableSetOf<Int>()
+    private var minLevel = Int.MAX_VALUE
+    private var maxLevel = Int.MIN_VALUE
     private var currentSelectId = -1L
     private var currentOperateId = -1L
     private var lastOperateSegment: TrackElementData? = null
+    private var bounds = Rect()
 
     companion object {
         const val FOCUS_Z = 10f
@@ -42,14 +45,48 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
     }
 
     fun setData(data: List<TrackElementData>) {
+        dataList.clear()
+        dataList.addAll(data)
+        updateDataSet()
+    }
+
+    private fun updateDataSet() {
         elements.clear()
-        levels.clear()
-        for (d in data) {
+
+        for (d in dataList) {
             elements[d.id] = d
-            elements[d.trackLevel.toLong()] = TrackElementData(d.trackLevel.toLong(), 0, FrameLayout.LayoutParams.MATCH_PARENT, d.trackLevel)
-            levels.add(d.trackLevel)
+            if (d.trackLevel < minLevel) {
+                minLevel = d.trackLevel
+            } else if (d.trackLevel > maxLevel) {
+                maxLevel = d.trackLevel
+            }
         }
+
+        for (i in minLevel..maxLevel) {
+            addTrack(i)
+        }
+
         notifyDataSetChanged()
+    }
+
+    private fun addTrack(level: Int) {
+        elements[level.toLong()] = TrackElementData(level.toLong(), 0, FrameLayout.LayoutParams.MATCH_PARENT, level)
+        if (level < minLevel) {
+            minLevel = level
+        } else if (level > maxLevel) {
+            maxLevel = level
+        }
+    }
+
+    private fun topAddTrack(): Int {
+        // 在顶部添加新轨，原来所有轨道层级增加1， 需要全量刷新
+        for (e in dataList) {
+            e.trackLevel += 1
+        }
+        updateDataSet()
+        addTrack(0)
+        notifyDataSetChanged()
+        return 0
     }
 
     fun clearSelect() {
@@ -146,9 +183,9 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
             }
         }
         when {
-            checkOverlap(elementData.id) -> {
-                itemView.alpha = 0.2f
-            }
+//            checkOverlap(elementData.id) -> {
+//                itemView.alpha = 0.2f
+//            }
             elementData.id == currentOperateId -> {
                 itemView.alpha = 0.6f
             }
@@ -190,55 +227,62 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
             hasAddedTrack = false
         }
 
-        override fun onMove(view: ElementView, deltaX: Float, deltaY: Float) {
+        override fun onMove(view: ElementView, deltaX: Int, deltaY: Int) {
             if (!view.isLongPressed()) {
                 return
             }
             val elementData = view.tag as TrackElementData
             if (deltaY < -(DEFAULT_TRACK_HEIGHT / 2 + DEFAULT_TRACK_MARGIN)) {
-                if (elementData.trackLevel == 0) {
-                    moveSegment(elementData, deltaX.toInt())
+                if (elementData.trackLevel == minLevel) {
+                    if (!hasAddedTrack) {
+                        hasAddedTrack = true
+                        // 向上新增一个轨道
+                        val newTrack = topAddTrack()
+                        elementData.trackLevel = newTrack
+                    }
+                    moveElement(elementData, deltaX)
                 } else {
                     // 移到上一个轨道
                     elementData.trackLevel -= 1
-                    moveSegment(elementData, deltaX.toInt())
+                    moveElement(elementData, deltaX)
                 }
             } else if (deltaY >= -(DEFAULT_TRACK_HEIGHT / 2 + DEFAULT_TRACK_MARGIN) && deltaY <= DEFAULT_TRACK_HEIGHT / 2 + DEFAULT_TRACK_MARGIN) {
-                moveSegment(elementData, deltaX.toInt())
+                moveElement(elementData, deltaX)
             } else {
-                if (elementData.trackLevel == levels.size - 1) {
+                if (elementData.trackLevel == maxLevel) {
                     if (!hasAddedTrack) {
                         hasAddedTrack = true
                         // 向下新增一个轨道
                         val newTrack = elementData.trackLevel + 1
-                        elements[newTrack.toLong()] = TrackElementData(newTrack.toLong(), 0, FrameLayout.LayoutParams.MATCH_PARENT, newTrack)
-                        levels.add(newTrack)
+                        addTrack(newTrack)
                         notifyItemInserted(newTrack.toLong())
                         elementData.trackLevel = newTrack
                     }
-                    moveSegment(elementData, deltaX.toInt())
+                    moveElement(elementData, deltaX)
                 } else {
                     // 直接移到下一个轨道
                     elementData.trackLevel += 1
-                    moveSegment(elementData, deltaX.toInt())
+                    moveElement(elementData, deltaX)
                 }
             }
         }
 
-        override fun onActionUp(view: ElementView, deltaX: Float, deltaY: Float) {
+        override fun onActionUp(view: ElementView, deltaX: Int, deltaY: Int) {
             val data = (view.tag as TrackElementData)
+            val offsetX = clampOffsetX(data, deltaX)
+            val offsetY = clampOffsetY(data, deltaY)
             if (data.id == currentOperateId) {
                 currentOperateId = -1L
                 view.alpha = 1.0f
             }
-            handleHorizontalTouchEvent(false)
-            if (checkOverlap(data.id, deltaX, deltaY)) {
+            if (checkOverlap(data.id, offsetX, offsetY)) {
                 // 位置有重叠，不能放置，做回弹动画
                 lastOperateSegment?.let {
                     doRollback(data, it)
                     lastOperateSegment = null
                 }
             }
+            handleHorizontalTouchEvent(false)
         }
 
         override fun onLongPress(view: ElementView) {
@@ -260,20 +304,21 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
             handleHorizontalTouchEvent(true)
         }
 
-        override fun onMove(view: ElementView, deltaX: Float, deltaY: Float) {
+        override fun onMove(view: ElementView, deltaX: Int, deltaY: Int) {
             // TODO 避免强转
             val data = (view.tag as AttachElementData)
+            val offset = clampOffsetX(data, deltaX)
             elements[data.targetId]?.let {
                 // 重叠检测
-                if (checkRemainRelativePosition(it.id, deltaX)) {
-                    data.horizontalMoveBy(deltaX.toInt())
+                if (checkRemainRelativePosition(it.id, offset)) {
+                    data.horizontalMoveBy(offset)
                     notifyItemMoved(data.id)
-                    moveSegment(it, deltaX.toInt())
+                    moveElement(it, offset)
                 }
             }
         }
 
-        override fun onActionUp(view: ElementView, deltaX: Float, deltaY: Float) {
+        override fun onActionUp(view: ElementView, deltaX: Int, deltaY: Int) {
             handleHorizontalTouchEvent(false)
         }
 
@@ -289,35 +334,36 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
             handleHorizontalTouchEvent(true)
         }
 
-        override fun onMove(view: ElementView, deltaX: Float, deltaY: Float) {
+        override fun onMove(view: ElementView, deltaX: Int, deltaY: Int) {
             val data = (view.tag as DraggerElementData)
             elements[data.targetId]?.let {
                 // 最小长度检测
-                if ((data.isLeft && it.width - deltaX.toInt() <= MIN_ELEMENT_WITH)
-                    || (!data.isLeft && it.width + deltaX.toInt() <= MIN_ELEMENT_WITH)) {
+                if ((data.isLeft && it.width - deltaX <= MIN_ELEMENT_WITH)
+                    || (!data.isLeft && it.width + deltaX <= MIN_ELEMENT_WITH)) {
                     return
                 }
                 // 重叠检测
-                if (checkRemainRelativePosition(it.id, deltaX)) {
-                    data.horizontalMoveBy(deltaX.toInt())
+                val offset = clampOffsetX(data, deltaX)
+                if (checkRemainRelativePosition(it.id, offset)) {
+                    data.horizontalMoveBy(offset)
                     notifyItemMoved(data.id)
                     if (data.isLeft) {
-                        it.left += deltaX.toInt()
-                        it.width -= deltaX.toInt()
+                        it.left += offset
+                        it.width -= offset
                         // 拖把要跟着一起动
                         elements[ID_SLIDER]?.let {
-                            it.horizontalMoveBy(deltaX.toInt())
+                            it.horizontalMoveBy(offset)
                             notifyItemMoved(ID_SLIDER)
                         }
                     } else {
-                        it.width += deltaX.toInt()
+                        it.width += offset
                     }
                     notifyItemMoved(it.id)
                 }
             }
         }
 
-        override fun onActionUp(view: ElementView, deltaX: Float, deltaY: Float) {
+        override fun onActionUp(view: ElementView, deltaX: Int, deltaY: Int) {
             handleHorizontalTouchEvent(false)
         }
 
@@ -328,18 +374,41 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
         }
     }
 
-    private fun moveSegment(data: TrackElementData, deltaX: Int) {
-        data.horizontalMoveBy(deltaX)
+    private fun moveElement(data: TrackElementData, deltaX: Int) {
+        val offset = clampOffsetX(data, deltaX)
+        data.horizontalMoveBy(offset)
         // 耳朵跟着移到
         elements[ID_LEFT_DRAGGER]?.let {
-            it.horizontalMoveBy(deltaX)
+            it.horizontalMoveBy(offset)
             notifyItemMoved(it.id)
         }
         elements[ID_RIGHT_DRAGGER]?.let {
-            it.horizontalMoveBy(deltaX)
+            it.horizontalMoveBy(offset)
             notifyItemMoved(it.id)
         }
         notifyItemMoved(data.id)
+    }
+
+    private fun clampOffsetX(data: TrackElementData, deltaX: Int): Int {
+        var offset = deltaX
+        if (data.left + deltaX <= bounds.left) {
+            offset = bounds.left - data.left
+        }
+        if (data.right() + deltaX >= bounds.right) {
+            offset = bounds.right - data.width - data.left
+        }
+        return offset
+    }
+
+    private fun clampOffsetY(data: TrackElementData, deltaY: Int): Int {
+        var offset = deltaY
+        if (data.top + deltaY <= bounds.top) {
+            offset = bounds.top - data.top
+        }
+        if (data.bottom() + deltaY >= bounds.bottom) {
+            offset = bounds.bottom - data.height - data.top
+        }
+        return offset
     }
 
     private fun select(data: TrackElementData) {
@@ -395,12 +464,12 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
     /**
      * 重叠检查
      */
-    private fun checkOverlap(segmentId: Long, deltaX: Float = 0f, deltaY: Float = 0f): Boolean {
+    private fun checkOverlap(segmentId: Long, deltaX: Int = 0, deltaY: Int = 0): Boolean {
         val segmentData = elements[segmentId] ?: return false
         val rect = getSegmentBounds(segmentData, deltaX, deltaY)
         for (data in elements.values) {
             if (getElementType(data.id) != ELEMENT_TYPE_SEGMENT) continue
-            if (data.id != segmentId && rect.intersect(getSegmentBounds(data))) {
+            if (data.id != segmentId && Rect.intersects(rect, getSegmentBounds(data))) {
                 return true
             }
         }
@@ -410,7 +479,7 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
     /**
      * 检查移动后同一个轨道的两个segment是否还保持同样的相对位置
      */
-    private fun checkRemainRelativePosition(segmentId: Long, deltaX: Float = 0f): Boolean {
+    private fun checkRemainRelativePosition(segmentId: Long, deltaX: Int = 0): Boolean {
         val segmentData = elements[segmentId] ?: return false
         val originRange = getHorizontalRange(segmentData)
         val newRange = getHorizontalRange(segmentData, deltaX)
@@ -435,7 +504,7 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
      * 如果 range1 在 range2 的右边， 返回1
      * 如果 range1 和 range2 相交，返回0
      */
-    private fun checkRangedRelativePosition(range1: Range<Float>, range2: Range<Float>): Int {
+    private fun checkRangedRelativePosition(range1: Range<Int>, range2: Range<Int>): Int {
         return when {
             range1.upper < range2.lower -> {
                 -1
@@ -449,20 +518,24 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<AbsPlane
         }
     }
 
-    private fun getSegmentBounds(segmentData: TrackElementData, deltaX: Float = 0.0f, deltaY: Float = 0.0f): RectF {
+    private fun getSegmentBounds(segmentData: TrackElementData, deltaX: Int = 0, deltaY: Int = 0): Rect {
         val left = segmentData.left + deltaX
         val top = segmentData.top + deltaY
         val right = left + segmentData.width
         val bottom = top + segmentData.height
-        return RectF(left, top, right, bottom)
+        return Rect(left, top, right, bottom)
     }
 
-    private fun getHorizontalRange(segmentData: TrackElementData, deltaX: Float = 0f): Range<Float> {
+    private fun getHorizontalRange(segmentData: TrackElementData, deltaX: Int = 0): Range<Int> {
         return Range(segmentData.left + deltaX, segmentData.right() + deltaX)
     }
 
     override fun getElementIds(): List<Long> {
         return elements.keys.toList()
+    }
+
+    fun setBounds(bound: Rect) {
+        this.bounds.set(bound)
     }
 
     class TextTrackHolder(itemView: View) : ViewHolder(itemView)

@@ -78,6 +78,7 @@ class PlaneRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : Scr
 
     private fun updateViews() {
         val adapter = segmentAdapter ?: return
+        trackContainerInner.removeAllViews()
         insertElements(adapter.getElementIds())
     }
 
@@ -118,9 +119,9 @@ class PlaneRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : Scr
     }
 
     private fun scrollIfNeed(holder: AbsPlaneRecyclerAdapter.ViewHolder) {
-        if (holder.y + holder.height < scrollY) {
+        if (holder.y < scrollY) {
             scrollTo(0, holder.y)
-        } else if (holder.y > scrollY + height) {
+        } else if (holder.y + holder.height > scrollY + height) {
             scrollTo(0, holder.y + holder.height)
         }
     }

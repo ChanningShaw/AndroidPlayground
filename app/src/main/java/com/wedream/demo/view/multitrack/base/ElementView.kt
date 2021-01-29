@@ -5,8 +5,11 @@ import android.content.Context
 import android.os.Handler
 import android.os.Message
 import android.util.AttributeSet
+import android.util.Log
+import android.util.Range
 import android.view.MotionEvent
 import android.view.View
+import com.wedream.demo.util.LogUtils.log
 import kotlin.math.abs
 
 abstract class ElementView(context: Context, attrs: AttributeSet?, defStyle: Int) : View(context, attrs, defStyle) {
@@ -15,8 +18,8 @@ abstract class ElementView(context: Context, attrs: AttributeSet?, defStyle: Int
 
     private var eventListener: ElementEventListener? = null
 
-    private var downX = 0f
-    private var downY = 0f
+    private var downX = 0
+    private var downY = 0
 
     private var isLongPress = false
     private var downTime = 0L
@@ -44,8 +47,8 @@ abstract class ElementView(context: Context, attrs: AttributeSet?, defStyle: Int
         }
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                downX = event.x
-                downY = event.y
+                downX = event.x.toInt()
+                downY = event.y.toInt()
                 isLongPress = false
                 downTime = System.currentTimeMillis()
                 val msg = Message.obtain()
@@ -54,7 +57,7 @@ abstract class ElementView(context: Context, attrs: AttributeSet?, defStyle: Int
                 eventListener?.onActionDown(this)
             }
             MotionEvent.ACTION_MOVE -> {
-                eventListener?.onMove(this, event.x - downX, event.y - downY)
+                eventListener?.onMove(this, event.x.toInt() - downX, event.y.toInt() - downY)
             }
             MotionEvent.ACTION_UP -> {
                 if (System.currentTimeMillis() - downTime < LONG_PRESS_TIME) {
@@ -64,7 +67,7 @@ abstract class ElementView(context: Context, attrs: AttributeSet?, defStyle: Int
                         eventListener?.onClick(this)
                     }
                 }
-                eventListener?.onActionUp(this, event.x - downX, event.y - downY)
+                eventListener?.onActionUp(this, event.x.toInt() - downX, event.y.toInt() - downY)
             }
             MotionEvent.ACTION_CANCEL -> {
                 isLongPress = false
@@ -85,8 +88,8 @@ abstract class ElementView(context: Context, attrs: AttributeSet?, defStyle: Int
 
     interface ElementEventListener {
         fun onActionDown(view: ElementView)
-        fun onMove(view: ElementView, deltaX: Float, deltaY: Float)
-        fun onActionUp(view: ElementView, deltaX: Float, deltaY: Float)
+        fun onMove(view: ElementView, deltaX: Int, deltaY: Int)
+        fun onActionUp(view: ElementView, deltaX: Int, deltaY: Int)
         fun onLongPress(view: ElementView)
         fun onClick(view: ElementView)
     }
