@@ -1,8 +1,9 @@
 package com.wedream.demo.view.multitrack
 
 import android.content.Context
+import android.graphics.Rect
 import android.util.AttributeSet
-import android.util.Log
+import android.view.Choreographer
 import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
@@ -10,48 +11,77 @@ import android.widget.ScrollView
 import com.wedream.demo.R
 import com.wedream.demo.util.LogUtils.log
 import com.wedream.demo.view.multitrack.base.AbsPlaneRecyclerAdapter
-import com.wedream.demo.view.multitrack.base.ITrackContainer
 import com.wedream.demo.view.multitrack.base.ElementData
+import com.wedream.demo.view.multitrack.base.ITrackContainer
+import java.util.*
+
 
 class PlaneRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : ScrollView(context, attrs, defStyle), ITrackContainer<ElementData> {
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context) : this(context, null, 0)
 
     private lateinit var trackContainerInner: FrameLayout
-    private var elementHolders = mutableMapOf<Long, AbsPlaneRecyclerAdapter.ViewHolder>()
+
+    private var allHolders = mutableMapOf<Long, ViewHolder>()
+    private var allBorders = mutableMapOf<Long, ViewBorder>()
+
+    // 按照viewType缓存的holder
+    private var cacheHolders = hashMapOf<Int, LinkedList<ViewHolder>>()
+    private var visibleHolders = hashMapOf<Long, ViewHolder>()
+
     private var handleHorizontalEvent = false
-    private var visibleBoundLeft = 0
-    private var visibleBoundRight = 0
-    private var segmentAdapter: AbsPlaneRecyclerAdapter<AbsPlaneRecyclerAdapter.ViewHolder>? = null
+    private var recyclerAdapter: AbsPlaneRecyclerAdapter<ViewHolder>? = null
     private var listener: EventListener? = null
 
-    fun setAdapter(adapter: AbsPlaneRecyclerAdapter<AbsPlaneRecyclerAdapter.ViewHolder>) {
-        this.segmentAdapter = adapter
-        this.segmentAdapter?.registerAdapterDataObserver(adapterDataObserver)
+    private var choreographer = Choreographer.getInstance()
+    private var dataSetChanged = false
+
+    private var visibleRegion = Rect()
+
+    init {
+        isFillViewport = false
     }
 
-    fun notifyHorizontalScroll(left: Int, right: Int) {
-        visibleBoundLeft = left
-        visibleBoundRight = right
-//        Log.e("xcm", "visibleBoundLeft = $visibleBoundLeft, visibleBoundRight = $visibleBoundRight")
-        updateVisibleItem()
-    }
-
-    private fun updateVisibleItem() {
-        for (holder in elementHolders.values) {
-            val view = holder.itemView
-            view.visibility = (if (showItemVisible(view)) VISIBLE else GONE)
+    private var frameCallback = Choreographer.FrameCallback {
+        if (dataSetChanged) {
+            dataSetChanged = false
+            updateViews()
+            return@FrameCallback
         }
     }
 
-    private fun showItemVisible(view: View): Boolean {
-        return !(view.r() < visibleBoundLeft || view.l() > visibleBoundRight)
+    fun setAdapter(adapter: AbsPlaneRecyclerAdapter<ViewHolder>) {
+        this.recyclerAdapter = adapter
+        this.recyclerAdapter?.registerAdapterDataObserver(adapterDataObserver)
     }
 
-    // TODO 合并更新
+    fun notifyHorizontalScroll(left: Int, right: Int) {
+        updateVisibleRegion(left, visibleRegion.top, right, visibleRegion.bottom)
+    }
+
+    private fun updateVisibleRegion(left: Int, top: Int, right: Int, bottom: Int) {
+        visibleRegion.set(left, top, right, bottom)
+        log { "visibleRegion = $visibleRegion" }
+        reLayout()
+    }
+
+    private fun reSendFrameCallBack() {
+        choreographer.removeFrameCallback(frameCallback)
+        choreographer.postFrameCallback(frameCallback)
+    }
+
     private val adapterDataObserver = object : AbsPlaneRecyclerAdapter.AdapterDataObserver() {
         override fun onChanged() {
-            updateViews()
+            if (isShown) {
+                if (!dataSetChanged) {
+                    dataSetChanged = true
+                    reSendFrameCallBack()
+                }
+            } else {
+                post {
+                    updateViews()
+                }
+            }
         }
 
         override fun onItemChanged(ids: List<Long>) {
@@ -73,28 +103,44 @@ class PlaneRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : Scr
         override fun handleHorizontalTouchEvent(handle: Boolean) {
             handleHorizontalEvent = handle
         }
-
     }
 
     private fun updateViews() {
-        val adapter = segmentAdapter ?: return
+        log { "updateViews()" }
+        val adapter = recyclerAdapter ?: return
         trackContainerInner.removeAllViews()
         insertElements(adapter.getElementIds())
     }
 
-    private fun insertElements(ids: List<Long>) {
+    private fun insertElements(ids: List<Long>, checkVisible: Boolean = true) {
+        val adapter = recyclerAdapter ?: return
+        var minHeight = 0
         for (id in ids) {
-            val adapter = segmentAdapter ?: return
-            val holder = adapter.onCreateElementHolder(trackContainerInner, adapter.getElementType(id))
+            val border = adapter.getViewBorder(id, trackContainerInner)
+            allBorders[id] = border
+            // 计算累积的高度
+            if (border.bottom() > minHeight) {
+                minHeight = border.bottom()
+            }
+            if (checkVisible && !checkViewVisible(border)) {
+                continue
+            }
+            val viewType = adapter.getElementType(id)
+            val holder = getHolderFromCache(viewType) ?: adapter.onCreateElementHolder(trackContainerInner, viewType)
             updateHolder(adapter, holder, id)
             trackContainerInner.addView(holder.itemView)
-            elementHolders[id] = holder
+            visibleHolders[id] = holder
+            allHolders[id] = holder
         }
+        val view = View(context)
+        val params = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, 1)
+        params.topMargin = minHeight
+        trackContainerInner.addView(view, params)
     }
 
     private fun handleItemRemoved(ids: List<Long>) {
         for (id in ids) {
-            val holder = elementHolders.remove(id)
+            val holder = allHolders.remove(id)
             holder?.let {
                 trackContainerInner.removeView(holder.itemView)
             }
@@ -103,8 +149,8 @@ class PlaneRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : Scr
 
     private fun handleItemChanged(ids: List<Long>) {
         for (id in ids) {
-            val adapter = segmentAdapter ?: return
-            val holder = elementHolders[id] ?: return
+            val adapter = recyclerAdapter ?: return
+            val holder = allHolders[id] ?: return
             updateHolder(adapter, holder, id)
         }
     }
@@ -112,29 +158,45 @@ class PlaneRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : Scr
     private fun handleItemMoved(ids: List<Long>) {
         handleItemChanged(ids)
         ids.lastOrNull()?.let {
-            elementHolders[it]?.let {
-                scrollIfNeed(it)
+            allHolders[it]?.let { holder ->
+                scrollIfNeed(holder.itemBorder)
             }
         }
     }
 
-    private fun scrollIfNeed(holder: AbsPlaneRecyclerAdapter.ViewHolder) {
-        if (holder.y < scrollY) {
-            scrollTo(0, holder.y)
-        } else if (holder.y + holder.height > scrollY + height) {
-            scrollTo(0, holder.y + holder.height)
+    private fun getHolderFromCache(viewType: Int): ViewHolder? {
+        val cache = cacheHolders[viewType] ?: LinkedList<ViewHolder>().apply {
+            cacheHolders[viewType] = this
+        }
+        return cache.poll()
+    }
+
+    private fun scrollIfNeed(border: ViewBorder) {
+        if (border.y < scrollY) {
+            scrollTo(0, border.y)
+        } else if (border.bottom() > scrollY + height) {
+            scrollTo(0, border.bottom())
         }
     }
 
-    private fun updateHolder(adapter: AbsPlaneRecyclerAdapter<AbsPlaneRecyclerAdapter.ViewHolder>,
-                             holder: AbsPlaneRecyclerAdapter.ViewHolder,
+    /**
+     * 检查一个view是否需要画出来
+     */
+    private fun checkViewVisible(border: ViewBorder): Boolean {
+        val result = visibleRegion.overlap(border.toRect())
+        log { "border = $border, visibleRegion = $visibleRegion, visible = $result" }
+        return result
+    }
+
+    private fun updateHolder(adapter: AbsPlaneRecyclerAdapter<ViewHolder>,
+                             holder: ViewHolder,
                              id: Long) {
         adapter.onBindElementHolder(holder, id)
         val params = holder.itemView.layoutParams as MarginLayoutParams?
-            ?: FrameLayout.LayoutParams(holder.width, holder.height)
-        params.setMargins(holder.x, holder.y, 0, 0)
-        params.width = holder.width
-        params.height = holder.height
+            ?: FrameLayout.LayoutParams(holder.itemBorder.width, holder.itemBorder.height)
+        params.setMargins(holder.itemBorder.x, holder.itemBorder.y, 0, 0)
+        params.width = holder.itemBorder.width
+        params.height = holder.itemBorder.height
         holder.itemView.layoutParams = params
     }
 
@@ -149,21 +211,50 @@ class PlaneRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : Scr
         return super.onTouchEvent(ev)
     }
 
+    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+        super.onLayout(changed, l, t, r, b)
+        visibleRegion.top = scrollY
+        visibleRegion.bottom = scrollY + height
+    }
+
     override fun onFinishInflate() {
         super.onFinishInflate()
         trackContainerInner = findViewById<FrameLayout>(R.id.track_container_inner)
     }
 
     override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
-        log { "l = $l, t = $t, oldl = $oldl, oldt = $oldt, height = $height, scrollY = $scrollY"}
-        for (entry in elementHolders) {
-            val h = entry.value
-            if (h.y + h.height < t) {
-                log { "${entry.key} is invisible" }
-            } else if (h.y > t + height) {
-                log { "${entry.key} is invisible" }
+        updateVisibleRegion(visibleRegion.left, t, visibleRegion.right, t + height)
+    }
+
+    private fun reLayout() {
+        val start = System.currentTimeMillis()
+        val adapter = recyclerAdapter ?: return
+        val becomeVisibleList = mutableListOf<Long>()
+
+        for (entry in allBorders) {
+            val border = entry.value
+            border.setupWithParent(trackContainerInner)
+            if (visibleRegion.overlap(border.toRect())) {
+                // 可见
+                // 如果view还没添加，现在添加
+                if (visibleHolders[entry.key] == null) {
+                    becomeVisibleList.add(entry.key)
+                }
+            } else {
+                // 不可见
+                visibleHolders.remove(entry.key)?.let {
+                    val viewType = adapter.getElementType(entry.key)
+                    val cache = cacheHolders[viewType] ?: LinkedList<ViewHolder>().apply {
+                        cacheHolders[viewType] = this
+                    }
+                    cache.add(it)
+                    trackContainerInner.removeView(it.itemView)
+                }
             }
         }
+
+        insertElements(becomeVisibleList, false)
+        log { "reLayout took ${System.currentTimeMillis() - start}" }
     }
 
     fun handleHorizontalTouchEvent(value: Boolean) {
@@ -174,8 +265,54 @@ class PlaneRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : Scr
         this.listener = listener
     }
 
+    fun getContentHeight(): Int {
+        var height = 0
+        for (i in 0 until childCount) {
+            if (getChildAt(i).bottom > height) {
+                height = getChildAt(i).bottom
+            }
+        }
+        return height
+    }
+
     interface EventListener {
         fun onEmptyClick()
+    }
+
+    class ViewBorder {
+        var x = 0
+        var y = 0
+        var width = 0
+        var height = 0
+
+        fun right(): Int {
+            return x + width
+        }
+
+        fun bottom(): Int {
+            return y + height
+        }
+
+        fun toRect(): Rect {
+            return Rect(x, y, right(), bottom())
+        }
+
+        fun setupWithParent(parent: View) {
+            if (width == FrameLayout.LayoutParams.MATCH_PARENT) {
+                width = parent.width - x
+            }
+            if (height == FrameLayout.LayoutParams.MATCH_PARENT) {
+                height = parent.height - y
+            }
+        }
+
+        override fun toString(): String {
+            return "x = $x, y = $y, width = $width, height = $height"
+        }
+    }
+
+    abstract class ViewHolder(val itemView: View){
+        val itemBorder = ViewBorder()
     }
 }
 
@@ -185,4 +322,14 @@ fun View.r() : Float{
 
 fun View.l() : Float{
     return left + translationX
+}
+
+/**
+ * 判断两个矩形是否有重叠
+ */
+fun Rect.overlap(rect: Rect): Boolean {
+    return !(right <= rect.left ||
+            bottom <= rect.top ||
+            left >= rect.right ||
+            top >= rect.bottom)
 }

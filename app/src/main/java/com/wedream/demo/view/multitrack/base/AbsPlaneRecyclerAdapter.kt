@@ -1,18 +1,20 @@
 package com.wedream.demo.view.multitrack.base
 
 import android.database.Observable
-import android.view.View
 import android.view.ViewGroup
+import com.wedream.demo.view.multitrack.PlaneRecycler
 
-abstract class AbsPlaneRecyclerAdapter<H : AbsPlaneRecyclerAdapter.ViewHolder> {
+abstract class AbsPlaneRecyclerAdapter<H : PlaneRecycler.ViewHolder> {
 
     private val observable = AdapterDataObservable()
+
+    abstract fun getElementIds(): List<Long>
+
+    abstract fun getViewBorder(id: Long, parent: ViewGroup): PlaneRecycler.ViewBorder
 
     abstract fun onCreateElementHolder(parent: ViewGroup, viewType: Int): H
 
     abstract fun onBindElementHolder(holder: H, id: Long)
-
-    abstract fun getElementIds(): List<Long>
 
     open fun getElementType(id: Long): Int {
         return 0
@@ -108,21 +110,6 @@ abstract class AbsPlaneRecyclerAdapter<H : AbsPlaneRecyclerAdapter.ViewHolder> {
 
         open fun handleHorizontalTouchEvent(handle: Boolean) {
 
-        }
-    }
-
-    abstract class ViewHolder(val itemView: View){
-        var x = 0
-        var y = 0
-        var width = 0
-        var height = 0
-
-        open fun bindData(){
-
-        }
-
-        override fun toString(): String {
-            return "ViewHolder: x = $x, y = $y, width = $width, height = $height"
         }
     }
 }

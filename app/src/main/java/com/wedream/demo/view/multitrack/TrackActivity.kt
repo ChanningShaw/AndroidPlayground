@@ -42,11 +42,11 @@ class TrackActivity : AppCompatActivity() {
 
 
         val list = mutableListOf<TrackElementData>()
-        var start = 1000
+        var start = 200
         val length = 200
         val margin = 10
         var end = start + length
-        for (i in 0..1) {
+        for (i in 0..10) {
             list.add(TrackElementData(i.toLong() + 100000, start, end - start, i))
             start += (length + margin)
             end += (length + margin)
@@ -54,7 +54,9 @@ class TrackActivity : AppCompatActivity() {
         adapter = MultiTrackAdapter(this)
         trackContainer?.setAdapter(adapter!!)
         trackContainer?.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
-            adapter?.setBounds(Rect(left, top, right, bottom))
+            val height = trackContainer?.getContentHeight() ?: 0
+            log { "height = $height" }
+            adapter?.setBounds(Rect(left, top, right, top + height))
         }
         adapter?.setData(list)
 
