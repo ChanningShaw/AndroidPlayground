@@ -112,13 +112,13 @@ class PlaneRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : Scr
         insertElements(adapter.getElementIds())
     }
 
-    private fun insertElements(ids: List<Long>, checkVisible: Boolean = true) {
+    private fun insertElements(ids: List<Long>, fullUpdate: Boolean = true, checkVisible: Boolean = true) {
         val adapter = recyclerAdapter ?: return
         var minHeight = 0
         for (id in ids) {
             val border = adapter.getViewBorder(id, trackContainerInner)
             allBorders[id] = border
-            // 计算累积的高度
+            // 计算累计的高度
             if (border.bottom() > minHeight) {
                 minHeight = border.bottom()
             }
@@ -134,7 +134,7 @@ class PlaneRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : Scr
         }
         val view = View(context)
         val params = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, 1)
-        params.topMargin = minHeight
+        params.topMargin = minHeight - 1
         trackContainerInner.addView(view, params)
     }
 

@@ -9,6 +9,8 @@ abstract class ElementData(val id: Long){
      var width: Int = 0
      var height: Int = 0
 
+    private var isSelected = false
+
     constructor(id: Long, left: Int, top: Int, width: Int, height: Int) : this(id) {
         this.left = left
         this.top = top
@@ -17,8 +19,6 @@ abstract class ElementData(val id: Long){
     }
 
     constructor(id: Long, rect: Rect) : this(id, rect.left, rect.top, rect.width(), rect.height())
-
-    private var isSelected = false
 
     fun horizontalMoveBy(offset: Int) {
         this.left += offset

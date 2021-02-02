@@ -441,7 +441,7 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<PlaneRec
         }
     }
 
-    private fun removeAttachData(){
+    private fun removeAttachData() {
         elements.remove(ID_SLIDER)?.let {
             notifyItemRemoved(it.id)
         }
