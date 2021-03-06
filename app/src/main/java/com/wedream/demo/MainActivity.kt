@@ -2,13 +2,11 @@ package com.wedream.demo
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
 import com.wedream.demo.algo.activity.LinkedListActivity
 import com.wedream.demo.algo.activity.SortActivity
 import com.wedream.demo.app.ApplicationHolder
-import com.wedream.demo.category.CategoryAdapter
-import com.wedream.demo.common.CommonAdapter
+import com.wedream.demo.app.CategoryActivity
+import com.wedream.demo.category.Category
 import com.wedream.demo.concurrent.JavaExecutorActivity
 import com.wedream.demo.concurrent.kotlin.CoroutineActivity
 import com.wedream.demo.concurrent.kotlin.FlowActivity
@@ -25,33 +23,7 @@ import com.wedream.demo.view.TabLayoutActivity
 import com.wedream.demo.view.ViewPagerActivity
 import com.wedream.demo.view.multitrack.TrackActivity
 
-class MainActivity : AppCompatActivity() {
-
-    companion object {
-        val data = listOf(
-            MatrixDemoActivity::class.java,
-            DrawTextDemoActivity::class.java,
-            PlaneGeometryActivity::class.java,
-            CoroutineActivity::class.java,
-            FlowActivity::class.java,
-            SortActivity::class.java,
-            LinkedListActivity::class.java,
-            DrawPathActivity::class.java,
-            WaveViewActivity::class.java,
-            FunctionProgrammingActivity::class.java,
-            RxJavaDemoActivity::class.java,
-            JavaExecutorActivity::class.java,
-            HelloJNIActivity::class.java,
-            GL2JNIActivity::class.java,
-            FontDemoActivity::class.java,
-            GLColorActivity::class.java,
-            NewTipsActivity::class.java,
-            TabLayoutActivity::class.java,
-            ViewPagerActivity::class.java,
-            TrackActivity::class.java,
-            HorizontalScrollActivity::class.java
-        )
-    }
+class MainActivity : CategoryActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,21 +33,49 @@ class MainActivity : AppCompatActivity() {
             intent.component = lastCom
             startActivity(intent)
         }
-        setContentView(R.layout.activity_main)
-        val rv = findViewById<RecyclerView>(R.id.main_rv)
-        val adapter = CategoryAdapter(this)
-        rv.layoutManager =
-            androidx.recyclerview.widget.LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        setCategoryList(buildData())
+    }
 
-        adapter.setData(data)
-        rv.adapter = adapter
-
-        adapter.setItemClickListener(object :
-            CommonAdapter.OnItemClickListener<Class<*>, CategoryAdapter.Holder> {
-            override fun onItemClick(data: Class<*>, holder: CategoryAdapter.Holder, pos: Int) {
-                val intent = Intent(this@MainActivity, data)
-                startActivity(intent)
-            }
-        })
+    private fun buildData(): List<Category> {
+        val viewCategory = Category("view").addComponentCategories(
+            listOf(
+                MatrixDemoActivity::class.java,
+                DrawTextDemoActivity::class.java,
+                PlaneGeometryActivity::class.java,
+                DrawPathActivity::class.java,
+                WaveViewActivity::class.java,
+                NewTipsActivity::class.java,
+                TabLayoutActivity::class.java,
+                ViewPagerActivity::class.java,
+                TrackActivity::class.java,
+                HorizontalScrollActivity::class.java
+            )
+        )
+        val multiThreading = Category("multiThreading").addComponentCategories(
+            listOf(
+                CoroutineActivity::class.java,
+                FlowActivity::class.java,
+                FunctionProgrammingActivity::class.java,
+                RxJavaDemoActivity::class.java,
+                JavaExecutorActivity::class.java
+            )
+        )
+        val algorithm = Category("algorithm").addComponentCategories(
+            listOf(
+                SortActivity::class.java,
+                LinkedListActivity::class.java
+            )
+        )
+        val render = Category("render").addComponentCategories(
+            listOf(
+                HelloJNIActivity::class.java,
+                GL2JNIActivity::class.java,
+                FontDemoActivity::class.java,
+                GLColorActivity::class.java
+            )
+        )
+        return listOf(
+            viewCategory, multiThreading, algorithm, render
+        )
     }
 }

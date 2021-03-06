@@ -45,6 +45,9 @@ class MyApplication : Application() {
             }
 
             override fun onActivityResumed(activity: Activity) {
+                if (activity is CategoryActivity) {
+                    return
+                }
                 val value = "${activity.componentName.packageName}/${activity.componentName.className}"
                 appSp.edit().putString(KEY_LAST_RESUME_ACTIVITY, value).apply()
             }

@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.wedream.demo.R
 import com.wedream.demo.common.CommonAdapter
 
-class CategoryAdapter(context: Context) : CommonAdapter<Class<*>, CategoryAdapter.Holder>(context) {
+class CategoryAdapter(context: Context) : CommonAdapter<Category, CategoryAdapter.Holder>(context) {
 
     class Holder(view: View) : RecyclerView.ViewHolder(view) {
         val textView: TextView = view.findViewById(R.id.tv)
@@ -20,7 +20,7 @@ class CategoryAdapter(context: Context) : CommonAdapter<Class<*>, CategoryAdapte
     override fun onBindViewHolder(holder: Holder, position: Int) {
         super.onBindViewHolder(holder, position)
         val data = getData()[position]
-        holder.textView.text = data.simpleName
+        holder.textView.text = data.name
     }
 
     override fun getViewHolder(view: View): Holder {
