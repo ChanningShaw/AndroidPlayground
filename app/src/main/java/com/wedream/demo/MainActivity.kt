@@ -19,6 +19,7 @@ import com.wedream.demo.jni.HelloJNIActivity
 import com.wedream.demo.planegeometry.PlaneGeometryActivity
 import com.wedream.demo.render.*
 import com.wedream.demo.render.gl3.GLColorActivity
+import com.wedream.demo.view.HorizontalScrollActivity
 import com.wedream.demo.view.NewTipsActivity
 import com.wedream.demo.view.TabLayoutActivity
 import com.wedream.demo.view.ViewPagerActivity
@@ -47,7 +48,8 @@ class MainActivity : AppCompatActivity() {
             NewTipsActivity::class.java,
             TabLayoutActivity::class.java,
             ViewPagerActivity::class.java,
-            TrackActivity::class.java
+            TrackActivity::class.java,
+            HorizontalScrollActivity::class.java
         )
     }
 

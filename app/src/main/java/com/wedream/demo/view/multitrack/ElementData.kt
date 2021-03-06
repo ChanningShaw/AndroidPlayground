@@ -2,7 +2,7 @@ package com.wedream.demo.view.multitrack
 
 import com.wedream.demo.view.multitrack.base.ElementData
 
-open class TrackElementData(id: Long) : ElementData(id) {
+open class ElementData(id: Long) : ElementData(id) {
 
     companion object {
         const val DEFAULT_TRACK_HEIGHT = 100
@@ -30,12 +30,12 @@ open class TrackElementData(id: Long) : ElementData(id) {
     }
 
     override fun <T> copy(): T {
-        return TrackElementData(id, left, width, trackLevel) as T
+        return ElementData(id, left, width, trackLevel) as T
     }
 
     override fun set(other: ElementData) {
         super.set(other)
-        if (other is TrackElementData) {
+        if (other is com.wedream.demo.view.multitrack.ElementData) {
             this.trackLevel = other.trackLevel
         }
     }

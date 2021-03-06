@@ -45,11 +45,8 @@ class MyApplication : Application() {
             }
 
             override fun onActivityResumed(activity: Activity) {
-                val value =
-                    "${activity.componentName.packageName}/${activity.componentName.className}"
-                appSp.edit()
-                    .putString(KEY_LAST_RESUME_ACTIVITY, value)
-                    .apply()
+                val value = "${activity.componentName.packageName}/${activity.componentName.className}"
+                appSp.edit().putString(KEY_LAST_RESUME_ACTIVITY, value).apply()
             }
         })
     }

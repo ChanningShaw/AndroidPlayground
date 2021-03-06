@@ -41,13 +41,13 @@ class TrackActivity : AppCompatActivity() {
         })
 
 
-        val list = mutableListOf<TrackElementData>()
+        val list = mutableListOf<ElementData>()
         var start = 200
         val length = 200
         val margin = 10
         var end = start + length
         for (i in 0..10) {
-            list.add(TrackElementData(i.toLong() + 100000, start, end - start, i))
+            list.add(ElementData(i.toLong() + 100000, start, end - start, i))
             start += (length + margin)
             end += (length + margin)
         }

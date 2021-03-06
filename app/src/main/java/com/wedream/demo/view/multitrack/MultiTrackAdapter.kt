@@ -13,13 +13,13 @@ import com.wedream.demo.view.multitrack.base.ElementView
 
 class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<PlaneRecycler.ViewHolder>() {
 
-    private val dataList = mutableListOf<TrackElementData>()
-    private val elements = mutableMapOf<Long, TrackElementData>()
+    private val dataList = mutableListOf<ElementData>()
+    private val elements = mutableMapOf<Long, ElementData>()
     private var minLevel = Int.MAX_VALUE
     private var maxLevel = Int.MIN_VALUE
     private var currentSelectId = -1L
     private var currentOperateId = -1L
-    private var lastOperateSegment: TrackElementData? = null
+    private var lastOperateSegment: ElementData? = null
     private var bounds = Rect()
 
     companion object {
@@ -44,7 +44,7 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<PlaneRec
         const val MIN_ELEMENT_WITH = 10
     }
 
-    fun setData(data: List<TrackElementData>) {
+    fun setData(data: List<ElementData>) {
         dataList.clear()
         dataList.addAll(data)
         updateDataSet()
@@ -70,7 +70,7 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<PlaneRec
     }
 
     private fun addTrack(level: Int) {
-        elements[level.toLong()] = TrackElementData(level.toLong(), 0, FrameLayout.LayoutParams.MATCH_PARENT, level)
+        elements[level.toLong()] = ElementData(level.toLong(), 0, FrameLayout.LayoutParams.MATCH_PARENT, level)
         if (level < minLevel) {
             minLevel = level
         } else if (level > maxLevel) {
@@ -117,17 +117,17 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<PlaneRec
         when (viewType) {
             ELEMENT_TYPE_SLIDER -> {
                 return TextTrackHolder(SliderView(context).apply {
-                    setSegmentEventListener(sliderEventListener)
+                    setElementEventListener(sliderEventListener)
                 })
             }
             ELEMENT_TYPE_LEFT_DRAGGER -> {
                 return TextTrackHolder(DraggerView(context).apply {
-                    setSegmentEventListener(draggerEventListener)
+                    setElementEventListener(draggerEventListener)
                 })
             }
             ELEMENT_TYPE_RIGHT_DRAGGER -> {
                 return TextTrackHolder(DraggerView(context).apply {
-                    setSegmentEventListener(draggerEventListener)
+                    setElementEventListener(draggerEventListener)
                 })
             }
             ELEMENT_TYPE_TRACK -> {
@@ -135,7 +135,7 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<PlaneRec
             }
             else -> {
                 return TextTrackHolder(SegmentView(context).apply {
-                    setSegmentEventListener(segmentEventListener)
+                    setElementEventListener(segmentEventListener)
                 })
             }
         }
@@ -164,7 +164,7 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<PlaneRec
         }
     }
 
-    private fun onBindSegmentHolder(elementData: TrackElementData, holder: PlaneRecycler.ViewHolder) {
+    private fun onBindSegmentHolder(elementData: ElementData, holder: PlaneRecycler.ViewHolder) {
         elementData.bindBorder(holder.itemBorder)
         val itemView = holder.itemView
         itemView.tag = elementData
@@ -192,20 +192,20 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<PlaneRec
         }
     }
 
-    private fun onBindTrackHolder(elementData: TrackElementData, holder: PlaneRecycler.ViewHolder) {
+    private fun onBindTrackHolder(elementData: ElementData, holder: PlaneRecycler.ViewHolder) {
         elementData.bindBorder(holder.itemBorder)
         log { "onBindTrackHolder :$holder" }
         holder.itemView.setBackgroundResource(R.color.color_gray)
     }
 
-    private fun onBindSliderHolder(elementData: TrackElementData, holder: PlaneRecycler.ViewHolder) {
+    private fun onBindSliderHolder(elementData: ElementData, holder: PlaneRecycler.ViewHolder) {
         elementData.bindBorder(holder.itemBorder)
         log { "onBindSliderHolder :$holder" }
         holder.itemView.setBackgroundResource(R.color.red_dot_color)
         holder.itemView.tag = elementData
     }
 
-    private fun onBindDraggerHolder(elementData: TrackElementData, holder: PlaneRecycler.ViewHolder) {
+    private fun onBindDraggerHolder(elementData: ElementData, holder: PlaneRecycler.ViewHolder) {
         elementData.bindBorder(holder.itemBorder)
         log { "onBindDraggerHolder :$holder" }
         holder.itemView.setBackgroundResource(R.color.red_dot_color)
@@ -218,7 +218,7 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<PlaneRec
         private var hasAddedTrack = false
 
         override fun onActionDown(view: ElementView) {
-            val segmentData = view.tag as TrackElementData
+            val segmentData = view.tag as ElementData
             lastOperateSegment = segmentData.copy()
             handleHorizontalTouchEvent(true)
             hasAddedTrack = false
@@ -228,7 +228,7 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<PlaneRec
             if (!view.isLongPressed()) {
                 return
             }
-            val elementData = view.tag as TrackElementData
+            val elementData = view.tag as ElementData
             if (deltaY < -(DEFAULT_TRACK_HEIGHT / 2 + DEFAULT_TRACK_MARGIN)) {
                 if (elementData.trackLevel == minLevel) {
                     if (!hasAddedTrack) {
@@ -265,7 +265,7 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<PlaneRec
         }
 
         override fun onActionUp(view: ElementView, deltaX: Int, deltaY: Int) {
-            val data = (view.tag as TrackElementData)
+            val data = (view.tag as ElementData)
             val offsetX = clampOffsetX(data, deltaX)
             val offsetY = clampOffsetY(data, deltaY)
             if (data.id == currentOperateId) {
@@ -283,7 +283,7 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<PlaneRec
         }
 
         override fun onLongPress(view: ElementView) {
-            val data = (view.tag as TrackElementData)
+            val data = (view.tag as ElementData)
             currentOperateId = data.id
             view.alpha = 0.8f
             unSelect()
@@ -291,7 +291,7 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<PlaneRec
         }
 
         override fun onClick(view: ElementView) {
-            val data = (view.tag as TrackElementData)
+            val data = (view.tag as ElementData)
             select(data)
         }
     }
@@ -371,7 +371,7 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<PlaneRec
         }
     }
 
-    private fun moveElement(data: TrackElementData, deltaX: Int) {
+    private fun moveElement(data: ElementData, deltaX: Int) {
         val offset = clampOffsetX(data, deltaX)
         data.horizontalMoveBy(offset)
         // 耳朵跟着移到
@@ -386,7 +386,7 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<PlaneRec
         notifyItemMoved(data.id)
     }
 
-    private fun clampOffsetX(data: TrackElementData, deltaX: Int): Int {
+    private fun clampOffsetX(data: ElementData, deltaX: Int): Int {
         var offset = deltaX
         if (data.left + deltaX <= bounds.left) {
             offset = bounds.left - data.left
@@ -397,7 +397,7 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<PlaneRec
         return offset
     }
 
-    private fun clampOffsetY(data: TrackElementData, deltaY: Int): Int {
+    private fun clampOffsetY(data: ElementData, deltaY: Int): Int {
         var offset = deltaY
         if (data.top + deltaY <= bounds.top) {
             offset = bounds.top - data.top
@@ -408,7 +408,7 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<PlaneRec
         return offset
     }
 
-    private fun select(data: TrackElementData) {
+    private fun select(data: ElementData) {
         unSelect()
         currentSelectId = data.id
         // 显示拖把和耳朵
@@ -453,7 +453,7 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<PlaneRec
         }
     }
 
-    private fun doRollback(current: TrackElementData, old: TrackElementData) {
+    private fun doRollback(current: ElementData, old: ElementData) {
         current.set(old)
         notifyItemMoved(current.id)
     }
@@ -462,11 +462,11 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<PlaneRec
      * 重叠检查
      */
     private fun checkOverlap(segmentId: Long, deltaX: Int = 0, deltaY: Int = 0): Boolean {
-        val segmentData = elements[segmentId] ?: return false
-        val rect = getSegmentBounds(segmentData, deltaX, deltaY)
+        val elementData = elements[segmentId] ?: return false
+        val rect = getElementBounds(elementData, deltaX, deltaY)
         for (data in elements.values) {
             if (getElementType(data.id) != ELEMENT_TYPE_SEGMENT) continue
-            if (data.id != segmentId && rect.overlap(getSegmentBounds(data))) {
+            if (data.id != segmentId && rect.overlap(getElementBounds(data))) {
                 return true
             }
         }
@@ -515,15 +515,15 @@ class MultiTrackAdapter(val context: Context) : AbsPlaneRecyclerAdapter<PlaneRec
         }
     }
 
-    private fun getSegmentBounds(segmentData: TrackElementData, deltaX: Int = 0, deltaY: Int = 0): Rect {
-        val left = segmentData.left + deltaX
-        val top = segmentData.top + deltaY
-        val right = left + segmentData.width
-        val bottom = top + segmentData.height
+    private fun getElementBounds(elementData: ElementData, deltaX: Int = 0, deltaY: Int = 0): Rect {
+        val left = elementData.left + deltaX
+        val top = elementData.top + deltaY
+        val right = left + elementData.width
+        val bottom = top + elementData.height
         return Rect(left, top, right, bottom)
     }
 
-    private fun getHorizontalRange(segmentData: TrackElementData, deltaX: Int = 0): Range<Int> {
+    private fun getHorizontalRange(segmentData: ElementData, deltaX: Int = 0): Range<Int> {
         return Range(segmentData.left + deltaX, segmentData.right() + deltaX)
     }
 
@@ -561,7 +561,7 @@ inline fun <T, R> Iterable<T>.mapDistinct(transform: (T) -> R): List<R> {
     return map.toList()
 }
 
-fun TrackElementData.bindBorder(border: PlaneRecycler.ViewBorder) {
+fun ElementData.bindBorder(border: PlaneRecycler.ViewBorder) {
     border.x = left
     border.y = top
     border.width = width

@@ -7,7 +7,7 @@ open class AttachElementData(id: Long,
                         left: Int,
                         width: Int,
                         trackLevel: Int)
-    : TrackElementData(id, left, width, trackLevel) {
+    : ElementData(id, left, width, trackLevel) {
 
     var targetId = -1L
 }

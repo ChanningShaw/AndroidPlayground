@@ -37,7 +37,7 @@
     <activity android:name=".view.TabLayoutActivity" />
     <activity android:name=".view.ViewPagerActivity" />
     <activity android:name=".view.multitrack.TrackActivity"
-      android:screenOrientation = "landscape" />
+      android:screenOrientation = "landscape" /><activity android:name=".view.HorizontalScrollActivity" />
   </application>
 
 </manifest>

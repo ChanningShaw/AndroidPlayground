@@ -33,7 +33,7 @@ abstract class ElementView(context: Context, attrs: AttributeSet?, defStyle: Int
         const val CLICK_AREA = 25
     }
 
-    fun setSegmentEventListener(listener: ElementEventListener) {
+    fun setElementEventListener(listener: ElementEventListener) {
         eventListener = listener
     }
 

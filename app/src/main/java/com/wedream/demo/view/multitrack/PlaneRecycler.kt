@@ -22,8 +22,8 @@ class PlaneRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : Scr
 
     private lateinit var trackContainerInner: FrameLayout
 
-    private var allHolders = mutableMapOf<Long, ViewHolder>()
     private var allBorders = mutableMapOf<Long, ViewBorder>()
+    private var allHolders = mutableMapOf<Long, ViewHolder>()
 
     // 按照viewType缓存的holder
     private var cacheHolders = hashMapOf<Int, LinkedList<ViewHolder>>()
@@ -139,20 +139,38 @@ class PlaneRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : Scr
     }
 
     private fun handleItemRemoved(ids: List<Long>) {
+        val adapter = recyclerAdapter ?: return
         for (id in ids) {
-            val holder = allHolders.remove(id)
-            holder?.let {
-                trackContainerInner.removeView(holder.itemView)
-            }
+            allBorders.remove(id)
+            allHolders.remove(id)
+            recycleItem(adapter, id)
         }
     }
 
     private fun handleItemChanged(ids: List<Long>) {
+        val becomeVisibleList = mutableListOf<Long>()
+        val adapter = recyclerAdapter ?: return
         for (id in ids) {
-            val adapter = recyclerAdapter ?: return
-            val holder = allHolders[id] ?: return
-            updateHolder(adapter, holder, id)
+            val holder = visibleHolders[id]
+            if (holder != null) {
+                if (checkViewVisible(holder.itemBorder)) {
+                    updateHolder(adapter, holder, id)
+                } else {
+                    recycleItem(adapter, id)
+                }
+            } else {
+                // 不可见或者之前没添加的item发生了变化
+                val border = adapter.getViewBorder(id, trackContainerInner)
+                allBorders[id] = border
+                if (checkViewVisible(border)) {
+                    // 如果view还没添加，现在添加
+                    if (visibleHolders[id] == null) {
+                        becomeVisibleList.add(id)
+                    }
+                }
+            }
         }
+        insertElements(becomeVisibleList)
     }
 
     private fun handleItemMoved(ids: List<Long>) {
@@ -162,6 +180,7 @@ class PlaneRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : Scr
                 scrollIfNeed(holder.itemBorder)
             }
         }
+        handleHorizontalEvent = false
     }
 
     private fun getHolderFromCache(viewType: Int): ViewHolder? {
@@ -234,22 +253,14 @@ class PlaneRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : Scr
         for (entry in allBorders) {
             val border = entry.value
             border.setupWithParent(trackContainerInner)
-            if (visibleRegion.overlap(border.toRect())) {
+            if (checkViewVisible(border)) {
                 // 可见
                 // 如果view还没添加，现在添加
                 if (visibleHolders[entry.key] == null) {
                     becomeVisibleList.add(entry.key)
                 }
             } else {
-                // 不可见
-                visibleHolders.remove(entry.key)?.let {
-                    val viewType = adapter.getElementType(entry.key)
-                    val cache = cacheHolders[viewType] ?: LinkedList<ViewHolder>().apply {
-                        cacheHolders[viewType] = this
-                    }
-                    cache.add(it)
-                    trackContainerInner.removeView(it.itemView)
-                }
+                recycleItem(adapter, entry.key)
             }
         }
 
@@ -257,11 +268,22 @@ class PlaneRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : Scr
         log { "reLayout took ${System.currentTimeMillis() - start}" }
     }
 
+    private fun recycleItem(adapter: AbsPlaneRecyclerAdapter<ViewHolder>, id: Long) {
+        visibleHolders.remove(id)?.let {
+            val viewType = adapter.getElementType(id)
+            val cache = cacheHolders[viewType] ?: LinkedList<ViewHolder>().apply {
+                cacheHolders[viewType] = this
+            }
+            cache.add(it)
+            trackContainerInner.removeView(it.itemView)
+        }
+    }
+
     fun handleHorizontalTouchEvent(value: Boolean) {
         handleHorizontalEvent = value
     }
 
-    fun setEventListener(listener: EventListener){
+    fun setEventListener(listener: EventListener) {
         this.listener = listener
     }
 
@@ -316,7 +338,7 @@ class PlaneRecycler(context: Context, attrs: AttributeSet?, defStyle: Int) : Scr
     }
 }
 
-fun View.r() : Float{
+fun View.r(): Float {
     return right + translationX
 }
 
