@@ -12,6 +12,7 @@ import com.wedream.demo.concurrent.kotlin.CoroutineActivity
 import com.wedream.demo.concurrent.kotlin.FlowActivity
 import com.wedream.demo.concurrent.kotlin.FunctionProgrammingActivity
 import com.wedream.demo.concurrent.rxjava.RxJavaDemoActivity
+import com.wedream.demo.investment.BTCPredictActivity
 import com.wedream.demo.jni.GL2JNIActivity
 import com.wedream.demo.jni.HelloJNIActivity
 import com.wedream.demo.planegeometry.PlaneGeometryActivity
@@ -74,8 +75,13 @@ class MainActivity : CategoryActivity() {
                 GLColorActivity::class.java
             )
         )
+        val investment = Category("investment").addComponentCategories(
+            listOf(
+                BTCPredictActivity::class.java
+            )
+        )
         return listOf(
-            viewCategory, multiThreading, algorithm, render
+            viewCategory, multiThreading, algorithm, render, investment
         )
     }
 }
