@@ -8,12 +8,21 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import com.tencent.mmkv.MMKV
 import com.wedream.demo.MainActivity
+import com.wedream.demo.app.ApplicationHolder.instance
+import com.wedream.demo.database.greenDao.DaoMaster
+import com.wedream.demo.database.greenDao.DaoOpenHelper
+import com.wedream.demo.database.greenDao.DaoSession
 
 class MyApplication : Application() {
 
     companion object {
         const val APP_SP_NAME = "app_sp"
         const val KEY_LAST_RESUME_ACTIVITY = "key_last_resume_activity"
+        const val DB_NAME = "investment.db"
+        val daoSession: DaoSession by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
+            val daoMaster = DaoMaster(DaoOpenHelper(instance, DB_NAME, null).writableDb)
+            daoMaster.newSession()
+        }
     }
 
     private lateinit var appSp: SharedPreferences
@@ -62,6 +71,10 @@ class MyApplication : Application() {
             val splits = componentString.split("/")
             ComponentName(splits[0], splits[1])
         }
+    }
+
+    fun getDaoSession(): DaoSession {
+        return daoSession
     }
 
     fun cleanLastResumeActivity() {

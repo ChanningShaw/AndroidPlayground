@@ -7,9 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.wedream.demo.R
 import com.wedream.demo.common.CommonAdapter
 import com.wedream.demo.util.TimeUtils.getHourAndMinutes
+import java.util.*
 
 class NewsListAdapter(context: Context) :
-    CommonAdapter<BTCPredictActivity.News, NewsListAdapter.Holder>(context) {
+    CommonAdapter<NewsEntity, NewsListAdapter.Holder>(context) {
 
     class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val time: TextView = itemView.findViewById(R.id.time)
@@ -25,7 +26,7 @@ class NewsListAdapter(context: Context) :
     override fun onBindViewHolder(holder: Holder, position: Int) {
         super.onBindViewHolder(holder, position)
         val news = getData()[position]
-        holder.time.text = getHourAndMinutes(news.time)
+        holder.time.text = getHourAndMinutes(Calendar.getInstance().apply { timeInMillis = news.time })
         holder.text.text = news.title
         holder.bullCount.text = news.bullCount.toString()
         holder.bearCount.text = news.bearCount.toString()

@@ -6,21 +6,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.wedream.demo.R
 import com.wedream.demo.util.LogUtils.log
+import com.wedream.demo.util.TimeUtils
 import com.wedream.demo.util.TimeUtils.getTimeString
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import org.jsoup.Jsoup
-import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
+import kotlin.math.max
 
 class BTCPredictActivity : AppCompatActivity() {
 
-    lateinit var disposable: Disposable
+    private var disposable = CompositeDisposable()
     private lateinit var bullLastText3: TextView
     private lateinit var bearLastText3: TextView
     private lateinit var ratioLastText3: TextView
@@ -35,7 +32,10 @@ class BTCPredictActivity : AppCompatActivity() {
 
     private lateinit var lastUpdate: TextView
     private lateinit var newsRecyclerView: RecyclerView
+
     private val adapter = NewsListAdapter(this)
+    // 缓存，按时间降序排序
+    private var cache = LinkedList<NewsEntity>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,17 +61,61 @@ class BTCPredictActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        disposable = startSpider("https://www.bishijie.com/kuaixun")
+        loadNews()
+        startSpider()
+    }
+
+    private fun loadNews() {
+        disposable.add(NewsManager.queryLast(12)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                analyseNews(it)
+                cache.addAll(it)
+                showNews()
             }, {
                 log { "error, cause = ${it.cause} , msg = ${it.message}" }
-            })
+            }))
     }
 
-    private fun analyseNews(newsList: List<News>) {
+    private fun startSpider() {
+        disposable.add(NewsSpider.start("https://www.bishijie.com/kuaixun")
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                addToCache(it)
+                showNews()
+            }, {
+                log { "error, cause = ${it.cause} , msg = ${it.message}" }
+            }))
+    }
+
+    /**
+     * todo 这里可以优化
+     */
+    private fun addToCache(newsList: List<NewsEntity>) {
+        for (n in newsList) {
+            var add = false
+            for (i in cache.indices) {
+                val cn = cache[i]
+                if (n == cn) {
+                    cn.bullCount = n.bullCount
+                    cn.bearCount = n.bearCount
+                    add = true
+                    break
+                } else if (n.time > cn.time) {
+                    cache.add(i, n)
+                    add = true
+                    break
+                }
+            }
+            if (!add) {
+                cache.addLast(n)
+            }
+        }
+    }
+
+    private fun showNews() {
+        log { "total news size = ${cache.size}" }
         val now = Calendar.getInstance(TimeZone.getTimeZone("GMT+8"))
         val last3 = Calendar.getInstance(TimeZone.getTimeZone("GMT+8")).apply {
             add(Calendar.HOUR, -3)
@@ -88,16 +132,16 @@ class BTCPredictActivity : AppCompatActivity() {
         var bearLast6 = 0
         var bullLast12 = 0
         var bearLast12 = 0
-        for (news in newsList) {
-            if (news.time.after(last12)) {
+        for (news in cache) {
+            if (news.time > last12.timeInMillis) {
                 bullLast12 += news.bullCount
                 bearLast12 += news.bearCount
             }
-            if (news.time.after(last6)) {
+            if (news.time > last6.timeInMillis) {
                 bullLast6 += news.bullCount
                 bearLast6 += news.bearCount
             }
-            if (news.time.after(last3)) {
+            if (news.time > last3.timeInMillis) {
                 bullLast3 += news.bullCount
                 bearLast3 += news.bearCount
             }
@@ -105,91 +149,23 @@ class BTCPredictActivity : AppCompatActivity() {
 //        log { "totalBullCount = $totalBullCount, totalBearCount = $totalBearCount" }
         bullLastText3.text = bullLast3.toString()
         bearLastText3.text = bearLast3.toString()
-        ratioLastText3.text = String.format("%.2f", bullLast3 * 1.0f / bearLast3)
+        ratioLastText3.text = String.format("%.2f", bullLast3 * 1.0f / (bearLast3 + bullLast3) * 100) + "%"
 
         bullLastText6.text = bullLast6.toString()
         bearLastText6.text = bearLast6.toString()
-        ratioLastText6.text = String.format("%.2f", bullLast6 * 1.0f / bearLast6)
+        ratioLastText6.text = String.format("%.2f", bullLast6 * 1.0f / (bearLast6 + bullLast6) * 100) + "%"
 
         bullLastText12.text = bullLast12.toString()
         bearLastText12.text = bearLast12.toString()
-        ratioLastText12.text = String.format("%.2f", bullLast12 * 1.0f / bearLast12)
+        ratioLastText12.text = String.format("%.2f", bullLast12 * 1.0f / (bullLast12 + bearLast12) * 100)+ "%"
 
         lastUpdate.text = getTimeString(now)
-        adapter.setData(newsList)
+        adapter.setData(cache)
     }
-
-    private fun startSpider(url: String): Observable<List<News>> {
-        return Observable.interval(0, 10, TimeUnit.SECONDS)
-            .flatMap {
-                return@flatMap Observable.create<List<News>> { emitter ->
-                    var html = ""
-                    val client = OkHttpClient()
-                    val request = Request.Builder()
-                        .url(url)
-                        .build()
-                    val response = client.newCall(request).execute()
-                    html = response.body?.string() ?: ""
-                    if (html == "") {
-                        emitter.onNext(emptyList())
-                    } else {
-                        val document = Jsoup.parse(html)
-                        val news = mutableListOf<News>()
-                        val newItems = document.getElementsByClass("newscontainer")
-                        var last = Calendar.getInstance(TimeZone.getTimeZone("GMT+8"))
-
-                        for (newsItem in newItems) {
-                            val items = newsItem.getElementsByTag("li")
-                            for (item in items) {
-                                val h3 = item.getElementsByTag("h3").first().text()
-                                val index = h3.indexOfFirst { it == ' ' }
-                                val time = h3.substring(0, index)
-                                log { time }
-                                val ms = time.split(":")
-                                log { "${ms[1].toInt()}, ${ms[0].toInt()}" }
-                                val date = Calendar.getInstance(TimeZone.getTimeZone("GMT+8"))
-                                date.set(
-                                    last.get(Calendar.YEAR),
-                                    last.get(Calendar.MONTH),
-                                    last.get(Calendar.DATE),
-                                    ms[0].toInt(),
-                                    ms[1].toInt(),
-                                    0
-                                )
-                                log { getTimeString(date) }
-                                if (date.after(last)) {
-                                    date.add(Calendar.DATE, -1)
-                                    last = date
-                                }
-                                val title = h3.substring(index)
-//                            log { time }
-//                            log { title }
-                                val bull = item.getElementsByClass("bull").first().text().split(" ")[1]
-                                val bullCount = bull.toInt()
-//                            log { bullCount }
-                                val bear = item.getElementsByClass("bear").first().text().split(" ")[1]
-                                val bearCount = bear.toInt()
-//                            log { bearCount }
-                                val n = News(date, title, bullCount, bearCount)
-//                            log { n }
-                                news.add(n)
-                            }
-                        }
-                        emitter.onNext(news)
-                    }
-                }
-            }
-    }
-
 
     override fun onStop() {
         super.onStop()
         disposable.dispose()
-    }
-
-    class News(val time: Calendar, val title: String, val bullCount: Int, val bearCount: Int) {
-        override fun toString(): String {
-            return "time = $time, title = $title, bullCount = $bullCount, bearCount = $bearCount"
-        }
+        NewsManager.insertNews(cache)
     }
 }
