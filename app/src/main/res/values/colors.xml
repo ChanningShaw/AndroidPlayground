@@ -8,6 +8,8 @@
     <color name="color_blue">#436EEE</color>
     <color name="color_violet">#551A8B</color>
     <color name="color_gray">#66888888</color>
+    <color name="color_yellow">#F8D74A</color>
+    <color name="color_white">#ffffff</color>
 
   <!-- 新功能提示 -->
   <color name="red_dot_color">#F91C1B</color>

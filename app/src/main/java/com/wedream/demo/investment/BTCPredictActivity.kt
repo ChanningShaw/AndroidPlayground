@@ -70,6 +70,7 @@ class BTCPredictActivity : AppCompatActivity() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
+                cache.clear()
                 cache.addAll(it)
                 showNews()
             }, {

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:clickable="true"
+  android:focusable="true">
+
+  <TextView
+    android:id="@+id/text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:layout_margin="20dp"
+    android:gravity="center"
+    android:text="1"
+    android:textColor="#ffffff"
+    android:textSize="30sp" />
+
+      <com.wedream.demo.view.TasksCompletedView
+        android:id="@+id/task_view"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
+        android:visibility="gone"
+        app:radius="4dp"
+        app:ringBgColor="@color/color_yellow"
+        app:ringColor="@color/color_yellow"
+        app:strokeWidth="2dp" />
+
+</RelativeLayout>

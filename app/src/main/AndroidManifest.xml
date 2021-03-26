@@ -43,7 +43,7 @@
             android:screenOrientation="landscape" />
         <activity android:name=".view.HorizontalScrollActivity" />
         <activity android:name=".app.CategoryActivity" />
-        <activity android:name=".investment.BTCPredictActivity" />
+        <activity android:name=".investment.BTCPredictActivity" /><activity android:name=".render.RecyclerViewActivity" /><activity android:name=".view.ViewLevelActivity" />
     </application>
 
 </manifest>
