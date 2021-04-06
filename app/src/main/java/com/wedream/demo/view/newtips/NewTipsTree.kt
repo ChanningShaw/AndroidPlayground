@@ -1,4 +1,4 @@
-package com.wedream.demo.view
+package com.wedream.demo.view.newtips
 
 import android.view.View
 import com.wedream.demo.util.LogUtils.log

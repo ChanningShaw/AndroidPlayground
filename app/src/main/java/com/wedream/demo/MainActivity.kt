@@ -20,6 +20,7 @@ import com.wedream.demo.render.*
 import com.wedream.demo.render.gl3.GLColorActivity
 import com.wedream.demo.view.*
 import com.wedream.demo.view.multitrack.TrackActivity
+import com.wedream.demo.view.newtips.NewTipsActivity
 
 class MainActivity : CategoryActivity() {
 
@@ -48,7 +49,8 @@ class MainActivity : CategoryActivity() {
                 TrackActivity::class.java,
                 HorizontalScrollActivity::class.java,
                 RecyclerViewActivity::class.java,
-                ViewLevelActivity::class.java
+                ViewLevelActivity::class.java,
+                ScaleActivity::class.java
             )
         )
         val multiThreading = Category("multiThreading").addComponentCategories(

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.wedream.demo">
+  package="com.wedream.demo">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".app.MyApplication"
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+      android:name=".app.MyApplication"
+      android:allowBackup="true"
+      android:icon="@mipmap/ic_launcher"
+      android:label="@string/app_name"
+      android:roundIcon="@mipmap/ic_launcher_round"
+      android:supportsRtl="true"
+      android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,15 +35,18 @@
         <activity android:name=".jni.GL2JNIActivity" />
         <activity android:name=".render.FontDemoActivity" />
         <activity android:name=".render.gl3.GLColorActivity" />
-        <activity android:name=".view.NewTipsActivity" />
+        <activity android:name=".view.newtips.NewTipsActivity" />
         <activity android:name=".view.TabLayoutActivity" />
         <activity android:name=".view.ViewPagerActivity" />
         <activity
-            android:name=".view.multitrack.TrackActivity"
-            android:screenOrientation="landscape" />
+          android:name=".view.multitrack.TrackActivity"
+          android:screenOrientation="landscape" />
         <activity android:name=".view.HorizontalScrollActivity" />
         <activity android:name=".app.CategoryActivity" />
-        <activity android:name=".investment.BTCPredictActivity" /><activity android:name=".render.RecyclerViewActivity" /><activity android:name=".view.ViewLevelActivity" />
+        <activity android:name=".investment.BTCPredictActivity" />
+        <activity android:name=".render.RecyclerViewActivity" />
+        <activity android:name=".view.ViewLevelActivity" />
+        <activity android:name=".view.ScaleActivity" />
     </application>
 
 </manifest>

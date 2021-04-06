@@ -1,4 +1,4 @@
-package com.wedream.demo.view
+package com.wedream.demo.view.newtips
 
 import android.content.Context
 import android.graphics.Canvas
