@@ -50,6 +50,7 @@ class MainActivity : CategoryActivity() {
                 HorizontalScrollActivity::class.java,
                 RecyclerViewActivity::class.java,
                 ViewLevelActivity::class.java,
+                ScaleViewActivity::class.java,
                 ScaleActivity::class.java
             )
         )

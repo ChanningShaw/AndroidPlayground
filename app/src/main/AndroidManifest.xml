@@ -46,7 +46,7 @@
         <activity android:name=".investment.BTCPredictActivity" />
         <activity android:name=".render.RecyclerViewActivity" />
         <activity android:name=".view.ViewLevelActivity" />
-        <activity android:name=".view.ScaleActivity" />
+        <activity android:name=".view.ScaleViewActivity" /><activity android:name=".view.ScaleActivity" />
     </application>
 
 </manifest>
