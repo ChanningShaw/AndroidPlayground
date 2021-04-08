@@ -49,6 +49,7 @@
         <activity android:name=".view.ScaleViewActivity" />
         <activity android:name=".view.ScaleActivity" />
         <activity android:name=".algo.activity.ArrayAlgorithmActivity" />
+        <activity android:name=".view.CrossGroupMovementActivity" />
     </application>
 
 </manifest>

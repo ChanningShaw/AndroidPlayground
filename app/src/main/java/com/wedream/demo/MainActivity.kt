@@ -52,7 +52,8 @@ class MainActivity : CategoryActivity() {
                 RecyclerViewActivity::class.java,
                 ViewLevelActivity::class.java,
                 ScaleViewActivity::class.java,
-                ScaleActivity::class.java
+                ScaleActivity::class.java,
+                CrossGroupMovementActivity::class.java
             )
         )
         val multiThreading = Category("multiThreading").addComponentCategories(
