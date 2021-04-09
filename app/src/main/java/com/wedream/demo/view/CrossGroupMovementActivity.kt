@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
 import com.wedream.demo.util.LogUtils.log
@@ -15,8 +14,8 @@ import com.wedream.demo.view.multitrack.overlap
 
 class CrossGroupMovementActivity : AppCompatActivity() {
 
-    lateinit var container: LinearLayout
-    private lateinit var group1: FrameLayout''
+    lateinit var container: FrameLayout
+    private lateinit var group1: FrameLayout
     lateinit var group2: FrameLayout
 
     private val groupRectMap = mutableMapOf<View, ViewInfo>()
@@ -26,6 +25,9 @@ class CrossGroupMovementActivity : AppCompatActivity() {
     private var movingStart = false
     private var canPlace = false
     private var originRect = Rect()
+    private var newGroupTipsView: View? = null
+    // 正在操作的group
+    private var operatingGroup: ViewGroup? = null
 
     private var elementEventListener = object : ElementView.ElementEventListener {
 
@@ -95,6 +97,7 @@ class CrossGroupMovementActivity : AppCompatActivity() {
 
         override fun onLongPress(view: ElementView) {
             if (!movingStart) {
+                operatingGroup = view.parent as ViewGroup
                 movingStart = true
                 view.z += 10
                 (view.parent as ViewGroup).z += 10
@@ -112,6 +115,8 @@ class CrossGroupMovementActivity : AppCompatActivity() {
         container = findViewById(R.id.container)
         group1 = findViewById(R.id.group1)
         group2 = findViewById(R.id.group2)
+        group1.tag = 1
+        group2.tag = 2
         group1.post {
             initRects()
         }
@@ -121,13 +126,13 @@ class CrossGroupMovementActivity : AppCompatActivity() {
         var offset = 0
         val width = 150
         for (i in 1..5) {
-            val rect = Rect(offset, 0, offset + width, 200)
+            val rect = Rect(offset, 0, offset + width, group1.height)
             group1RectMap[i] = ViewInfo(rect, group1.top)
             offset += width
         }
         offset = 0
         for (i in 6..10) {
-            val rect = Rect(offset, 0, offset + width, 200)
+            val rect = Rect(offset, 0, offset + width, group2.height)
             group2RectMap[i] = ViewInfo(rect, group2.top)
             offset += width
         }
@@ -183,9 +188,9 @@ class CrossGroupMovementActivity : AppCompatActivity() {
         val rect = Rect(info.rect)
         // 转换成全局坐标
         rect.offset(0, info.offset)
+        restrictWithin(rect, container)
         adsorbContainerBorder(rect, group1)
         adsorbContainerBorder(rect, group2)
-        restrictWithin(rect, container)
         // 转回容器内坐标
         rect.offset(0, -info.offset)
         info.rect.set(rect)
@@ -200,15 +205,27 @@ class CrossGroupMovementActivity : AppCompatActivity() {
             if (rect.left < groupRect.left && rect.right > groupRect.left) {
                 rect.offset(groupRect.left - rect.left, 0)
             }
-            if (rect.top < groupRect.top && rect.bottom > groupRect.top) {
-                rect.offset(0, groupRect.top - rect.top)
-            }
+//            if (rect.top < groupRect.top && rect.bottom > groupRect.top) {
+//                rect.offset(0, groupRect.top - rect.top)
+//            }
             if (rect.left < groupRect.right && rect.right > groupRect.right) {
                 rect.offset(groupRect.right - rect.right, 0)
             }
-            if (rect.top < groupRect.bottom && rect.bottom > groupRect.bottom) {
-                rect.offset(0, groupRect.bottom - rect.bottom)
+//            if (rect.top < groupRect.bottom && rect.bottom > groupRect.bottom) {
+//                rect.offset(0, groupRect.bottom - rect.bottom)
+//            }
+            log { "centerY = $centerY, groupRect = $groupRect" }
+            operatingGroup?.let {
+                if (centerY > groupRect.top && centerY < groupRect.top + groupRect.height() * 0.15) {
+                    showNewGroupTipsView(groupRect.top - it.top - 20 / 2)
+                } else if (centerY < groupRect.bottom && centerY > groupRect.top + groupRect.height() * 0.85) {
+                    showNewGroupTipsView(groupRect.top - it.top + groupRect.height() - 20 / 2)
+                } else {
+                    hideNewGroupTipsView(viewGroup)
+                }
             }
+        } else {
+            hideNewGroupTipsView(viewGroup)
         }
     }
 
@@ -227,6 +244,25 @@ class CrossGroupMovementActivity : AppCompatActivity() {
         if (rect.bottom > groupRect.bottom) {
             rect.offset(0, groupRect.bottom - rect.bottom)
         }
+    }
+
+    private fun showNewGroupTipsView(offset: Int) {
+        if (newGroupTipsView?.isAttachedToWindow == true) {
+            return
+        }
+        val view = newGroupTipsView ?: View(this).apply {
+            newGroupTipsView = this
+        }
+        view.setBackgroundResource(R.color.color_yellow)
+        view.z = 10f
+        val params = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, 20)
+        params.topMargin = offset
+        operatingGroup?.addView(view, params)
+    }
+
+    private fun hideNewGroupTipsView(targetGroup: ViewGroup) {
+        log { "hideNewGroupTipsView top group = ${targetGroup.tag}" }
+        targetGroup.removeView(newGroupTipsView)
     }
 
     private fun layoutView(view: View, rect: Rect) {

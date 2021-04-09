@@ -50,6 +50,7 @@
         <activity android:name=".view.ScaleActivity" />
         <activity android:name=".algo.activity.ArrayAlgorithmActivity" />
         <activity android:name=".view.CrossGroupMovementActivity" />
+        <activity android:name=".algo.activity.AlgorithmDetailActivity" />
     </application>
 
 </manifest>
