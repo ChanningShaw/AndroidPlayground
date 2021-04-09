@@ -32,15 +32,19 @@ open class CategoryActivity : AppCompatActivity() {
         adapter.setItemClickListener(object :
             CommonAdapter.OnItemClickListener<Category, CategoryAdapter.Holder> {
             override fun onItemClick(data: Category, holder: CategoryAdapter.Holder, pos: Int) {
-                val intent = Intent()
-                if (data is ComponentCategory) {
-                    intent.component = data.componentName
-                } else {
-                    intent.setClass(this@CategoryActivity, CategoryActivity::class.java)
-                    intent.putParcelableArrayListExtra("categories", data.children)
-                }
-                startActivity(intent)
+                onCategoryClick(data, pos)
             }
         })
+    }
+
+    open fun onCategoryClick(data: Category, pos: Int) {
+        val intent = Intent()
+        if (data is ComponentCategory) {
+            intent.component = data.componentName
+        } else {
+            intent.setClass(this@CategoryActivity, CategoryActivity::class.java)
+            intent.putParcelableArrayListExtra("categories", data.children)
+        }
+        startActivity(intent)
     }
 }

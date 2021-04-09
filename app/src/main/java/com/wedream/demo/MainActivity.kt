@@ -2,6 +2,7 @@ package com.wedream.demo
 
 import android.content.Intent
 import android.os.Bundle
+import com.wedream.demo.algo.activity.ArrayAlgorithmActivity
 import com.wedream.demo.algo.activity.LinkedListActivity
 import com.wedream.demo.algo.activity.SortActivity
 import com.wedream.demo.app.ApplicationHolder
@@ -66,7 +67,8 @@ class MainActivity : CategoryActivity() {
         val algorithm = Category("algorithm").addComponentCategories(
             listOf(
                 SortActivity::class.java,
-                LinkedListActivity::class.java
+                LinkedListActivity::class.java,
+                ArrayAlgorithmActivity::class.java
             )
         )
         val render = Category("render").addComponentCategories(

@@ -4,9 +4,29 @@ import com.wedream.demo.util.LogUtils.log
 import kotlin.random.Random
 
 fun <T> Array<T>.print() {
-    for (t in this) {
-        log { t }
+    val builder = StringBuilder()
+    builder.append('[')
+    for ((i, t) in withIndex()) {
+        builder.append(t)
+        if (i != lastIndex) {
+            builder.append(',')
+        }
     }
+    builder.append(']')
+    log { builder.toString() }
+}
+
+fun IntArray.print() {
+    val builder = StringBuilder()
+    builder.append('[')
+    for ((i, t) in withIndex()) {
+        builder.append(t)
+        if (i != lastIndex) {
+            builder.append(',')
+        }
+    }
+    builder.append(']')
+    log { builder.toString() }
 }
 
 
