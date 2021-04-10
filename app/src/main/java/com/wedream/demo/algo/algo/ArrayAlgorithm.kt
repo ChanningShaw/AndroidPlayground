@@ -8,7 +8,8 @@ object ArrayAlgorithm {
             MaxValuesInSlidingWindow(),
             SubArrayCountWithValueInRange(),
             MonotonicStack(),
-            NextGreaterNumber()
+            NextGreaterNumber(),
+            MaxRectSize()
         )
     }
 }

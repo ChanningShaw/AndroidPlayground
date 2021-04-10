@@ -1,38 +1,52 @@
 package com.wedream.demo.util
 
 
-fun <T> Array<T>.string(): String {
+fun <T> T.string(): String {
     val builder = StringBuilder()
-    builder.append('[')
-    for ((i, t) in withIndex()) {
-        when (t) {
-            is Array<*> -> {
-                builder.append(t.string())
+    when (this) {
+        is Array<*> -> {
+            builder.append('[')
+            for ((i, t) in this.withIndex()) {
+                when (t) {
+                    is Array<*> -> {
+                        builder.append("\n")
+                        builder.append(t.string())
+                        if (i != this.lastIndex) {
+                            builder.append(',')
+                        }
+                        builder.append("\n")
+                    }
+                    is IntArray -> {
+                        builder.append("\n")
+                        builder.append(t.string())
+                        if (i != this.lastIndex) {
+                            builder.append(',')
+                        }
+                        builder.append("\n")
+                    }
+                    else -> {
+                        builder.append(t)
+                        if (i != this.lastIndex) {
+                            builder.append(',')
+                        }
+                    }
+                }
             }
-            is IntArray -> {
-                builder.append(t.string())
-            }
-            else -> {
+            builder.append(']')
+        }
+        is IntArray -> {
+            builder.append('[')
+            for ((i, t) in withIndex()) {
                 builder.append(t)
+                if (i != lastIndex) {
+                    builder.append(',')
+                }
             }
+            builder.append(']')
         }
-        if (i != lastIndex) {
-            builder.append(',')
-        }
-    }
-    builder.append(']')
-    return builder.toString()
-}
-
-fun IntArray.string(): String {
-    val builder = StringBuilder()
-    builder.append('[')
-    for ((i, t) in withIndex()) {
-        builder.append(t)
-        if (i != lastIndex) {
-            builder.append(',')
+        else -> {
+            builder.append(this.toString())
         }
     }
-    builder.append(']')
     return builder.toString()
 }

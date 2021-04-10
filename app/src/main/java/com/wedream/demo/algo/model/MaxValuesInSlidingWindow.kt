@@ -25,27 +25,29 @@ class MaxValuesInSlidingWindow : AlgorithmModel() {
         return Pair(input.string() + ", 3", result.string())
     }
 
-    private fun execute(array: IntArray, w: Int): IntArray {
-        if (array.isEmpty() || w < 1 || array.size < w) {
-            return intArrayOf()
+    companion object {
+        fun execute(array: IntArray, w: Int): IntArray {
+            if (array.isEmpty() || w < 1 || array.size < w) {
+                return intArrayOf()
+            }
+            val result = IntArray(array.size - w + 1)
+            val qMax = LinkedList<Int>()
+            var index = 0
+            for (i in array.indices) {
+                while (qMax.isNotEmpty() && array[i] >= array[qMax.peekLast()]) {
+                    qMax.pollLast()
+                }
+                qMax.addLast(i)
+                if (qMax.peekFirst() == i - w) {
+                    // 已经滑过，需要出列
+                    qMax.pollFirst()
+                }
+                if (i >= w - 1) {
+                    // 生成最大值
+                    result[index++] = array[qMax.peekFirst()]
+                }
+            }
+            return result
         }
-        val result = IntArray(array.size - w + 1)
-        val qMax = LinkedList<Int>()
-        var index = 0
-        for (i in array.indices) {
-            while (qMax.isNotEmpty() && array[i] >= array[qMax.peekLast()]) {
-                qMax.pollLast()
-            }
-            qMax.addLast(i)
-            if (qMax.peekFirst() == i - w) {
-                // 已经滑过，需要出列
-                qMax.pollFirst()
-            }
-            if (i >= w - 1) {
-                // 生成最大值
-                result[index++] = array[qMax.peekFirst()]
-            }
-        }
-        return result
     }
 }

@@ -16,27 +16,29 @@ class NextGreaterNumber : AlgorithmModel() {
 
     override fun execute(): Pair<String, String> {
         val arr = intArrayOf(3, 4, 1, 5, 6, 2, 7)
-        val result = getNextGreater(arr)
+        val result = execute(arr)
         return Pair(arr.string(), result.string())
     }
 
-    private fun getNextGreater(arr: IntArray): IntArray {
-        if (arr.isEmpty()) {
-            return intArrayOf()
-        }
-        val res = IntArray(arr.size)
-        val stack = Stack<Int>()
-        for (i in arr.indices) {
-            while (stack.isNotEmpty() && arr[i] > arr[stack.peek()]) {
-                val index = stack.pop()
-                res[index] = arr[i]
+    companion object {
+        fun execute(arr: IntArray): IntArray {
+            if (arr.isEmpty()) {
+                return intArrayOf()
             }
-            stack.push(i)
+            val res = IntArray(arr.size)
+            val stack = Stack<Int>()
+            for (i in arr.indices) {
+                while (stack.isNotEmpty() && arr[i] > arr[stack.peek()]) {
+                    val index = stack.pop()
+                    res[index] = arr[i]
+                }
+                stack.push(i)
+            }
+            while (stack.isNotEmpty()) {
+                val index = stack.pop()
+                res[index] = -1
+            }
+            return res
         }
-        while (stack.isNotEmpty()) {
-            val index = stack.pop()
-            res[index] = -1
-        }
-        return res
     }
 }

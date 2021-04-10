@@ -30,41 +30,43 @@ class SubArrayCountWithValueInRange : AlgorithmModel() {
         return Pair(input.string() + ", 3", result)
     }
 
-    private fun execute(arr: IntArray, num: Int): Int {
-        if (arr.isEmpty() || num < 0) {
-            return 0
-        }
-        val qMin = LinkedList<Int>()
-        val qMax = LinkedList<Int>()
-        var i = 0
-        var j = 0
-        var res = 0
-        while (i < arr.size) {
-            while (j < arr.size) {
-                if (qMin.isEmpty() || qMin.peekLast() != j) {
-                    while (qMin.isNotEmpty() && arr[j] <= arr[qMin.peekLast()]) {
-                        qMin.pollLast()
+    companion object {
+        fun execute(arr: IntArray, num: Int): Int {
+            if (arr.isEmpty() || num < 0) {
+                return 0
+            }
+            val qMin = LinkedList<Int>()
+            val qMax = LinkedList<Int>()
+            var i = 0
+            var j = 0
+            var res = 0
+            while (i < arr.size) {
+                while (j < arr.size) {
+                    if (qMin.isEmpty() || qMin.peekLast() != j) {
+                        while (qMin.isNotEmpty() && arr[j] <= arr[qMin.peekLast()]) {
+                            qMin.pollLast()
+                        }
+                        qMin.addLast(j)
+                        while (qMax.isNotEmpty() && arr[j] >= arr[qMax.peekLast()]) {
+                            qMax.pollLast()
+                        }
+                        qMax.addLast(j)
                     }
-                    qMin.addLast(j)
-                    while (qMax.isNotEmpty() && arr[j] >= arr[qMax.peekLast()]) {
-                        qMax.pollLast()
+                    if (arr[qMax.first] - arr[qMin.first] > num) {
+                        break
                     }
-                    qMax.addLast(j)
+                    j++
                 }
-                if (arr[qMax.first] - arr[qMin.first] > num) {
-                    break
+                res += j - i
+                if (qMin.peekFirst() == i) {
+                    qMin.pollFirst()
                 }
-                j++
+                if (qMax.peekFirst() == i) {
+                    qMax.pollFirst()
+                }
+                i++
             }
-            res += j - i
-            if (qMin.peekFirst() == i) {
-                qMin.pollFirst()
-            }
-            if (qMax.peekFirst() == i) {
-                qMax.pollFirst()
-            }
-            i++
+            return res
         }
-        return res
     }
 }

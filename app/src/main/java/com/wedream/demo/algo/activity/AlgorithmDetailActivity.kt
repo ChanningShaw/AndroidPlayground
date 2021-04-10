@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.tencent.mmkv.MMKV
 import com.wedream.demo.R
 import com.wedream.demo.algo.algo.ArrayAlgorithm
 
@@ -14,6 +15,7 @@ class AlgorithmDetailActivity : AppCompatActivity() {
     lateinit var executeButton: Button
     lateinit var inputView: TextView
     lateinit var outputView: TextView
+    private val mmkv = MMKV.mmkvWithID("algo")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +26,12 @@ class AlgorithmDetailActivity : AppCompatActivity() {
         inputView = findViewById(R.id.input_content)
         outputView = findViewById(R.id.output_content)
 
-        val index = intent.extras?.getInt("index", 0) ?: 0
+        var index = intent.extras?.getInt("index", 0) ?: 0
+        if (index == 0) {
+            index = mmkv.getInt("last_algo_id", 0)
+        } else {
+            mmkv.putInt("last_algo_id", index)
+        }
         val model = ArrayAlgorithm.getModels()[index]
 
         titleView.text = model.title

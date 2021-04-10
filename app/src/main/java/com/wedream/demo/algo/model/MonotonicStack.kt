@@ -21,27 +21,29 @@ class MonotonicStack : AlgorithmModel() {
         return Pair(arr.string(), result.string())
     }
 
-    private fun getNearLess(arr: IntArray): Array<IntArray> {
-        if (arr.isEmpty()) {
-            return emptyArray()
-        }
-        val res = Array(arr.size) { IntArray(2) }
-        val stack = Stack<Int>()
-        for (i in arr.indices) {
-            while (stack.isNotEmpty() && arr[i] < arr[stack.peek()]) {
+    companion object {
+        fun getNearLess(arr: IntArray): Array<IntArray> {
+            if (arr.isEmpty()) {
+                return emptyArray()
+            }
+            val res = Array(arr.size) { IntArray(2) }
+            val stack = Stack<Int>()
+            for (i in arr.indices) {
+                while (stack.isNotEmpty() && arr[i] < arr[stack.peek()]) {
+                    val index = stack.pop()
+                    val leftValue = if (stack.isEmpty()) -1 else stack.peek()
+                    res[index][0] = leftValue
+                    res[index][1] = i
+                }
+                stack.push(i)
+            }
+            while (stack.isNotEmpty()) {
                 val index = stack.pop()
                 val leftValue = if (stack.isEmpty()) -1 else stack.peek()
                 res[index][0] = leftValue
-                res[index][1] = i
+                res[index][1] = -1
             }
-            stack.push(i)
+            return res
         }
-        while (stack.isNotEmpty()) {
-            val index = stack.pop()
-            val leftValue = if (stack.isEmpty()) -1 else stack.peek()
-            res[index][0] = leftValue
-            res[index][1] = -1
-        }
-        return res
     }
 }
