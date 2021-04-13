@@ -3,23 +3,4 @@
   android:id="@+id/container"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:clipChildren="false">
-
-  <FrameLayout
-    android:id="@+id/group1"
-    android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:background="@drawable/simple_border"
-    android:clipChildren="false">
-  </FrameLayout>
-
-  <FrameLayout
-    android:id="@+id/group2"
-    android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:layout_marginTop="100dp"
-    android:background="@drawable/simple_border"
-    android:clipChildren="false">
-  </FrameLayout>
-
-</FrameLayout>
+  android:clipChildren="false"/>
