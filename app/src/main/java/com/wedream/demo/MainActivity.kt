@@ -1,5 +1,6 @@
 package com.wedream.demo
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
 import com.wedream.demo.algo.activity.ArrayAlgorithmActivity
@@ -19,6 +20,7 @@ import com.wedream.demo.jni.HelloJNIActivity
 import com.wedream.demo.planegeometry.PlaneGeometryActivity
 import com.wedream.demo.render.*
 import com.wedream.demo.render.gl3.GLColorActivity
+import com.wedream.demo.util.LogUtils.log
 import com.wedream.demo.view.*
 import com.wedream.demo.view.multitrack.TrackActivity
 import com.wedream.demo.view.newtips.NewTipsActivity
@@ -31,7 +33,11 @@ class MainActivity : CategoryActivity() {
         if (lastCom != componentName) {
             val intent = Intent()
             intent.component = lastCom
-            startActivity(intent)
+            try {
+                startActivity(intent)
+            } catch (e: ActivityNotFoundException) {
+                log { "activity not found, has renanmed an activity?" }
+            }
         }
         setCategoryList(buildData())
     }
@@ -54,6 +60,7 @@ class MainActivity : CategoryActivity() {
                 ScaleViewActivity::class.java,
                 ScaleActivity::class.java,
                 CrossTrackMovementActivity::class.java
+
             )
         )
         val multiThreading = Category("multiThreading").addComponentCategories(

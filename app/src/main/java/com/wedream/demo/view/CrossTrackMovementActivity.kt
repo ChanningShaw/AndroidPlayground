@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.ScrollView
 import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
 import com.wedream.demo.util.AndroidUtils
@@ -17,7 +18,8 @@ import kotlin.math.round
 
 class CrossTrackMovementActivity : AppCompatActivity() {
 
-    lateinit var container: FrameLayout
+    private lateinit var scrollView: ScrollView
+    private lateinit var container: FrameLayout
 
     private val totalSegmentViewMap = mutableMapOf<View, ViewInfo>()
     private val segments = mutableListOf<MutableMap<Int, ViewInfo>>()
@@ -28,19 +30,27 @@ class CrossTrackMovementActivity : AppCompatActivity() {
     private var originRect = Rect()
     private var newGroupTipsView: View? = null
     private var showingNewTrackTips = false
-    private var extraOffsetY = 0
+    private var pendingNewTrackIndex = -1
 
     // 正在操作的Track
     private var operatingTrack: ViewGroup? = null
     private var operatingSegmentView: View? = null
-    private var movingStatus = MOVING_STATUS_NORMAL
-
-    private val trackHeight = AndroidUtils.dip2pix(100)
-    private val tipsAreaHeight = 30
 
     companion object {
-        const val MOVING_STATUS_NORMAL = 0 // 没有高亮
-        const val MOVING_STATUS_HIGHLIGHT = 1 // 高亮
+        private val TRACK_HEIGHT = AndroidUtils.dip2pix(100)
+        private const val TIPS_VIEW_HEIGHT = 10
+        private const val TIPS_AREA_RATIO = 0.4
+        private val TIPS_AREA_HEIGHT = (TRACK_HEIGHT * TIPS_AREA_RATIO).toInt()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_cross_group_move)
+        scrollView = findViewById(R.id.scrollView)
+        container = findViewById(R.id.container)
+        container.post {
+            initRects()
+        }
     }
 
     private var elementEventListener = object : ElementView.ElementEventListener {
@@ -52,7 +62,7 @@ class CrossTrackMovementActivity : AppCompatActivity() {
         override fun onMove(view: ElementView, deltaX: Int, deltaY: Int) {
             if (movingStart) {
                 val info = totalSegmentViewMap[view] ?: return
-                info.rect.offset(deltaX, deltaY + extraOffsetY)
+                info.rect.offset(deltaX, deltaY)
                 log { "offsetY = $deltaY" }
                 handleMove(info)
                 layoutView(view, info.rect)
@@ -66,20 +76,22 @@ class CrossTrackMovementActivity : AppCompatActivity() {
         }
 
         override fun onActionUp(view: ElementView, deltaX: Int, deltaY: Int) {
+            scrollView.requestDisallowInterceptTouchEvent(false)
             if (movingStart) {
                 movingStart = false
                 view.z -= 10
                 (view.parent as ViewGroup).z -= 10
-                if (newGroupTipsView?.isAttachedToWindow == true) {
+                if (showingNewTrackTips) {
                     operatingTrack?.let { track ->
-                        hideNewTrackTipsView()
                         totalSegmentViewMap[operatingSegmentView]?.let {
                             log { "newGroup at ${it.rect}" }
-                            val index = checkNewGroupPos(it.getGlobalRect())
-                            val id = view.tag as Int
-                            val oldTrack = track.tag as Int
-                            insertSegmentToTrack(id, oldTrack, index, it.rect)
+                            if (pendingNewTrackIndex >= 0) {
+                                val id = view.tag as Int
+                                val oldTrack = track.tag as Int
+                                insertSegmentToTrack(id, oldTrack, pendingNewTrackIndex, it.rect)
+                            }
                         }
+                        hideNewTrackTipsView()
                     }
                 } else if (!canPlace) {
                     view.alpha = 1.0f
@@ -121,8 +133,8 @@ class CrossTrackMovementActivity : AppCompatActivity() {
         }
 
         override fun onLongPress(view: ElementView) {
+            scrollView.requestDisallowInterceptTouchEvent(true)
             if (!movingStart) {
-                extraOffsetY = 0
                 operatingTrack = view.parent as ViewGroup
                 movingStart = true
                 view.z += 10
@@ -135,21 +147,12 @@ class CrossTrackMovementActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_cross_group_move)
-        container = findViewById(R.id.container)
-        container.post {
-            initRects()
-        }
-    }
-
     private fun initRects() {
         var offset = 0
         val width = 150
         val m1 = mutableMapOf<Int, ViewInfo>()
         for (i in 1..5) {
-            val rect = Rect(offset, 0, offset + width, trackHeight)
+            val rect = Rect(offset, 0, offset + width, TRACK_HEIGHT)
             m1[i] = ViewInfo(rect)
             offset += width
         }
@@ -158,7 +161,7 @@ class CrossTrackMovementActivity : AppCompatActivity() {
         val m2 = mutableMapOf<Int, ViewInfo>()
         offset = 0
         for (i in 6..10) {
-            val rect = Rect(offset, 0, offset + width, trackHeight)
+            val rect = Rect(offset, 0, offset + width, TRACK_HEIGHT)
             m2[i] = ViewInfo(rect)
             offset += width
         }
@@ -167,7 +170,7 @@ class CrossTrackMovementActivity : AppCompatActivity() {
     }
 
     private fun insertSegmentToTrack(id: Int, oldTrackIndex: Int, newTrackIndex: Int, rect: Rect) {
-        val newRect = Rect(rect.left, 0, rect.right, trackHeight)
+        val newRect = Rect(rect.left, 0, rect.right, TRACK_HEIGHT)
         val map = mutableMapOf<Int, ViewInfo>()
         map[id] = ViewInfo(newRect)
         segments[oldTrackIndex].remove(id)
@@ -185,13 +188,13 @@ class CrossTrackMovementActivity : AppCompatActivity() {
             val track = FrameLayout(this)
             track.clipChildren = false
             track.setBackgroundResource(R.drawable.simple_border)
-            val params = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, trackHeight)
+            val params = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, TRACK_HEIGHT)
             params.topMargin = offset
             container.addView(track, params)
             trackMap[i] = track
             track.tag = i
             addViewsToGroup(track, m)
-            offset += trackHeight
+            offset += TRACK_HEIGHT
         }
     }
 
@@ -249,36 +252,44 @@ class CrossTrackMovementActivity : AppCompatActivity() {
         // 转换成全局坐标
         rect.offset(0, info.track.top)
 
-        val centerY = rect.centerY()
+        handleNewTrackTips(rect)
+        handleAdsorption(rect)
+        restrictWithin(rect, container)
+
+        rect.offset(0, -info.track.top)
+        info.rect.set(rect)
+    }
+
+    private fun handleNewTrackTips(globalRect: Rect) {
+        val centerY = globalRect.centerY()
         var showTips = false
         var tipsPos = 0
+
         for (i in 1 until trackMap.size) {
-            if (centerY >= trackHeight * i - tipsAreaHeight / 2 && centerY <= trackHeight * i + tipsAreaHeight / 2) {
+            if (centerY >= TRACK_HEIGHT * i - TIPS_AREA_HEIGHT / 2 && centerY <= TRACK_HEIGHT * i + TIPS_AREA_HEIGHT / 2) {
                 // 处于新建track区间
-                tipsPos = trackHeight * i - tipsAreaHeight / 2
+                tipsPos = TRACK_HEIGHT * i - TIPS_VIEW_HEIGHT / 2
                 showTips = true
                 break
             }
         }
-        if (showTips) {
-            if (movingStatus == MOVING_STATUS_NORMAL) {
-                movingStatus = MOVING_STATUS_HIGHLIGHT
+
+        if (!showTips) {
+            // 最后检查顶部和底部
+            if (globalRect.top < -TIPS_AREA_HEIGHT / 2) {
+                tipsPos = 0
+                showTips = true
+            } else if (globalRect.bottom > container.height + TIPS_AREA_HEIGHT / 2) {
+                tipsPos = container.height - TIPS_VIEW_HEIGHT
+                showTips = true
             }
-            showNewTrackTipsView(tipsPos)
-        } else {
-            handleSticky(rect)
-            if (movingStatus == MOVING_STATUS_HIGHLIGHT) {
-                // 滑出高亮区，要进行吸附
-                log { "make Adsorption" }
-                handleAdsorption(rect)
-                movingStatus = MOVING_STATUS_NORMAL
-            }
-            hideNewTrackTipsView()
         }
 
-        restrictWithin(rect, container)
-        rect.offset(0, -info.track.top)
-        info.rect.set(rect)
+        if (showTips) {
+            showNewTrackTipsView(tipsPos)
+        } else {
+            hideNewTrackTipsView()
+        }
     }
 
     private fun handleAdsorption(globalRect: Rect) {
@@ -287,55 +298,12 @@ class CrossTrackMovementActivity : AppCompatActivity() {
             val centerY = globalRect.centerY()
             val trackRect = Rect(e.value.left, e.value.top, e.value.right, e.value.bottom)
             if (trackRect.contains(centerX, centerY)) {
-                extraOffsetY += trackRect.top - globalRect.top
-                globalRect.offset(0, extraOffsetY)
-                log { "extraOffsetY = $extraOffsetY" }
-//                log { "centerY = $centerY, trackRect = $trackRect, globalRect = $globalRect" }
-                break
-            }
-        }
-    }
-
-    private fun handleSticky(globalRect: Rect) {
-        for (e in trackMap) {
-            val centerX = globalRect.centerX()
-            val centerY = globalRect.centerY()
-            val trackRect = Rect(e.value.left, e.value.top, e.value.right, e.value.bottom)
-            if (trackRect.contains(centerX, centerY)) {
-                if (abs(centerY - trackRect.centerY()) < trackHeight * 0.3) {
-                    // 增加开始拖动的粘滞性
-                    globalRect.set(globalRect.left, trackRect.top, globalRect.right, trackRect.bottom)
-                    log { "handleSticky" }
+                if (abs(centerY - trackRect.centerY()) < TRACK_HEIGHT * (1 - TIPS_AREA_RATIO) / 2) {
+                    globalRect.offset(0, trackRect.top - globalRect.top)
+                    break
                 }
-                break
             }
         }
-    }
-
-    private fun handleNewTrackTips(rect: Rect) {
-        val centerY = rect.centerY()
-        var showTips = false
-        var tipsPos = 0
-        for (i in 1 until trackMap.size) {
-            if (centerY >= trackHeight * i - tipsAreaHeight / 2 && centerY <= trackHeight * i + tipsAreaHeight / 2) {
-                tipsPos = trackHeight * i - tipsAreaHeight / 2
-                showTips = true
-                break
-            }
-        }
-        if (showTips) {
-            showNewTrackTipsView(tipsPos)
-        } else {
-            hideNewTrackTipsView()
-        }
-    }
-
-    private fun checkNewGroupPos(rect: Rect): Int {
-        val centerY = rect.centerY()
-        val height = rect.height()
-        val index = round(centerY * 1.0 / height)
-        log { "index = $index" }
-        return index.toInt()
     }
 
     private fun restrictWithin(globalRect: Rect, viewGroup: ViewGroup) {
@@ -368,7 +336,8 @@ class CrossTrackMovementActivity : AppCompatActivity() {
         log { "showNewTrackTipsView at $trackId" }
         view.setBackgroundResource(R.color.color_yellow)
         view.z = 10f
-        val params = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, 20)
+        val params = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, TIPS_VIEW_HEIGHT)
+        pendingNewTrackIndex = round(globalTipsPos * 1.0f / TRACK_HEIGHT).toInt()
         params.topMargin = globalTipsPos - trackView.top
         operatingTrack?.addView(view, params)
     }
@@ -377,6 +346,7 @@ class CrossTrackMovementActivity : AppCompatActivity() {
         if (!showingNewTrackTips) {
             return
         }
+        pendingNewTrackIndex = -1
         showingNewTrackTips = false
         operatingTrack?.removeView(newGroupTipsView)
     }
