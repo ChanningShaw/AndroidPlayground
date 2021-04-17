@@ -30,6 +30,11 @@ class LinkedList<T> {
 
         var next: Node<T>? = null
 
+        var rand: Node<T>? = null
+
+        // 用于循环链表中表示是否是最后一个
+        var isLast = false
+
         override fun toString(): String {
             return "$value, next = ${next?.value}"
         }

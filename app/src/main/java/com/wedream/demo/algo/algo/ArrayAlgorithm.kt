@@ -9,7 +9,13 @@ object ArrayAlgorithm {
             SubArrayCountWithValueInRange(),
             MonotonicStack(),
             NextGreaterNumber(),
-            MaxRectSize()
+            MaxRectSize(),
+            JosephusProblem(),
+            PalindromeLink(),
+            ListPartition(),
+            RandomPointerListCopy(),
+            NumListAdd(),
+            JudgeWhetherListIntersect()
         )
     }
 }

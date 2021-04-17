@@ -8,14 +8,6 @@ import com.wedream.demo.algo.structure.LinkedList
 import com.wedream.demo.util.LogUtils.log
 import kotlin.random.Random
 
-fun <T> LinkedList<T>.print() {
-    var temp = head
-    while (temp != null) {
-        log { temp?.value }
-        temp = temp.next
-    }
-}
-
 inline fun <T> LinkedList<T>.forEach(action: (Int, LinkedList.Node<T>) -> Unit) {
     var temp = head
     var index = 0

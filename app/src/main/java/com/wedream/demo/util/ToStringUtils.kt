@@ -1,5 +1,7 @@
 package com.wedream.demo.util
 
+import com.wedream.demo.algo.structure.LinkedList
+
 
 fun <T> T.string(): String {
     val builder = StringBuilder()
@@ -44,8 +46,26 @@ fun <T> T.string(): String {
             }
             builder.append(']')
         }
+        is LinkedList.Node<*> -> {
+            builder.append(value)
+            if (rand != null) {
+                builder.append("(${rand?.value})")
+            }
+            builder.append("->")
+            when {
+                next == null -> {
+                    builder.append("null")
+                }
+                isLast -> {
+                    builder.append("${next?.value}")
+                }
+                else -> {
+                    builder.append(next.string())
+                }
+            }
+        }
         else -> {
-            builder.append(this.toString())
+            builder.append(toString())
         }
     }
     return builder.toString()
