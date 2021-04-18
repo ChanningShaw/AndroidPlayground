@@ -17,7 +17,7 @@ import kotlin.math.max
 
 class BTCPredictActivity : AppCompatActivity() {
 
-    private var disposable = CompositeDisposable()
+    private lateinit var disposable: CompositeDisposable
     private lateinit var bullLastText3: TextView
     private lateinit var bearLastText3: TextView
     private lateinit var ratioLastText3: TextView
@@ -61,6 +61,7 @@ class BTCPredictActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        disposable = CompositeDisposable()
         loadNews()
         startSpider()
     }

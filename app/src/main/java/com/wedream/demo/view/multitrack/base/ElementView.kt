@@ -58,7 +58,6 @@ abstract class ElementView(context: Context, attrs: AttributeSet?, defStyle: Int
             }
             MotionEvent.ACTION_MOVE -> {
                 eventListener?.onMove(this, event.x.toInt() - downX, event.y.toInt() - downY)
-//                log { "deltaX = ${event.x.toInt() - downX}, deltaY = ${event.y.toInt() - downY}" }
             }
             MotionEvent.ACTION_UP -> {
                 if (System.currentTimeMillis() - downTime < LONG_PRESS_TIME) {
