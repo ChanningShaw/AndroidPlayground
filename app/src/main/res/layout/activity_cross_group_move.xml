@@ -7,6 +7,7 @@
   android:overScrollMode="never">
 
   <FrameLayout
+    android:id="@+id/timeline_container"
     android:layout_width="wrap_content"
     android:layout_height="match_parent">
 
@@ -18,7 +19,7 @@
       android:overScrollMode="never">
 
       <FrameLayout
-        android:id="@+id/container"
+        android:id="@+id/track_container"
         android:layout_width="1000dp"
         android:layout_height="wrap_content"
         android:clipChildren="false" />

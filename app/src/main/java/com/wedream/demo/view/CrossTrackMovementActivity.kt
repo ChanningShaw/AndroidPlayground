@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.HorizontalScrollView
 import android.widget.ScrollView
 import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
@@ -19,7 +20,9 @@ import kotlin.math.round
 class CrossTrackMovementActivity : AppCompatActivity() {
 
     private lateinit var scrollView: ScrollView
-    private lateinit var container: FrameLayout
+    private lateinit var horizontalScrollView: HorizontalScrollView
+    private lateinit var trackContainer: FrameLayout
+    private lateinit var timelineContainer: FrameLayout
 
     private val totalSegmentViewMap = mutableMapOf<View, ViewInfo>()
     private val segments = mutableListOf<MutableMap<Int, ViewInfo>>()
@@ -42,7 +45,7 @@ class CrossTrackMovementActivity : AppCompatActivity() {
     private var scrollStopOffset = 0
 
     companion object {
-        private val TRACK_HEIGHT = AndroidUtils.dip2pix(50)
+        val TRACK_HEIGHT = AndroidUtils.dip2pix(50)
         private const val TIPS_VIEW_HEIGHT = 10
         private const val TIPS_AREA_RATIO = 0.4
         private val TIPS_AREA_HEIGHT = (TRACK_HEIGHT * TIPS_AREA_RATIO).toInt()
@@ -59,8 +62,10 @@ class CrossTrackMovementActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cross_group_move)
         scrollView = findViewById(R.id.scrollView)
-        container = findViewById(R.id.container)
-        container.post {
+        horizontalScrollView = findViewById(R.id.horizontal_scrollView)
+        trackContainer = findViewById(R.id.track_container)
+        timelineContainer = findViewById(R.id.timeline_container)
+        trackContainer.post {
             initRects()
         }
     }
@@ -75,13 +80,14 @@ class CrossTrackMovementActivity : AppCompatActivity() {
             if (movingStart) {
                 val info = totalSegmentViewMap[view] ?: return
                 log { "deltaY = $deltaY" }
-                if (scrollMode != ScrollMode.None) {
-                    // 正在滚动，不跟手移动
-                    handleScrolling(info, deltaY)
-                } else {
-                    info.rect.offset(deltaX, deltaY)
-                    handleMove(info)
-                }
+                checkOperationMode(info, deltaX, deltaY)
+//                if (scrollMode != ScrollMode.None) {
+//                    // 正在滚动，不跟手移动
+//                    handleScrolling(info, deltaY)
+//                } else {
+//                    info.rect.offset(deltaX, deltaY)
+//                    handleMove(info)
+//                }
                 layoutView(view, info.rect)
                 canPlace = !checkOverlap(view, info)
             }
@@ -168,25 +174,8 @@ class CrossTrackMovementActivity : AppCompatActivity() {
     }
 
     private fun initRects() {
-        var offset = 0
-        val width = 250
-        val m1 = mutableMapOf<Int, ViewInfo>()
-        val n = 5
-        for (i in 1..n) {
-            val rect = Rect(offset, 0, offset + width, TRACK_HEIGHT)
-            m1[i] = ViewInfo(rect)
-            offset += width
-        }
-        segments.add(m1)
-
-        val m2 = mutableMapOf<Int, ViewInfo>()
-        offset = 0
-        for (i in n + 1..2 * n) {
-            val rect = Rect(offset, 0, offset + width, TRACK_HEIGHT)
-            m2[i] = ViewInfo(rect)
-            offset += width
-        }
-        segments.add(m2)
+        segments.clear()
+        segments.addAll(TrackHelper.generateTrackData())
         fullUpdate()
     }
 
@@ -202,7 +191,7 @@ class CrossTrackMovementActivity : AppCompatActivity() {
 
     private fun fullUpdate() {
         trackMap.clear()
-        container.removeAllViews()
+        trackContainer.removeAllViews()
         totalSegmentViewMap.clear()
         var offset = 0
         for ((i, m) in segments.withIndex()) {
@@ -211,7 +200,7 @@ class CrossTrackMovementActivity : AppCompatActivity() {
             track.setBackgroundResource(R.drawable.simple_border)
             val params = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, TRACK_HEIGHT)
             params.topMargin = offset
-            container.addView(track, params)
+            trackContainer.addView(track, params)
             trackMap[i] = track
             track.tag = i
             addViewsToGroup(track, m)
@@ -268,21 +257,94 @@ class CrossTrackMovementActivity : AppCompatActivity() {
         return false
     }
 
-    private fun handleMove(info: ViewInfo) {
-        val rect = Rect(info.rect)
-        // 转换成全局坐标
-        rect.offset(0, info.track.top)
-
-        detectScroll(info, rect)
-        handleNewTrackTips(rect)
-        handleAdsorption(rect)
-        restrictWithin(rect, container)
-
+    private fun checkOperationMode(info: ViewInfo, deltaX: Int, deltaY: Int) {
+        val rect = Rect(info.getGlobalRect())
+        rect.offset(deltaX, deltaY)
+        val centerY = rect.centerY()
+        val centerX = rect.centerX()
+        log { "rect = $rect, centerY = $centerY" }
+        var showTips = false
+        var stopScrolling = false
+        var tipsPos = 0
+        val absScrollY = scrollView.height + scrollView.scrollY
+        val absScrollX = horizontalScrollView.width + horizontalScrollView.scrollX
+        when {
+            rect.top < scrollView.scrollY - TRACK_HEIGHT * (1 - TIPS_AREA_RATIO) / 2 && scrollView.scrollY > 0 -> {
+                log { "checkOperationMode top scroll" }
+                if (scrollMode != ScrollMode.ScrollUp) {
+                    scrollMode = ScrollMode.ScrollUp
+                    startScroll(info)
+                }
+                rect.offset(-deltaX, -deltaY)
+            }
+            rect.bottom > absScrollY + TRACK_HEIGHT * (1 - TIPS_AREA_RATIO) / 2 && trackContainer.height - absScrollY > 0 -> {
+                log { "checkOperationMode bottom scroll" }
+                if (scrollMode != ScrollMode.ScrollDown) {
+                    scrollMode = ScrollMode.ScrollDown
+                    startScroll(info)
+                }
+                rect.offset(-deltaX, -deltaY)
+            }
+            rect.right > absScrollX - TRACK_HEIGHT * (1 - TIPS_AREA_RATIO) / 2 &&  timelineContainer.width - absScrollX > 0-> {
+                log { "checkOperationMode right scroll" }
+                if (scrollMode != ScrollMode.ScrollRight) {
+                    scrollMode = ScrollMode.ScrollRight
+                    startScroll(info)
+                }
+                rect.offset(-deltaX, -deltaY)
+            }
+            centerY < 0 -> {
+                log { "checkOperationMode top insert" }
+                tipsPos = 0
+                showTips = true
+                rect.offset(-deltaX, -deltaY)
+                stopScrolling = true
+            }
+            centerY > trackContainer.bottom -> {
+                log { "checkOperationMode bottom insert" }
+                rect.offset(-deltaX, -deltaY)
+                tipsPos = trackContainer.height - TIPS_VIEW_HEIGHT
+                showTips = true
+                stopScrolling = true
+            }
+            else -> {
+                var i = 0
+                for (e in trackMap) {
+                    if (i < trackMap.size - 1 && centerY in TRACK_HEIGHT * (i + 1) - TIPS_AREA_HEIGHT / 2..TRACK_HEIGHT * (i + 1) + TIPS_AREA_HEIGHT / 2) {
+                        // 处于新建track区间
+                        tipsPos = TRACK_HEIGHT * (i + 1) - TIPS_VIEW_HEIGHT / 2
+                        showTips = true
+                        log { "checkOperationMode newTips" }
+                        break
+                    } else {
+                        val trackRect = Rect(e.value.left, e.value.top, e.value.right, e.value.bottom)
+                        if (trackRect.contains(centerX, centerY)) {
+                            if (abs(centerY - trackRect.centerY()) < TRACK_HEIGHT * (1 - TIPS_AREA_RATIO) / 2) {
+                                rect.offset(0, trackRect.top - rect.top)
+                                log { "checkOperationMode in track" }
+                                break
+                            }
+                        }
+                    }
+                    i++
+                }
+                stopScrolling = true
+            }
+        }
+        if (showTips) {
+            showNewTrackTipsView(tipsPos)
+        } else {
+            hideNewTrackTipsView()
+        }
+        if (stopScrolling) {
+            stopScroll()
+        }
+        restrictWithin(rect, trackContainer)
         rect.offset(0, -info.track.top)
         info.rect.set(rect)
     }
 
-    private val scrollListener = object :ScrollRunnable.ScrollListener {
+    private val scrollListener = object : ScrollRunnable.ScrollListener {
         override fun onScrollEnd() {
             scrollMode = ScrollMode.None
         }
@@ -297,83 +359,22 @@ class CrossTrackMovementActivity : AppCompatActivity() {
         }
     }
 
-    private fun startScroll(direction: Int, info: ViewInfo) {
-        log { "startScroll direction = $direction" }
+    private fun startScroll(info: ViewInfo) {
+        log { "startScroll" }
         operatingSegmentView?.let {
-            scrollAction = ScrollRunnable(it, scrollView, container, info, direction, scrollListener)
+            if (scrollMode == ScrollMode.ScrollUp || scrollMode == ScrollMode.ScrollDown) {
+                scrollAction = VerticalScrollRunnable(it, scrollView, trackContainer, info, scrollMode, scrollListener)
+            } else if (scrollMode == ScrollMode.ScrollLeft || scrollMode == ScrollMode.ScrollRight){
+                scrollAction = HorizontalScrollRunnable(it, horizontalScrollView, info, scrollMode, scrollListener)
+            }
+            scrollView.postDelayed(scrollAction, 300)
         }
-        scrollView.postDelayed(scrollAction, 300)
     }
 
     private fun stopScroll() {
         log { "stopScroll" }
         scrollView.removeCallbacks(scrollAction)
         scrollMode = ScrollMode.None
-    }
-
-    private fun detectScroll(info: ViewInfo, globalRect: Rect) {
-        val absScrollY = scrollView.height + scrollView.scrollY
-        if (globalRect.bottom > absScrollY + TRACK_HEIGHT * (1 - TIPS_AREA_RATIO) / 2 && container.height - absScrollY > 0) {
-//            log { "handleScroll, rect =  $globalRect, scrollView.height = ${scrollView.height}, scrollY = ${scrollView.scrollY}" }
-            if (scrollMode != ScrollMode.ScrollDown) {
-                scrollMode = ScrollMode.ScrollDown
-                log { "ScrollDown" }
-                startScroll(0, info)
-            }
-        } else if (globalRect.top < scrollView.scrollY - TRACK_HEIGHT * (1 - TIPS_AREA_RATIO) / 2 && scrollView.scrollY > 0) {
-            if (scrollMode != ScrollMode.ScrollUp) {
-                scrollMode = ScrollMode.ScrollUp
-                log { "ScrollUp" }
-                startScroll(1, info)
-            }
-        }
-//        log { "scrollMode = $scrollMode, showingNewTrackTips = $showingNewTrackTips" }
-    }
-
-    private fun handleNewTrackTips(globalRect: Rect) {
-        val centerY = globalRect.centerY()
-        var showTips = false
-        var tipsPos = 0
-
-        for (i in 1 until trackMap.size) {
-            if (centerY >= TRACK_HEIGHT * i - TIPS_AREA_HEIGHT / 2 && centerY <= TRACK_HEIGHT * i + TIPS_AREA_HEIGHT / 2) {
-                // 处于新建track区间
-                tipsPos = TRACK_HEIGHT * i - TIPS_VIEW_HEIGHT / 2
-                showTips = true
-                break
-            }
-        }
-
-        if (!showTips) {
-            // 最后检查顶部和底部
-            if (globalRect.top < -TIPS_AREA_HEIGHT / 2) {
-                tipsPos = 0
-                showTips = true
-            } else if (globalRect.bottom > container.height + TIPS_AREA_HEIGHT / 2) {
-                tipsPos = container.height - TIPS_VIEW_HEIGHT
-                showTips = true
-            }
-        }
-
-        if (showTips) {
-            showNewTrackTipsView(tipsPos)
-        } else {
-            hideNewTrackTipsView()
-        }
-    }
-
-    private fun handleAdsorption(globalRect: Rect) {
-        for (e in trackMap) {
-            val centerX = globalRect.centerX()
-            val centerY = globalRect.centerY()
-            val trackRect = Rect(e.value.left, e.value.top, e.value.right, e.value.bottom)
-            if (trackRect.contains(centerX, centerY)) {
-                if (abs(centerY - trackRect.centerY()) < TRACK_HEIGHT * (1 - TIPS_AREA_RATIO) / 2) {
-                    globalRect.offset(0, trackRect.top - globalRect.top)
-                    break
-                }
-            }
-        }
     }
 
     private fun restrictWithin(globalRect: Rect, viewGroup: ViewGroup) {
@@ -429,74 +430,6 @@ class CrossTrackMovementActivity : AppCompatActivity() {
             val r = Rect(rect)
             r.offset(0, track.top)
             return r
-        }
-    }
-
-    enum class ScrollMode {
-        None, ScrollDown, ScrollUp
-    }
-
-    /**
-     * 边缘上下滚动的Runnable
-     */
-    class ScrollRunnable(private val targetView: View,
-                         private val scrollView: ScrollView,
-                         private val container: ViewGroup,
-                         private val info: ViewInfo,
-                         private val direction: Int,
-                         private val listener : ScrollListener) : Runnable {
-        override fun run() {
-            val rect = Rect(info.rect)
-            // 转换成全局坐标
-            rect.offset(0, info.track.top)
-            var offset = 0
-            var continueScroll = false
-            if (direction == 0) {
-                // 向下滑动
-                val absScrollY = scrollView.height + scrollView.scrollY
-                if (container.height - absScrollY > 0) {
-                     if (container.height - absScrollY > TRACK_HEIGHT) {
-                         offset = TRACK_HEIGHT
-                         continueScroll = true
-                     } else {
-                         offset = rect.bottom - absScrollY
-                         continueScroll = false
-                    }
-                } else {
-                    continueScroll = false
-                    log { "stopScroll" }
-                }
-            } else {
-                // 向上滑动
-                if (scrollView.scrollY > 0) {
-                    if (scrollView.scrollY > TRACK_HEIGHT) {
-                        offset = -TRACK_HEIGHT
-                        continueScroll = true
-                    } else {
-                        offset = -scrollView.scrollY
-                        continueScroll = false
-                    }
-                } else {
-                    continueScroll = false
-                }
-            }
-            log { "scrollBy : $offset" }
-            scrollView.smoothScrollBy(0, offset)
-            if (abs(offset) >= TRACK_HEIGHT) {
-                rect.offset(0, offset)
-                rect.offset(0, -info.track.top)
-                info.rect.set(rect)
-                layoutView(targetView, info.rect)
-            }
-            if (continueScroll) {
-                scrollView.postDelayed(this, 500)
-            } else {
-                listener.onScrollEnd()
-            }
-        }
-
-        interface ScrollListener {
-            fun onScrollEnd()
         }
     }
 }
