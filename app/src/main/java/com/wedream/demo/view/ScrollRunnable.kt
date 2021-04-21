@@ -1,12 +1,11 @@
 package com.wedream.demo.view
 
-import android.view.View
-
-abstract class ScrollRunnable(val targetView: View,
-                              val info: CrossTrackMovementActivity.ViewInfo,
-                              val scrollMode: ScrollMode,
+abstract class ScrollRunnable(val scrollMode: ScrollMode,
                               val listener: ScrollListener) : Runnable {
     interface ScrollListener {
+
+        fun onScrolling(offsetX: Int, offsetY: Int)
+
         fun onScrollEnd()
     }
 }
