@@ -1,6 +1,5 @@
 package com.wedream.demo.view
 
-import android.animation.ValueAnimator
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
@@ -46,6 +45,9 @@ class CrossTrackMovementActivity : AppCompatActivity() {
 
     // 按下时在容器中的位置
     private var downRect = Rect()
+
+    // 滚动开始时的位置
+    private var scrollingStartRect = Rect()
     private var puppetView: View? = null
 
     // 滚动相关
@@ -60,11 +62,8 @@ class CrossTrackMovementActivity : AppCompatActivity() {
         private val TIPS_AREA_HEIGHT = (TRACK_HEIGHT * TIPS_AREA_RATIO).toInt()
 
         fun layoutView(view: View, rect: Rect, offsetX: Int = 0, offsetY: Int = 0) {
-            val params = view.layoutParams as ViewGroup.MarginLayoutParams
-            params.marginStart = rect.left + offsetX
-            log { "left = ${rect.left + offsetX}" }
-            params.topMargin = rect.top + offsetY
-            view.layoutParams = params
+            view.translationX = (rect.left + offsetX).toFloat()
+            view.translationY = (rect.top + offsetY).toFloat()
         }
     }
 
@@ -90,15 +89,9 @@ class CrossTrackMovementActivity : AppCompatActivity() {
         override fun onMove(view: ElementView, deltaX: Int, deltaY: Int) {
             if (movingStart) {
                 puppetView ?: return
-                if (scrollMode != ScrollMode.None) {
-                    handleScrolling(deltaX, deltaY)
-                } else {
-                    handleMove(deltaX, deltaY)
-                    puppetView?.let {
-                        layoutView(it, currentOperatingRect, -horizontalScrollView.scrollX, -scrollView.scrollY)
-                        canPlace = !checkOverlap(currentOperatingRect)
-                    }
-                }
+                handleMove(deltaX, deltaY)
+                layoutView()
+                canPlace = !checkOverlap(currentOperatingRect)
             }
         }
 
@@ -134,7 +127,6 @@ class CrossTrackMovementActivity : AppCompatActivity() {
                 } else {
                     // 如果可以放置，先找出移到了哪个容器里面
                     val info = totalSegmentViewMap[view] ?: return
-//                    log { "rect = ${info.rect}" }
                     val id = view.tag as Int
                     var hasMoved = false
                     for (i in segments.indices) {
@@ -179,10 +171,11 @@ class CrossTrackMovementActivity : AppCompatActivity() {
                     setViewBg(this, view.tag as Int)
                     currentOperatingRect.set(info.getGlobalRect())
                     downRect.set(currentOperatingRect)
+                    this.translationX = (currentOperatingRect.left - horizontalScrollView.scrollX).toFloat()
+                    this.translationY = (currentOperatingRect.top - scrollView.scrollY).toFloat()
                     val params = FrameLayout.LayoutParams(currentOperatingRect.width(), currentOperatingRect.height())
-                    params.marginStart = currentOperatingRect.left - horizontalScrollView.scrollX
-                    params.topMargin = currentOperatingRect.top - scrollView.scrollY
                     canvasContainer.addView(this, params)
+                    alpha = 0.5f
                 }
                 operatingSegmentView = view
                 originRect.set(totalSegmentViewMap[view]?.rect!!)
@@ -200,6 +193,11 @@ class CrossTrackMovementActivity : AppCompatActivity() {
     }
 
     private fun insertSegmentToTrack(id: Int, oldTrackIndex: Int, newTrackIndex: Int, rect: Rect) {
+        if (newTrackIndex == segments.size) {
+            trackContainer.post {
+                scrollView.scrollTo(0, trackContainer.height)
+            }
+        }
         val newRect = Rect(rect.left, 0, rect.right, TRACK_HEIGHT)
         val map = mutableMapOf<Int, ViewInfo>()
         map[id] = ViewInfo(newRect)
@@ -282,54 +280,98 @@ class CrossTrackMovementActivity : AppCompatActivity() {
     private fun handleMove(deltaX: Int, deltaY: Int) {
         val rect = Rect(downRect)
         rect.offset(deltaX, deltaY)
-        val centerX = rect.centerX()
-        val centerY = rect.centerY()
-        log { "currentOperatingRect = $rect, centerY = $centerY" }
+
         var showTips = false
         var tipsPos = 0
         val absScrollY = scrollView.height + scrollView.scrollY
         val absScrollX = horizontalScrollView.width + horizontalScrollView.scrollX
-        when {
-            rect.top < scrollView.scrollY - TRACK_HEIGHT * (1 - TIPS_AREA_RATIO) / 2 && scrollView.scrollY > 0 -> {
-                log { "checkOperationMode top scroll" }
-                if (scrollMode != ScrollMode.ScrollUp) {
-                    scrollMode = ScrollMode.ScrollUp
-                    startScroll()
-                }
-                rect.set(currentOperatingRect)
-            }
-            rect.bottom > absScrollY + TRACK_HEIGHT * (1 - TIPS_AREA_RATIO) / 2 && trackContainer.height - absScrollY > 0 -> {
-                log { "checkOperationMode bottom scroll" }
-                if (scrollMode != ScrollMode.ScrollDown) {
-                    scrollMode = ScrollMode.ScrollDown
-                    startScroll()
-                }
-                rect.set(currentOperatingRect)
-            }
-            rect.left < horizontalScrollView.scrollX + TRACK_HEIGHT * (1 - TIPS_AREA_RATIO) / 2 && horizontalScrollView.scrollX > 0 -> {
-                log { "checkOperationMode left scroll" }
-                if (scrollMode != ScrollMode.ScrollLeft) {
-                    scrollMode = ScrollMode.ScrollLeft
-                    startScroll()
-                }
-                rect.set(currentOperatingRect)
-            }
-            rect.right > absScrollX - TRACK_HEIGHT * (1 - TIPS_AREA_RATIO) / 2 && timelineContainer.width - absScrollX > 0 -> {
-                log { "checkOperationMode right scroll" }
-                if (scrollMode != ScrollMode.ScrollRight) {
-                    scrollMode = ScrollMode.ScrollRight
-                    startScroll()
-                }
-                rect.set(currentOperatingRect)
-            }
 
-            centerY < 0 -> {
+        if (scrollMode != ScrollMode.None) {
+            // 正在滚动，检查是否要停止滚定
+            val offsetX = rect.left - scrollingStartRect.left
+            val offsetY = rect.top - scrollingStartRect.top
+            log { "handleScrolling offsetX = $offsetX, offsetY = $offsetY" }
+            if (scrollMode == ScrollMode.ScrollLeft || scrollMode == ScrollMode.ScrollRight) {
+                if ((rect.left > horizontalScrollView.scrollX + TRACK_HEIGHT * (1 - TIPS_AREA_RATIO)) && scrollMode == ScrollMode.ScrollLeft) {
+                    stopScroll()
+                }
+                if ((rect.right < absScrollX - TRACK_HEIGHT * (1 - TIPS_AREA_RATIO)) && scrollMode == ScrollMode.ScrollRight) {
+                    stopScroll()
+                }
+            } else if (scrollMode == ScrollMode.ScrollUp || scrollMode == ScrollMode.ScrollDown) {
+                if (scrollMode == ScrollMode.ScrollUp) {
+                    if (rect.top > scrollView.scrollY + TRACK_HEIGHT * (1 - TIPS_AREA_RATIO)) {
+                        stopScroll()
+                    }
+                    if (rect.top < currentOperatingRect.top) {
+                        rect.set(rect.left, currentOperatingRect.top, rect.right, currentOperatingRect.bottom)
+                    }
+                } else if (scrollMode == ScrollMode.ScrollDown) {
+                    if (rect.bottom < absScrollY - TRACK_HEIGHT * (1 - TIPS_AREA_RATIO)) {
+                        stopScroll()
+                    }
+                    if (rect.bottom > currentOperatingRect.bottom) {
+                        rect.set(rect.left, currentOperatingRect.top, rect.right, currentOperatingRect.bottom)
+                    }
+                }
+            }
+        } else {
+            when {
+                rect.top < scrollView.scrollY - TRACK_HEIGHT * (1 - TIPS_AREA_RATIO) / 2 && scrollView.scrollY > 0 -> {
+                    log { "checkOperationMode top scroll" }
+                    if (scrollMode != ScrollMode.ScrollUp) {
+                        scrollMode = ScrollMode.ScrollUp
+                        // 卡住在屏幕内最上面的轨道
+                        var top = 0
+                        while (top + TRACK_HEIGHT <= scrollView.scrollY) {
+                            top += TRACK_HEIGHT
+                        }
+                        rect.set(rect.left, top, rect.right, top + TRACK_HEIGHT)
+                        startScroll()
+                    }
+                }
+                rect.bottom > absScrollY + TRACK_HEIGHT * (1 - TIPS_AREA_RATIO) / 2 && trackContainer.height - absScrollY > 0 -> {
+                    log { "checkOperationMode bottom scroll" }
+                    if (scrollMode != ScrollMode.ScrollDown) {
+                        scrollMode = ScrollMode.ScrollDown
+                        // 卡住在最下面的轨道
+                        var top = 0
+                        while (top + TRACK_HEIGHT < absScrollY) {
+                            top += TRACK_HEIGHT
+                        }
+                        log { "bottom reset top = $top" }
+                        rect.set(rect.left, top, rect.right, top + TRACK_HEIGHT)
+                        startScroll()
+                    }
+                }
+                rect.left < horizontalScrollView.scrollX + TRACK_HEIGHT * (1 - TIPS_AREA_RATIO) / 2 && horizontalScrollView.scrollX > 0 -> {
+                    log { "checkOperationMode left scroll" }
+                    if (scrollMode != ScrollMode.ScrollLeft) {
+                        scrollMode = ScrollMode.ScrollLeft
+                        startScroll()
+                    }
+                }
+                rect.right > absScrollX - TRACK_HEIGHT * (1 - TIPS_AREA_RATIO) / 2 && timelineContainer.width - absScrollX > 0 -> {
+                    log { "checkOperationMode right scroll" }
+                    if (scrollMode != ScrollMode.ScrollRight) {
+                        scrollMode = ScrollMode.ScrollRight
+                        startScroll()
+                    }
+                }
+            }
+        }
+
+        val centerX = rect.centerX()
+        val centerY = rect.centerY()
+
+        when {
+            scrollMode == ScrollMode.None && centerY < 0 -> {
                 log { "checkOperationMode top insert" }
                 tipsPos = 0
                 showTips = true
                 rect.set(rect.left, currentOperatingRect.top, rect.right, currentOperatingRect.bottom)
             }
-            centerY > trackContainer.bottom -> {
+            scrollMode == ScrollMode.None && centerY > trackContainer.bottom -> {
                 log { "checkOperationMode bottom insert" }
                 tipsPos = trackContainer.height - TIPS_VIEW_HEIGHT
                 showTips = true
@@ -337,8 +379,11 @@ class CrossTrackMovementActivity : AppCompatActivity() {
             }
             else -> {
                 var i = 0
+                log { "checkOperationMode else" }
                 for (e in trackMap) {
-                    if (i < trackMap.size - 1 && centerY in TRACK_HEIGHT * (i + 1) - TIPS_AREA_HEIGHT / 2..TRACK_HEIGHT * (i + 1) + TIPS_AREA_HEIGHT / 2) {
+                    if (scrollMode == ScrollMode.None
+                        && i < trackMap.size - 1 && centerY in TRACK_HEIGHT * (i + 1) - TIPS_AREA_HEIGHT / 2..TRACK_HEIGHT * (i + 1) + TIPS_AREA_HEIGHT / 2
+                    ) {
                         // 处于新建track区间
                         tipsPos = TRACK_HEIGHT * (i + 1) - TIPS_VIEW_HEIGHT / 2
                         showTips = true
@@ -370,52 +415,35 @@ class CrossTrackMovementActivity : AppCompatActivity() {
     private val scrollListener = object : ScrollRunnable.ScrollListener {
 
         override fun onScrolling(offsetX: Int, offsetY: Int) {
-//            downRect.offset(offsetX)
             currentOperatingRect.offset(offsetX, offsetY)
             log { "onScrolling currentOperatingRect = $currentOperatingRect" }
-//            if (abs(offsetY) < TRACK_HEIGHT) {
-//                // 需要反方向滑动
-//                val offset = -offsetY
-//                val originRect = Rect(currentOperatingRect)
-//                val animator = ValueAnimator.ofFloat(offset * 1.0f)
-//                animator.addUpdateListener {
-//                    val value = (it.animatedFraction * offset).toInt()
-//                    log { "value = $value" }
-//                    currentOperatingRect.set(originRect.left, originRect.top + value, originRect.right, originRect.bottom + value)
-//                    puppetView?.let {
-//                        layoutView(it, currentOperatingRect, -horizontalScrollView.scrollX, -scrollView.scrollY)
-//                        canPlace = !checkOverlap(currentOperatingRect)
-//                    }
-//                }
-//                animator.duration = 250
-//                animator.start()
-//            }
         }
 
         override fun onScrollEnd() {
+            if (scrollMode == ScrollMode.ScrollUp) {
+                // 卡住在屏幕内最上面的轨道
+                var top = 0
+                while (top + TRACK_HEIGHT <= scrollView.scrollY) {
+                    top += TRACK_HEIGHT
+                }
+                currentOperatingRect.set(currentOperatingRect.left, top, currentOperatingRect.right, top + TRACK_HEIGHT)
+                layoutView()
+            } else if (scrollMode == ScrollMode.ScrollDown) {
+                var top = 0
+                val absScrollY = scrollView.height + scrollView.scrollY
+                while (top + TRACK_HEIGHT < absScrollY) {
+                    top += TRACK_HEIGHT
+                }
+                currentOperatingRect.set(currentOperatingRect.left, top, currentOperatingRect.right, top + TRACK_HEIGHT)
+                layoutView()
+            }
             stopScroll()
         }
     }
 
-    private fun handleScrolling(deltaX: Int, deltaY: Int) {
-        val rect = Rect(downRect)
-        rect.offset(deltaX, deltaY)
-        if (scrollMode == ScrollMode.ScrollLeft || scrollMode == ScrollMode.ScrollRight) {
-            val absScrollX = horizontalScrollView.width + horizontalScrollView.scrollX
-            if ((rect.left > horizontalScrollView.scrollX + TRACK_HEIGHT * (1 - TIPS_AREA_RATIO)) && scrollMode == ScrollMode.ScrollLeft) {
-                stopScroll()
-            }
-            if ((rect.right < absScrollX - TRACK_HEIGHT * (1 - TIPS_AREA_RATIO)) && scrollMode == ScrollMode.ScrollRight) {
-                stopScroll()
-            }
-        } else if (scrollMode == ScrollMode.ScrollUp || scrollMode == ScrollMode.ScrollDown) {
-            val absScrollY = scrollView.height + scrollView.scrollY
-            if ((rect.top > scrollView.scrollY + TRACK_HEIGHT * (1 - TIPS_AREA_RATIO) / 2) && scrollMode == ScrollMode.ScrollUp) {
-                stopScroll()
-            }
-            if ((rect.bottom < absScrollY - TRACK_HEIGHT * (1 - TIPS_AREA_RATIO) / 2) && scrollMode == ScrollMode.ScrollDown) {
-                stopScroll()
-            }
+    private fun layoutView() {
+        puppetView?.let {
+            Companion.layoutView(it, currentOperatingRect, -horizontalScrollView.scrollX, -scrollView.scrollY)
         }
     }
 
@@ -427,6 +455,7 @@ class CrossTrackMovementActivity : AppCompatActivity() {
             scrollAction = HorizontalScrollRunnable(horizontalScrollView, timelineContainer, scrollMode, scrollListener)
         }
         scrollView.postDelayed(scrollAction, 300)
+        scrollingStartRect.set(currentOperatingRect)
     }
 
     private fun stopScroll() {

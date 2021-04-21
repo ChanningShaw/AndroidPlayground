@@ -37,10 +37,10 @@ class VerticalScrollRunnable(private val scrollView: ScrollView,
             }
         }
         log { "scrollBy : $offsetY" }
-        scrollView.smoothScrollBy(0, offsetY)
+        scrollView.scrollBy(0, offsetY)
         listener.onScrolling(0, offsetY)
         if (continueScroll) {
-            scrollView.postDelayed(this, 550)
+            scrollView.postDelayed(this, 450)
         } else {
             listener.onScrollEnd()
         }
