@@ -12,5 +12,12 @@ abstract class ScrollRunnable(val scrollMode: ScrollMode,
 
 
 enum class ScrollMode {
-    None, ScrollDown, ScrollUp, ScrollLeft, ScrollRight
+    None, Pending, ScrollDown, ScrollUp, ScrollLeft, ScrollRight
+}
+
+fun isScrolling(mode: ScrollMode) : Boolean {
+    return mode == ScrollMode.ScrollUp
+            || mode == ScrollMode.ScrollDown
+            || mode == ScrollMode.ScrollLeft
+            || mode == ScrollMode.ScrollRight
 }

@@ -29,7 +29,7 @@ abstract class ElementView(context: Context, attrs: AttributeSet?, defStyle: Int
     }
 
     companion object {
-        const val LONG_PRESS_TIME = 500L
+        const val LONG_PRESS_TIME = 300L
         const val CLICK_AREA = 25
     }
 

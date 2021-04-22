@@ -15,6 +15,7 @@
       <FrameLayout
         android:id="@+id/timeline_container"
         android:layout_width="wrap_content"
+        android:background="#000000"
         android:layout_height="match_parent">
 
         <ScrollView

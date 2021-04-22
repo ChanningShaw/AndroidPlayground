@@ -14,12 +14,12 @@ class VerticalScrollRunnable(private val scrollView: ScrollView,
         if (scrollMode == ScrollMode.ScrollUp) {
             // 向上滑动
             if (scrollView.scrollY > 0) {
-                if (scrollView.scrollY >= CrossTrackMovementActivity.TRACK_HEIGHT) {
-                    offsetY = -CrossTrackMovementActivity.TRACK_HEIGHT
+                if (scrollView.scrollY >= CrossTrackMovementActivity.TRACK_TOTAL_HEIGHT) {
+                    offsetY = -CrossTrackMovementActivity.TRACK_TOTAL_HEIGHT
                     continueScroll = true
                 } else {
                     // 滑剩余的部分
-                    offsetY = scrollView.scrollY - CrossTrackMovementActivity.TRACK_HEIGHT
+                    offsetY = scrollView.scrollY - CrossTrackMovementActivity.TRACK_TOTAL_HEIGHT
                     log { "remain offsetY = $offsetY" }
                     continueScroll = false
                 }
@@ -30,13 +30,14 @@ class VerticalScrollRunnable(private val scrollView: ScrollView,
             // 向下滑动
             val absScrollY = scrollView.height + scrollView.scrollY
             if (container.height - absScrollY > 0) {
-                offsetY = CrossTrackMovementActivity.TRACK_HEIGHT
+                offsetY = CrossTrackMovementActivity.TRACK_TOTAL_HEIGHT
                 continueScroll = true
             } else {
                 continueScroll = false
             }
         }
         log { "scrollBy : $offsetY" }
+        // TODO 支持顺滑滚动
         scrollView.scrollBy(0, offsetY)
         listener.onScrolling(0, offsetY)
         if (continueScroll) {

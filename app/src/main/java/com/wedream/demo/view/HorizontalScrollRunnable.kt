@@ -22,7 +22,7 @@ class HorizontalScrollRunnable(private val horizontalScrollView: HorizontalScrol
         } else {
             // 向左滑动
             if (horizontalScrollView.width + horizontalScrollView.scrollX < container.width) {
-                offsetX = 20
+                offsetX = 25
                 continueScroll = true
             } else {
                 continueScroll = false
