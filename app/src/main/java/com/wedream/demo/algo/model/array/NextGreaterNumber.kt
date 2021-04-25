@@ -1,5 +1,7 @@
-package com.wedream.demo.algo.model
+package com.wedream.demo.algo.model.array
 
+import com.wedream.demo.algo.model.AlgorithmModel
+import com.wedream.demo.algo.model.Option
 import com.wedream.demo.util.string
 import java.util.*
 
@@ -14,7 +16,7 @@ class NextGreaterNumber : AlgorithmModel() {
             "维护一个从栈顶到栈底递增的栈，每次往栈压入位置i\n" +
             "如果i对应的值比栈顶大，那么弹出栈顶, i对应的值就是栈顶位置对应的更大的数"
 
-    override fun execute(): Pair<String, String> {
+    override fun execute(option: Option?): Pair<String, String> {
         val arr = intArrayOf(3, 4, 1, 5, 6, 2, 7)
         val result = execute(arr)
         return Pair(arr.string(), result.string())

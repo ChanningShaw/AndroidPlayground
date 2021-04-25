@@ -1,5 +1,7 @@
-package com.wedream.demo.algo.model
+package com.wedream.demo.algo.model.list
 
+import com.wedream.demo.algo.model.AlgorithmModel
+import com.wedream.demo.algo.model.Option
 import com.wedream.demo.algo.structure.LinkedList
 import com.wedream.demo.util.string
 
@@ -28,7 +30,7 @@ class JosephusProblem : AlgorithmModel() {
             "所以往回推的时候需要加上m\n" +
             "可以得到 f(n,m) = (f(n-1, m) + m) % n"
 
-    override fun execute(): Pair<String, String> {
+    override fun execute(option: Option?): Pair<String, String> {
         val head = LinkedList.Node(0)
         val n1 = LinkedList.Node(1)
         val n2 = LinkedList.Node(2)

@@ -3,9 +3,10 @@ package com.wedream.demo
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
-import com.wedream.demo.algo.activity.ArrayAlgorithmActivity
+import com.wedream.demo.algo.activity.LinearAlgorithmActivity
 import com.wedream.demo.algo.activity.LinkedListActivity
 import com.wedream.demo.algo.activity.SortActivity
+import com.wedream.demo.algo.activity.TreeAlgorithmActivity
 import com.wedream.demo.app.ApplicationHolder
 import com.wedream.demo.app.CategoryActivity
 import com.wedream.demo.category.Category
@@ -36,7 +37,7 @@ class MainActivity : CategoryActivity() {
             try {
                 startActivity(intent)
             } catch (e: ActivityNotFoundException) {
-                log { "activity not found, has renanmed an activity?" }
+                log { "activity not found, has renamed an activity?" }
             }
         }
         setCategoryList(buildData())
@@ -76,7 +77,8 @@ class MainActivity : CategoryActivity() {
             listOf(
                 SortActivity::class.java,
                 LinkedListActivity::class.java,
-                ArrayAlgorithmActivity::class.java
+                LinearAlgorithmActivity::class.java,
+                TreeAlgorithmActivity::class.java
             )
         )
         val render = Category("render").addComponentCategories(

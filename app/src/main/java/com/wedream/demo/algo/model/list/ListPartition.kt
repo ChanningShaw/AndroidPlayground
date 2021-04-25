@@ -1,5 +1,7 @@
-package com.wedream.demo.algo.model
+package com.wedream.demo.algo.model.list
 
+import com.wedream.demo.algo.model.AlgorithmModel
+import com.wedream.demo.algo.model.Option
 import com.wedream.demo.algo.structure.LinkedList
 import com.wedream.demo.util.string
 
@@ -22,7 +24,7 @@ class ListPartition : AlgorithmModel() {
             "然后遍历原链表，把原链表断开，根据值与pivot的大小比较情况往3个链表的Tail追加节点。\n" +
             "最后连接这3个链表即可"
 
-    override fun execute(): Pair<String, String> {
+    override fun execute(option: Option?): Pair<String, String> {
         val head = LinkedList.Node(9)
         val n1 = LinkedList.Node(0)
         val n2 = LinkedList.Node(4)

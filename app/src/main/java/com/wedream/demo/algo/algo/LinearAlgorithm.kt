@@ -1,8 +1,10 @@
 package com.wedream.demo.algo.algo
 
 import com.wedream.demo.algo.model.*
+import com.wedream.demo.algo.model.array.*
+import com.wedream.demo.algo.model.list.*
 
-object ArrayAlgorithm {
+object LinearAlgorithm {
     fun getModels(): List<AlgorithmModel> {
         return listOf(
             MaxValuesInSlidingWindow(),
@@ -15,7 +17,11 @@ object ArrayAlgorithm {
             ListPartition(),
             RandomPointerListCopy(),
             NumListAdd(),
-            JudgeWhetherListIntersect()
+            JudgeWhetherListIntersect(),
+            DeleteDuplicateNodeInList(),
+            DeleteNodeInList(),
+            InsertIntoOrderCircleList(),
+            MergeOrderedList()
         )
     }
 }

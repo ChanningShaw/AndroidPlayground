@@ -47,9 +47,10 @@
         <activity android:name=".view.ViewLevelActivity" />
         <activity android:name=".view.ScaleViewActivity" />
         <activity android:name=".view.ScaleActivity" />
-        <activity android:name=".algo.activity.ArrayAlgorithmActivity" />
+        <activity android:name=".algo.activity.LinearAlgorithmActivity" />
         <activity android:name=".view.CrossTrackMovementActivity" />
         <activity android:name=".algo.activity.AlgorithmDetailActivity" />
+        <activity android:name=".algo.activity.TreeAlgorithmActivity" />
     </application>
 
 </manifest>

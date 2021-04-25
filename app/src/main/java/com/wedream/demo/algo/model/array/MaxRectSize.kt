@@ -1,5 +1,7 @@
-package com.wedream.demo.algo.model
+package com.wedream.demo.algo.model.array
 
+import com.wedream.demo.algo.model.AlgorithmModel
+import com.wedream.demo.algo.model.Option
 import com.wedream.demo.util.string
 import java.util.*
 import kotlin.math.max
@@ -16,7 +18,7 @@ class MaxRectSize : AlgorithmModel() {
             "最大子矩阵的范围就是height * n"
 
 
-    override fun execute(): Pair<String, String> {
+    override fun execute(option: Option?): Pair<String, String> {
         val input = arrayOf(
             intArrayOf(1, 0, 1, 1),
             intArrayOf(1, 1, 1, 1),

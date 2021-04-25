@@ -38,6 +38,20 @@ class LinkedList<T> {
         override fun toString(): String {
             return "$value, next = ${next?.value}"
         }
+
+        override fun equals(other: Any?): Boolean {
+            if (other is Node<*>) {
+                if (value != other.value) {
+                    return false
+                }
+                return true
+            }
+            return false
+        }
+
+        override fun hashCode(): Int {
+            return value?.hashCode() ?: 0
+        }
     }
 
     fun isEmpty(): Boolean {

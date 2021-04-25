@@ -1,5 +1,7 @@
-package com.wedream.demo.algo.model
+package com.wedream.demo.algo.model.array
 
+import com.wedream.demo.algo.model.AlgorithmModel
+import com.wedream.demo.algo.model.Option
 import com.wedream.demo.util.string
 import java.util.*
 
@@ -24,7 +26,7 @@ class SubArrayCountWithValueInRange : AlgorithmModel() {
             "如果全局最大值和全全局最小值都满足条件，那么滑动窗口中的任意子数组也是满足的。\n" +
             "在计算子数组数量时，每次只计算以滑动窗口的左边界为起点的子数组数量有多少，实际就是滑动窗口的长度。\n"
 
-    override fun execute(): Pair<String, String> {
+    override fun execute(option: Option?): Pair<String, String> {
         val input = intArrayOf(6, 2, 5, 3, 4, 1)
         val result = execute(input, 3).toString()
         return Pair(input.string() + ", 3", result)

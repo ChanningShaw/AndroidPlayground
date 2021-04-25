@@ -5,5 +5,14 @@ abstract class AlgorithmModel(
     open var title: String = "",
     open var tips: String = ""
 ) {
-    abstract fun execute(): Pair<String, String>
+    open fun getOptions(): List<Option> {
+        return emptyList()
+    }
+
+    abstract fun execute(option: Option?): Pair<String, String>
 }
+
+class Option(
+    val id: Int,
+    val name: String
+)

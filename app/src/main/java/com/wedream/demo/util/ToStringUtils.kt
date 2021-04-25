@@ -1,5 +1,7 @@
 package com.wedream.demo.util
 
+import com.wedream.demo.algo.model.tree.PrintTreeNode
+import com.wedream.demo.algo.structure.BinaryTree
 import com.wedream.demo.algo.structure.LinkedList
 
 
@@ -64,6 +66,10 @@ fun <T> T.string(): String {
                 }
             }
         }
+        is BinaryTree.Node<*> -> {
+            builder.append(PrintTreeNode.printTree(this))
+        }
+
         else -> {
             builder.append(toString())
         }
