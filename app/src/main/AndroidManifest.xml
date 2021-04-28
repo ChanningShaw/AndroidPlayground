@@ -50,7 +50,7 @@
         <activity android:name=".algo.activity.LinearAlgorithmActivity" />
         <activity android:name=".view.CrossTrackMovementActivity" />
         <activity android:name=".algo.activity.AlgorithmDetailActivity" />
-        <activity android:name=".algo.activity.TreeAlgorithmActivity" />
+        <activity android:name=".algo.activity.TreeAlgorithmActivity" /><activity android:name=".view.newtrack.NewMultiTrackActivity" />
     </application>
 
 </manifest>

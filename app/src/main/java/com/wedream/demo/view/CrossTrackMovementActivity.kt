@@ -65,6 +65,20 @@ class CrossTrackMovementActivity : AppCompatActivity() {
             view.translationX = (rect.left + offsetX).toFloat()
             view.translationY = (rect.top + offsetY).toFloat()
         }
+
+        fun setViewBg(view: View, id: Int) {
+            when (id % 3) {
+                0 -> {
+                    view.setBackgroundResource(R.color.color_green)
+                }
+                1 -> {
+                    view.setBackgroundResource(R.color.color_blue)
+                }
+                else -> {
+                    view.setBackgroundResource(R.color.red_dot_color)
+                }
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,7 +103,6 @@ class CrossTrackMovementActivity : AppCompatActivity() {
         override fun onMove(view: ElementView, deltaX: Int, deltaY: Int) {
             if (movingStart) {
                 puppetView ?: return
-//                log { "deltaX = $deltaX, deltaY = $deltaY" }
                 handleMove(deltaX, deltaY)
                 translateView()
                 canPlace = !checkOverlap(currentOperatingRect)
@@ -248,20 +261,6 @@ class CrossTrackMovementActivity : AppCompatActivity() {
         }
     }
 
-    private fun setViewBg(view: View, id: Int) {
-        when (id % 3) {
-            0 -> {
-                view.setBackgroundResource(R.color.color_green)
-            }
-            1 -> {
-                view.setBackgroundResource(R.color.color_blue)
-            }
-            else -> {
-                view.setBackgroundResource(R.color.red_dot_color)
-            }
-        }
-    }
-
     private fun checkOverlap(globalRect: Rect): Boolean {
         for (e in totalSegmentViewMap) {
             val r = e.value.getGlobalRect()
@@ -384,19 +383,21 @@ class CrossTrackMovementActivity : AppCompatActivity() {
     private val scrollListener = object : ScrollRunnable.ScrollListener {
 
         override fun onScrolling(offsetX: Int, offsetY: Int) {
+            log { "onScrolling = $offsetY" }
             currentOperatingRect.offset(offsetX, offsetY)
         }
 
         override fun onScrollEnd() {
             endScroll()
             // 因为滚动，可能产生了错位，需要重新吸附一下
-            adsorptionRestrict(currentOperatingRect)
-            translateView()
+//            adsorptionRestrict(currentOperatingRect)
+//            translateView()
         }
     }
 
     private fun translateView() {
         puppetView?.let {
+            if (isScrolling(scrollMode)) return
             Companion.translateView(it, currentOperatingRect, -horizontalScrollView.scrollX, -scrollView.scrollY)
         }
     }

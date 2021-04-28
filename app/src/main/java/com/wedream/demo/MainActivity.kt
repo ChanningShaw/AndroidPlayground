@@ -25,6 +25,7 @@ import com.wedream.demo.util.LogUtils.log
 import com.wedream.demo.view.*
 import com.wedream.demo.view.multitrack.TrackActivity
 import com.wedream.demo.view.newtips.NewTipsActivity
+import com.wedream.demo.view.newtrack.NewMultiTrackActivity
 
 class MainActivity : CategoryActivity() {
 
@@ -60,8 +61,8 @@ class MainActivity : CategoryActivity() {
                 ViewLevelActivity::class.java,
                 ScaleViewActivity::class.java,
                 ScaleActivity::class.java,
-                CrossTrackMovementActivity::class.java
-
+                CrossTrackMovementActivity::class.java,
+                NewMultiTrackActivity::class.java
             )
         )
         val multiThreading = Category("multiThreading").addComponentCategories(

@@ -38,7 +38,7 @@ class VerticalScrollRunnable(private val scrollView: ScrollView,
         }
         log { "scrollBy : $offsetY" }
         // TODO 支持顺滑滚动
-        scrollView.scrollBy(0, offsetY)
+        scrollView.smoothScrollBy(0, offsetY)
         listener.onScrolling(0, offsetY)
         if (continueScroll) {
             scrollView.postDelayed(this, 450)
