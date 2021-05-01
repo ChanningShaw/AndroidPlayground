@@ -49,7 +49,6 @@ class NewMultiTrackActivity : AppCompatActivity() {
             if (!movingStart) return
             transInfo.x = deltaX - horizontalScrollView.scrollX
             transInfo.y = deltaY - scrollView.scrollY
-            log { "deltaX = $deltaX, deltaY = $deltaY" }
             handleMove(transInfo)
             adsorptionRestrict(transInfo)
             if (transInfo.curRect.left < 0) {
@@ -58,7 +57,7 @@ class NewMultiTrackActivity : AppCompatActivity() {
             if (transInfo.curRect.right > canvasContainer.right) {
                 transInfo.x += canvasContainer.right - transInfo.curRect.right
             }
-            if (transInfo.curRect.top < 0 ) {
+            if (transInfo.curRect.top < 0) {
                 transInfo.y += -transInfo.curRect.top
             }
             if (transInfo.curRect.bottom > canvasContainer.bottom) {
@@ -90,7 +89,6 @@ class NewMultiTrackActivity : AppCompatActivity() {
             val parent = view.parent as ViewGroup
             val downRect = Rect(view.left, view.top, view.right, view.bottom)
             downRect.offset(0, parent.top)
-            log { "downRect = $downRect" }
             transInfo.setDownRect(downRect)
             val id = view.tag as Int
             puppetView = SliderView(this@NewMultiTrackActivity).apply {
@@ -98,6 +96,8 @@ class NewMultiTrackActivity : AppCompatActivity() {
                 val params = FrameLayout.LayoutParams(downRect.width(), downRect.height())
                 params.marginStart = downRect.left
                 params.topMargin = downRect.top
+                translationX = -horizontalScrollView.scrollX.toFloat()
+                translationY = -scrollView.scrollY.toFloat()
                 alpha = 0.7f
                 canvasContainer.addView(this, params)
             }
@@ -138,7 +138,6 @@ class NewMultiTrackActivity : AppCompatActivity() {
                 endScroll()
             }
         } else {
-            log { "transInfo.curRect = ${transInfo.curRect}" }
             if (transInfo.curRect.top < canvasContainer.top - CrossTrackMovementActivity.TRACK_HEIGHT / 2 && scrollView.scrollY > 0) {
                 if (scrollMode != ScrollMode.ScrollUp) {
                     scrollMode = ScrollMode.ScrollUp

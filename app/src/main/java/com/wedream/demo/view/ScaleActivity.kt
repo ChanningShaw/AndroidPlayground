@@ -2,6 +2,7 @@ package com.wedream.demo.view
 
 import android.os.Bundle
 import android.view.View
+import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
 
@@ -12,5 +13,6 @@ class ScaleActivity : AppCompatActivity() {
         findViewById<View>(R.id.view).setOnClickListener {
             it.scaleX *= 1.1f
         }
+        findViewById<FrameLayout>(R.id.container).clipChildren = false
     }
 }

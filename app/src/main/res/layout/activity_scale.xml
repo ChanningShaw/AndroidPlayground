@@ -5,22 +5,24 @@
 
   <LinearLayout
     android:id="@+id/view"
-    android:layout_width="100dp"
+    android:layout_width="match_parent"
     android:layout_height="100dp"
     android:layout_centerInParent="true"
     android:background="@color/color_yellow"
-    android:orientation="horizontal">
+    android:clipChildren="false"
+    android:orientation="vertical">
 
-    <View
-      android:layout_width="10dp"
-      android:layout_height="match_parent"
-      android:background="@color/color_blue" />
-
-    <View
-      android:layout_width="10dp"
-      android:layout_height="match_parent"
-      android:background="@color/color_green" />
-
+    <FrameLayout
+      android:id="@+id/container"
+      android:layout_width="match_parent"
+      android:layout_height="100dp"
+      android:clipChildren="false">
+      <View
+        android:layout_width="50dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="100dp"
+        android:background="@color/color_green" />
+    </FrameLayout>
   </LinearLayout>
 
 </RelativeLayout>
