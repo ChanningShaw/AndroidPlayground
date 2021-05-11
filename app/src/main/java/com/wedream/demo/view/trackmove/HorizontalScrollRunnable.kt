@@ -1,13 +1,16 @@
-package com.wedream.demo.view
+package com.wedream.demo.view.trackmove
 
 import android.view.ViewGroup
 import android.widget.HorizontalScrollView
 import com.wedream.demo.util.LogUtils.log
+import com.wedream.demo.view.ScrollMode
+import com.wedream.demo.view.ScrollRunnable
 
 class HorizontalScrollRunnable(private val horizontalScrollView: HorizontalScrollView,
                                private val container: ViewGroup,
                                scrollMode: ScrollMode,
-                               listener: ScrollListener): ScrollRunnable(scrollMode, listener) {
+                               listener: ScrollListener
+): ScrollRunnable(scrollMode, listener) {
     override fun run() {
         var offsetX = 0
         var continueScroll = false

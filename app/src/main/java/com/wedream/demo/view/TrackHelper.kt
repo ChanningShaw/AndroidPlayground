@@ -1,6 +1,7 @@
 package com.wedream.demo.view
 
 import android.graphics.Rect
+import com.wedream.demo.view.trackmove.CrossTrackMovementActivity
 
 object TrackHelper {
     fun generateTrackData(): List<MutableMap<Int, CrossTrackMovementActivity.ViewInfo>> {

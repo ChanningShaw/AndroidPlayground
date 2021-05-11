@@ -48,9 +48,9 @@
         <activity android:name=".view.ScaleViewActivity" />
         <activity android:name=".view.ScaleActivity" />
         <activity android:name=".algo.activity.LinearAlgorithmActivity" />
-        <activity android:name=".view.CrossTrackMovementActivity" />
+        <activity android:name=".view.trackmove.CrossTrackMovementActivity" />
         <activity android:name=".algo.activity.AlgorithmDetailActivity" />
-        <activity android:name=".algo.activity.TreeAlgorithmActivity" /><activity android:name=".view.newtrack.NewMultiTrackActivity" />
+        <activity android:name=".algo.activity.TreeAlgorithmActivity" /><activity android:name=".view.newtrack.NewMultiTrackActivity" /><activity android:name=".view.InterceptEventActivity" />
     </application>
 
 </manifest>

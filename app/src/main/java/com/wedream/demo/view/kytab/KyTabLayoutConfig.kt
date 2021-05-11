@@ -1,4 +1,4 @@
-package com.wedream.demo.view
+package com.wedream.demo.view.kytab
 
 class KyTabLayoutConfig {
     var tabMargin = 20

@@ -1,4 +1,4 @@
-package com.wedream.demo.view
+package com.wedream.demo.view.kytab
 
 import android.animation.ValueAnimator
 import android.content.Context

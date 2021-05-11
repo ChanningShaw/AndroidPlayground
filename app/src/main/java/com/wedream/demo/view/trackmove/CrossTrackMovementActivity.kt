@@ -1,4 +1,4 @@
-package com.wedream.demo.view
+package com.wedream.demo.view.trackmove
 
 import android.graphics.Rect
 import android.os.Bundle
@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
 import com.wedream.demo.util.AndroidUtils
 import com.wedream.demo.util.LogUtils.log
+import com.wedream.demo.view.*
 import com.wedream.demo.view.multitrack.SliderView
 import com.wedream.demo.view.multitrack.base.ElementView
 import com.wedream.demo.view.multitrack.overlap
@@ -398,7 +399,7 @@ class CrossTrackMovementActivity : AppCompatActivity() {
     private fun translateView() {
         puppetView?.let {
             if (isScrolling(scrollMode)) return
-            Companion.translateView(it, currentOperatingRect, -horizontalScrollView.scrollX, -scrollView.scrollY)
+            translateView(it, currentOperatingRect, -horizontalScrollView.scrollX, -scrollView.scrollY)
         }
     }
 

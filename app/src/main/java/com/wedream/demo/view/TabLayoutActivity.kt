@@ -3,6 +3,8 @@ package com.wedream.demo.view
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
+import com.wedream.demo.view.kytab.IndicatorConfig
+import com.wedream.demo.view.kytab.KyTabLayout
 
 
 class TabLayoutActivity : AppCompatActivity() {

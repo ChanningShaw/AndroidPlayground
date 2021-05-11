@@ -3,6 +3,7 @@ package com.wedream.demo.view
 import android.view.ViewGroup
 import android.widget.ScrollView
 import com.wedream.demo.util.LogUtils.log
+import com.wedream.demo.view.trackmove.CrossTrackMovementActivity
 
 class VerticalScrollRunnable(private val scrollView: ScrollView,
                              private val container: ViewGroup,

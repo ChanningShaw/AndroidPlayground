@@ -13,6 +13,8 @@ import com.wedream.demo.util.LogUtils.log
 import com.wedream.demo.view.*
 import com.wedream.demo.view.multitrack.SliderView
 import com.wedream.demo.view.multitrack.base.ElementView
+import com.wedream.demo.view.trackmove.CrossTrackMovementActivity
+import com.wedream.demo.view.trackmove.HorizontalScrollRunnable
 
 class NewMultiTrackActivity : AppCompatActivity() {
 
