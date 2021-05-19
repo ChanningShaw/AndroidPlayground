@@ -64,7 +64,8 @@ class MainActivity : CategoryActivity() {
                 ScaleActivity::class.java,
                 CrossTrackMovementActivity::class.java,
                 NewMultiTrackActivity::class.java,
-                InterceptEventActivity::class.java
+                InterceptEventActivity::class.java,
+                LottieActivity::class.java
             )
         )
         val multiThreading = Category("multiThreading").addComponentCategories(

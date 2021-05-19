@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import com.wedream.demo.planegeometry.fitRect
+import com.wedream.demo.util.LogUtils.log
 
 class MatrixDemoView(context: Context, attrs: AttributeSet?, defStyle: Int) : View(context, attrs, defStyle) {
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -64,6 +65,7 @@ class MatrixDemoView(context: Context, attrs: AttributeSet?, defStyle: Int) : Vi
         mat.mapPoints(points)
         outPoints.clear()
         outPoints.add(PointF(points[0], points[1]))
+        log { "leftTop : x = ${points[0]}, y= ${points[1]}" }
         outPoints.add(PointF(points[2], points[3]))
         outPoints.add(PointF(points[4], points[5]))
         outPoints.add(PointF(points[6], points[7]))
