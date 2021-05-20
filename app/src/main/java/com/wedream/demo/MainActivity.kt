@@ -23,6 +23,7 @@ import com.wedream.demo.render.*
 import com.wedream.demo.render.gl3.GLColorActivity
 import com.wedream.demo.util.LogUtils.log
 import com.wedream.demo.view.*
+import com.wedream.demo.view.colormatrix.ColorMatrixCategoryActivity
 import com.wedream.demo.view.multitrack.TrackActivity
 import com.wedream.demo.view.newtips.NewTipsActivity
 import com.wedream.demo.view.newtrack.NewMultiTrackActivity
@@ -65,7 +66,8 @@ class MainActivity : CategoryActivity() {
                 CrossTrackMovementActivity::class.java,
                 NewMultiTrackActivity::class.java,
                 InterceptEventActivity::class.java,
-                LottieActivity::class.java
+                LottieActivity::class.java,
+                ColorMatrixCategoryActivity::class.java
             )
         )
         val multiThreading = Category("multiThreading").addComponentCategories(

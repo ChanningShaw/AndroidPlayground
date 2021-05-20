@@ -1,12 +1,10 @@
 package com.wedream.demo.render
 
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.wedream.demo.R
-import com.wedream.demo.common.CommonAdapter
 import kotlin.random.Random
 
 class RecyclerViewActivity : AppCompatActivity() {
