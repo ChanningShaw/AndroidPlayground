@@ -3,15 +3,17 @@ package com.wedream.demo.videoeditor
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.HorizontalScrollView
-import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
 import com.wedream.demo.app.DeviceParams
 import com.wedream.demo.app.DisposableActivity
 import com.wedream.demo.util.AndroidUtils
+import com.wedream.demo.util.LogUtils.log
 import com.wedream.demo.videoeditor.editor.VideoEditor
 import com.wedream.demo.videoeditor.timeline.data.TimelineViewModel
+import com.wedream.demo.videoeditor.timeline.utils.OperateScaleHelper
 import com.wedream.demo.videoeditor.timeline.utils.TimelineUtils
+import com.wedream.demo.videoeditor.timeline.widget.MyHorizontalScrollView
+import com.wedream.demo.videoeditor.timeline.widget.TimelineAxisView
 import com.wedream.demo.view.MyFrameLayout
 import com.wedream.demo.view.canvas.MyCanvasView
 import com.wedream.demo.view.multitrack.SliderView
@@ -21,8 +23,10 @@ class VideoEditorActivity : DisposableActivity() {
 
     private lateinit var timelineContainer: MyFrameLayout
     private lateinit var trackContainer: MyFrameLayout
-    private lateinit var scrollView: HorizontalScrollView
+    private lateinit var scrollView: MyHorizontalScrollView
     private lateinit var canvasView: MyCanvasView
+    private lateinit var timelineAxisView: TimelineAxisView
+
     private var videoEditor = VideoEditor()
     private val timelineViewModel = TimelineViewModel(videoEditor)
     private var timelineWrapWidth = TimelineUtils.time2Width(5.0 * 60, timelineViewModel.getScale())
@@ -40,6 +44,7 @@ class VideoEditorActivity : DisposableActivity() {
         trackContainer = findViewById(R.id.track_container)
         scrollView = findViewById(R.id.timeline_scroll_view)
         canvasView = findViewById(R.id.timeline_canvas)
+        timelineAxisView = findViewById(R.id.timeline)
         trackContainer.layoutParams?.let {
             it as ViewGroup.MarginLayoutParams
             it.marginStart = DeviceParams.SCREEN_WIDTH / 2
@@ -52,6 +57,17 @@ class VideoEditorActivity : DisposableActivity() {
             }
             onScrollChanged(scrollX)
         }
+        timelineAxisView.setOnScaleListener(object : OperateScaleHelper.OnScaleListener {
+            override fun onScaling(scale: Float) {
+                timelineViewModel.setScale(scale.toDouble())
+            }
+
+            override fun onScaleStart(scale: Float) {
+            }
+
+            override fun onScaleEnd(scale: Float) {
+            }
+        })
     }
 
     private fun initListeners() {

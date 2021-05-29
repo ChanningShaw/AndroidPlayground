@@ -6,7 +6,15 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.TextView
+import com.wedream.demo.R
+import com.wedream.demo.util.LogUtils.log
+import com.wedream.demo.view.multitrack.SegmentView
+import kotlin.random.Random
 
 class MyCanvasView(context: Context, attrs: AttributeSet?, defStyle: Int) :
     View(context, attrs, defStyle) {
@@ -15,6 +23,7 @@ class MyCanvasView(context: Context, attrs: AttributeSet?, defStyle: Int) :
 
     private val paint = Paint()
     private val highlightRect = Rect()
+    private var targetViews = arrayListOf<View>()
 
     init {
         paint.color = Color.WHITE
@@ -24,10 +33,24 @@ class MyCanvasView(context: Context, attrs: AttributeSet?, defStyle: Int) :
 
     override fun onDraw(canvas: Canvas) {
         canvas.drawRect(highlightRect, paint)
+        for (view in targetViews) {
+            view.draw(canvas)
+        }
     }
 
     fun setRect(left: Int, top: Int, right: Int, bottom: Int) {
         highlightRect.set(left, top, right, bottom)
         invalidate()
+    }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        return super.onTouchEvent(event)
+    }
+
+    fun drawView(view: View, left: Int, top: Int, width: Int, height: Int) {
+        view.layoutParams = ViewGroup.LayoutParams(width, height)
+        view.layout(left, top, left + width, top + height)
+        view.setBackgroundResource(R.color.color_green)
+        targetViews.add(view)
     }
 }

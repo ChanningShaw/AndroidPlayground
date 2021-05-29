@@ -16,10 +16,11 @@ class TimelineViewModel(private val videoEditor: VideoEditor) : ViewModel() {
     private var _message = PublishSubject.create<Int>()
 
     fun loadProject() {
-        val assets = videoEditor.loadProject()
+        segmentMap.clear()
+        val assets = videoEditor.getAssets()
         for (asset in assets) {
-            val start = TimelineUtils.time2Width(asset.start)
-            val end = TimelineUtils.time2Width(asset.end)
+            val start = TimelineUtils.time2Width(asset.start, scale)
+            val end = TimelineUtils.time2Width(asset.end, scale)
             timelineRealWidth += (end - start)
             segmentMap[asset.id] = Segment(asset.id, start, end)
         }
@@ -37,6 +38,11 @@ class TimelineViewModel(private val videoEditor: VideoEditor) : ViewModel() {
 
     fun getScale(): Double {
         return scale
+    }
+
+    fun setScale(scale: Double) {
+        this.scale = scale
+        loadProject()
     }
 
     fun getRealTimeWidth(): Int {
