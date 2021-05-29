@@ -10,11 +10,13 @@ import com.wedream.demo.algo.activity.TreeAlgorithmActivity
 import com.wedream.demo.app.ApplicationHolder
 import com.wedream.demo.app.CategoryActivity
 import com.wedream.demo.category.Category
+import com.wedream.demo.category.ComponentCategory
 import com.wedream.demo.concurrent.JavaExecutorActivity
 import com.wedream.demo.concurrent.kotlin.CoroutineActivity
 import com.wedream.demo.concurrent.kotlin.FlowActivity
 import com.wedream.demo.concurrent.kotlin.FunctionProgrammingActivity
 import com.wedream.demo.concurrent.rxjava.RxJavaDemoActivity
+import com.wedream.demo.videoeditor.VideoEditorActivity
 import com.wedream.demo.investment.BTCPredictActivity
 import com.wedream.demo.jni.GL2JNIActivity
 import com.wedream.demo.jni.HelloJNIActivity
@@ -23,6 +25,7 @@ import com.wedream.demo.render.*
 import com.wedream.demo.render.gl3.GLColorActivity
 import com.wedream.demo.util.LogUtils.log
 import com.wedream.demo.view.*
+import com.wedream.demo.view.canvas.CanvasActivity
 import com.wedream.demo.view.colormatrix.ColorMatrixCategoryActivity
 import com.wedream.demo.view.multitrack.TrackActivity
 import com.wedream.demo.view.newtips.NewTipsActivity
@@ -67,7 +70,8 @@ class MainActivity : CategoryActivity() {
                 NewMultiTrackActivity::class.java,
                 InterceptEventActivity::class.java,
                 LottieActivity::class.java,
-                ColorMatrixCategoryActivity::class.java
+                ColorMatrixCategoryActivity::class.java,
+                CanvasActivity::class.java
             )
         )
         val multiThreading = Category("multiThreading").addComponentCategories(
@@ -100,8 +104,9 @@ class MainActivity : CategoryActivity() {
                 BTCPredictActivity::class.java
             )
         )
+        val editor = ComponentCategory(VideoEditorActivity::class.java)
         return listOf(
-            viewCategory, multiThreading, algorithm, render, investment
+            viewCategory, multiThreading, algorithm, render, editor, investment
         )
     }
 }

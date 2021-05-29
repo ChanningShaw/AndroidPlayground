@@ -13,6 +13,7 @@ import android.widget.HorizontalScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
+import com.wedream.demo.app.DeviceParams
 import com.wedream.demo.util.LogUtils.log
 
 
@@ -21,7 +22,6 @@ class ScaleViewActivity : AppCompatActivity() {
     private lateinit var scaleView: ScaleView
     private lateinit var scrollView: HorizontalScrollView
     private lateinit var contentView: FrameLayout
-    private var screenWidth = 0
     private var currentScale = 1.0f
     private var laseScale = 1.0f
     private var scalingStartScrollX = 0
@@ -44,11 +44,6 @@ class ScaleViewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val wm = this.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val dm = DisplayMetrics()
-        wm.defaultDisplay.getMetrics(dm)
-        screenWidth = dm.widthPixels // 屏幕宽度（像素）
 
         setContentView(R.layout.activity_scale_view)
         scaleView = findViewById(R.id.scaleView)
@@ -94,8 +89,16 @@ class ScaleViewActivity : AppCompatActivity() {
         var offset = 0
         val width = 150
         for (i in 1..50) {
-            val view = LayoutInflater.from(this).inflate(R.layout.text_simple, null, false) as TextView
-            view.setOnTouchListener(MyTouchListener(view, scrollView, scrollView, screenWidth))
+            val view =
+                LayoutInflater.from(this).inflate(R.layout.text_simple, null, false) as TextView
+            view.setOnTouchListener(
+                MyTouchListener(
+                    view,
+                    scrollView,
+                    scrollView,
+                    DeviceParams.SCREEN_WIDTH
+                )
+            )
             view.text = i.toString()
             when (i % 3) {
                 0 -> {
@@ -127,7 +130,7 @@ class ScaleViewActivity : AppCompatActivity() {
                 it as ViewGroup.MarginLayoutParams
                 it.marginStart = offset
                 if (i == rectList.size - 1) {
-                    it.marginEnd = screenWidth / 2
+                    it.marginEnd = DeviceParams.SCREEN_WIDTH / 2
                 }
                 it.width = with
                 it.height = rect.height()
@@ -137,10 +140,12 @@ class ScaleViewActivity : AppCompatActivity() {
         }
     }
 
-    class MyTouchListener(val target: View,
-                          val parent: ViewGroup,
-                          val scrollView: HorizontalScrollView,
-                          val screenWidth: Int) : View.OnTouchListener, View.OnLayoutChangeListener {
+    class MyTouchListener(
+        val target: View,
+        val parent: ViewGroup,
+        val scrollView: HorizontalScrollView,
+        val screenWidth: Int
+    ) : View.OnTouchListener, View.OnLayoutChangeListener {
 
         var downX = 0f
         var lastX = 0f
@@ -240,7 +245,17 @@ class ScaleViewActivity : AppCompatActivity() {
             view.layoutParams = params
         }
 
-        override fun onLayoutChange(v: View, left: Int, top: Int, right: Int, bottom: Int, oldLeft: Int, oldTop: Int, oldRight: Int, oldBottom: Int) {
+        override fun onLayoutChange(
+            v: View,
+            left: Int,
+            top: Int,
+            right: Int,
+            bottom: Int,
+            oldLeft: Int,
+            oldTop: Int,
+            oldRight: Int,
+            oldBottom: Int
+        ) {
             val location1 = IntArray(2)
             v.getLocationInWindow(location1) //获取在当前窗口内的绝对坐标
             val absRight = location1[0] + right - left

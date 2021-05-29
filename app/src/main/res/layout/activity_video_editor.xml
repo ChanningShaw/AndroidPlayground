@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_gray">
+
+    <HorizontalScrollView
+        android:id="@+id/timeline_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <com.wedream.demo.view.MyFrameLayout
+            android:id="@+id/timeline_container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+
+            <com.wedream.demo.view.MyFrameLayout
+                android:id="@+id/track_container"
+                android:layout_width="0dp"
+                android:layout_height="match_parent">
+
+            </com.wedream.demo.view.MyFrameLayout>
+
+        </com.wedream.demo.view.MyFrameLayout>
+
+    </HorizontalScrollView>
+
+    <com.wedream.demo.view.canvas.MyCanvasView
+        android:id="@+id/timeline_canvas"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:clickable="false"
+        android:focusable="false"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/timeline_scroll_view" />
+
+    <View
+        android:layout_width="2dp"
+        android:layout_height="150dp"
+        android:background="@color/color_white"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/timeline_scroll_view" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

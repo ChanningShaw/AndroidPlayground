@@ -34,6 +34,7 @@ class MyApplication : Application() {
 //        Thread.setDefaultUncaughtExceptionHandler(handler)
         ApplicationHolder.instance = this
         appSp = getSharedPreferences("app_sp", Context.MODE_PRIVATE)
+        DeviceParams.init(this)
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
             override fun onActivityPaused(activity: Activity) {
             }

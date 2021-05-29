@@ -56,7 +56,10 @@
         <activity android:name=".view.LottieActivity" />
         <activity android:name=".view.colormatrix.ColorMatrixCategoryActivity" />
         <activity android:name=".view.colormatrix.ColorMatrixActivity" />
-        <activity android:name=".view.colormatrix.ColorHueActivity" /><activity android:name=".view.colormatrix.ColorFilterActivity" />
+        <activity android:name=".view.colormatrix.ColorHueActivity" />
+        <activity android:name=".view.colormatrix.ColorFilterActivity" />
+        <activity android:name=".videoeditor.VideoEditorActivity" />
+        <activity android:name=".view.canvas.CanvasActivity" />
     </application>
 
 </manifest>
