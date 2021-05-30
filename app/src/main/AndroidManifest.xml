@@ -60,6 +60,7 @@
         <activity android:name=".view.colormatrix.ColorFilterActivity" />
         <activity android:name=".videoeditor.VideoEditorActivity" />
         <activity android:name=".view.canvas.CanvasActivity" />
+        <activity android:name=".view.TranslateActivity" />
     </application>
 
 </manifest>

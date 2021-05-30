@@ -71,7 +71,8 @@ class MainActivity : CategoryActivity() {
                 InterceptEventActivity::class.java,
                 LottieActivity::class.java,
                 ColorMatrixCategoryActivity::class.java,
-                CanvasActivity::class.java
+                CanvasActivity::class.java,
+                TranslateActivity::class.java
             )
         )
         val multiThreading = Category("multiThreading").addComponentCategories(
