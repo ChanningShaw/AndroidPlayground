@@ -47,6 +47,10 @@ class MyCanvasView(context: Context, attrs: AttributeSet?, defStyle: Int) :
         return super.onTouchEvent(event)
     }
 
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        super.onLayout(changed, left, top, right, bottom)
+    }
+
     fun drawView(view: View, left: Int, top: Int, width: Int, height: Int) {
         view.layoutParams = ViewGroup.LayoutParams(width, height)
         view.layout(left, top, left + width, top + height)

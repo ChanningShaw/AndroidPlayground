@@ -2,6 +2,8 @@ package com.wedream.demo.videoeditor.timeline.data
 
 import androidx.lifecycle.ViewModel
 import com.wedream.demo.videoeditor.editor.VideoEditor
+import com.wedream.demo.videoeditor.timeline.utils.TimeLineMessageHelper
+import com.wedream.demo.videoeditor.timeline.utils.TimeLineMessageHelper.MSG_TIMELINE_CHANGE
 import com.wedream.demo.videoeditor.timeline.utils.TimelineUtils
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
@@ -12,11 +14,13 @@ class TimelineViewModel(private val videoEditor: VideoEditor) : ViewModel() {
     private var segmentMap = hashMapOf<Int, Segment>()
     private var timelineRealWidth = 0
     private var scale = 1.0
+    private var timelineScrollX = 0
 
     private var _message = PublishSubject.create<Int>()
 
     fun loadProject() {
         segmentMap.clear()
+        timelineRealWidth = 0
         val assets = videoEditor.getAssets()
         for (asset in assets) {
             val start = TimelineUtils.time2Width(asset.start, scale)
@@ -24,7 +28,7 @@ class TimelineViewModel(private val videoEditor: VideoEditor) : ViewModel() {
             timelineRealWidth += (end - start)
             segmentMap[asset.id] = Segment(asset.id, start, end)
         }
-        sendMessage(0)
+        sendMessage(MSG_TIMELINE_CHANGE)
     }
 
     val message: Flowable<Int> = _message.toFlowable(BackpressureStrategy.MISSING)
@@ -45,6 +49,15 @@ class TimelineViewModel(private val videoEditor: VideoEditor) : ViewModel() {
         loadProject()
     }
 
+    fun setScrollX(scrollX: Int) {
+        this.timelineScrollX = scrollX
+        sendMessage(TimeLineMessageHelper.MSG_TIMELINE_SCROLL_CHANGED)
+    }
+
+    fun getScrollX(): Int {
+        return timelineScrollX
+    }
+
     fun getRealTimeWidth(): Int {
         return timelineRealWidth
     }
@@ -56,5 +69,9 @@ class TimelineViewModel(private val videoEditor: VideoEditor) : ViewModel() {
             }
         }
         return null
+    }
+
+    fun getCurrentSegment(): Segment? {
+        return getSegmentByPos(timelineScrollX)
     }
 }

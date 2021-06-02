@@ -13,7 +13,7 @@ class VideoEditor {
     private fun loadProject() {
         var offset = 0.0
         val duration = 5.0
-        for (i in 0..300) {
+        for (i in 0..10) {
             assets.add(Asset(i, offset, offset + duration))
             offset += duration
         }
