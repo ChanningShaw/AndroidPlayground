@@ -1,9 +1,10 @@
 package com.wedream.demo.videoeditor.timeline.data
 
-data class Segment(
+open class Segment(
     val id: Int,
     var left: Int,
-    var right: Int
+    var right: Int,
+    val type: SegmentType
 ) {
     val width
         get() = right - left
@@ -11,4 +12,8 @@ data class Segment(
     fun contains(pos: Int): Boolean {
         return pos in left..right
     }
+}
+
+enum class SegmentType {
+    Text,
 }

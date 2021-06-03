@@ -1,7 +1,9 @@
 package com.wedream.demo.videoeditor.controller
 
+import android.graphics.Color
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.TextView
 import com.wedream.demo.R
 import com.wedream.demo.util.LogUtils.log
 import com.wedream.demo.util.LogUtils.printAndDie
@@ -28,7 +30,7 @@ class TrackContainerController : Controller<TimelineViewModel>() {
                 for (s in segments) {
                     var view = segmentMap[s.id]
                     if (view == null) {
-                        view = SegmentView(getActivity())
+                        view = TextView(getActivity())
                         segmentMap[s.id] = view
                         trackContainer.addView(view, s.width, FrameLayout.LayoutParams.MATCH_PARENT)
                     } else {
@@ -39,6 +41,9 @@ class TrackContainerController : Controller<TimelineViewModel>() {
                             view.layoutParams = it
                         }
                     }
+                    view as TextView
+                    view.setTextColor(Color.WHITE)
+                    view.text = s.id.toString()
                     view.setTag(R.id.view_tag_segment_id, s.id)
                     CrossTrackMovementActivity.setViewBg(view, s.id)
                     view.translationX = s.left.toFloat()

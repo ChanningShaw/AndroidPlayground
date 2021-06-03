@@ -26,7 +26,7 @@ class TimelineViewModel(private val videoEditor: VideoEditor) : ViewModel() {
             val start = TimelineUtils.time2Width(asset.start, scale)
             val end = TimelineUtils.time2Width(asset.end, scale)
             timelineRealWidth += (end - start)
-            segmentMap[asset.id] = Segment(asset.id, start, end)
+            segmentMap[asset.id] = TextSegment(asset.id, start, end, asset.id.toString())
         }
         sendMessage(MSG_TIMELINE_CHANGE)
     }
