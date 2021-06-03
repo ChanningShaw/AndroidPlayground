@@ -12,6 +12,10 @@ open class Segment(
     fun contains(pos: Int): Boolean {
         return pos in left..right
     }
+
+    override fun toString(): String {
+        return "{id=$id, [$left, $right], type=$type}"
+    }
 }
 
 enum class SegmentType {
