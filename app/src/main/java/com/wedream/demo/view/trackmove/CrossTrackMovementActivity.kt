@@ -67,12 +67,12 @@ class CrossTrackMovementActivity : AppCompatActivity() {
             view.translationY = (rect.top + offsetY).toFloat()
         }
 
-        fun setViewBg(view: View, id: Int) {
+        fun setViewBg(view: View, id: Long) {
             when (id % 3) {
-                0 -> {
+                0L -> {
                     view.setBackgroundResource(R.color.color_green)
                 }
-                1 -> {
+                1L -> {
                     view.setBackgroundResource(R.color.color_blue)
                 }
                 else -> {
@@ -180,7 +180,7 @@ class CrossTrackMovementActivity : AppCompatActivity() {
                 // 往画布添加新view
                 puppetView = SliderView(this@CrossTrackMovementActivity).apply {
                     this.isClickable = false
-                    setViewBg(this, view.tag as Int)
+                    setViewBg(this, view.tag as Long)
                     currentOperatingRect.set(info.getGlobalRect())
                     downRect.set(currentOperatingRect)
                     this.translationX = (currentOperatingRect.left - horizontalScrollView.scrollX).toFloat()
@@ -251,7 +251,7 @@ class CrossTrackMovementActivity : AppCompatActivity() {
         for (e in map) {
             val view = SliderView(this)
             view.setElementEventListener(elementEventListener)
-            setViewBg(view, e.key)
+            setViewBg(view, e.key.toLong())
             totalSegmentViewMap[view] = e.value
             view.tag = e.key
             e.value.track = group

@@ -3,14 +3,22 @@ package com.wedream.demo.videoeditor.menu
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
-import com.wedream.demo.util.LogUtils.log
 import com.wedream.demo.videoeditor.controller.Controller
+import com.wedream.demo.videoeditor.editor.VideoEditor
+import com.wedream.demo.videoeditor.editor.action.Action
+import com.wedream.demo.videoeditor.project.AssetType
 
-class MenuController : Controller<MenuViewModel>() {
+class MenuController(private val videoEditor: VideoEditor) : Controller<MenuViewModel>() {
 
     private val menuList = listOf(
         MenuEntity("新增素材") {
-            log { "新增素材 onClick" }
+            videoEditor.handleAction(
+                Action.AddAssetAction(
+                    videoEditor.timelineViewModel.getCurrentTime(),
+                    5.0,
+                    AssetType.Video
+                )
+            )
         }
     )
 

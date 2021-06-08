@@ -11,12 +11,18 @@ import io.reactivex.subjects.PublishSubject
 
 class TimelineViewModel(private val videoEditor: VideoEditor) : ViewModel() {
 
-    private var segmentMap = hashMapOf<Int, Segment>()
+    private var segmentMap = hashMapOf<Long, Segment>()
     private var timelineRealWidth = 0
     private var scale = 1.0
     private var timelineScrollX = 0
 
     private var _message = PublishSubject.create<Int>()
+
+    init {
+        videoEditor.onProjectChange {
+            loadProject()
+        }
+    }
 
     fun loadProject() {
         segmentMap.clear()
@@ -56,6 +62,10 @@ class TimelineViewModel(private val videoEditor: VideoEditor) : ViewModel() {
 
     fun getScrollX(): Int {
         return timelineScrollX
+    }
+
+    fun getCurrentTime(): Double {
+        return TimelineUtils.width2time(timelineScrollX, scale)
     }
 
     fun getRealTimeWidth(): Int {

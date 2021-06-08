@@ -17,7 +17,7 @@ import com.wedream.demo.view.trackmove.CrossTrackMovementActivity
 class TrackContainerController : Controller<TimelineViewModel>() {
 
     private lateinit var trackContainer: MyFrameLayout
-    private var segmentMap = hashMapOf<Int, View>()
+    private var segmentMap = hashMapOf<Long, View>()
     private var segmentTouchListener: SegmentTouchListener? = null
 
     override fun onBind() {

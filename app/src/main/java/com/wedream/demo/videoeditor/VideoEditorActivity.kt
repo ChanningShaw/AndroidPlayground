@@ -35,6 +35,10 @@ class VideoEditorActivity : DisposableActivity() {
     private var scalingStartScale = 1.0
     private var scalingStartScrollX = 0
 
+    init {
+        videoEditor.timelineViewModel = timelineViewModel
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_editor)
@@ -114,7 +118,7 @@ class VideoEditorActivity : DisposableActivity() {
         trackContainerController.bind(timelineViewModel, timelineAxisView)
         val timelineCanvasController = TimelineCanvasController()
         timelineCanvasController.bind(timelineViewModel, timelineAxisView)
-        val menuController = MenuController()
+        val menuController = MenuController(videoEditor)
         menuController.bind(menuViewModel, menuContainer)
     }
 }

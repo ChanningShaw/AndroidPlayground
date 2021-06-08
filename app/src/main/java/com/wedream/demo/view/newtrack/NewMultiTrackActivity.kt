@@ -94,7 +94,7 @@ class NewMultiTrackActivity : AppCompatActivity() {
             transInfo.setDownRect(downRect)
             val id = view.tag as Int
             puppetView = SliderView(this@NewMultiTrackActivity).apply {
-                CrossTrackMovementActivity.setViewBg(this, id)
+                CrossTrackMovementActivity.setViewBg(this, id.toLong())
                 val params = FrameLayout.LayoutParams(downRect.width(), downRect.height())
                 params.marginStart = downRect.left
                 params.topMargin = downRect.top
@@ -218,7 +218,7 @@ class NewMultiTrackActivity : AppCompatActivity() {
         val width = 200
         val view = SliderView(this)
         view.setElementEventListener(elementEventListener)
-        CrossTrackMovementActivity.setViewBg(view, id)
+        CrossTrackMovementActivity.setViewBg(view, id.toLong())
         view.tag = id
         val params = FrameLayout.LayoutParams(width, CrossTrackMovementActivity.TRACK_HEIGHT)
         params.marginStart = (width * id)

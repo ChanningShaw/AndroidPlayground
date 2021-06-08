@@ -1,7 +1,7 @@
 package com.wedream.demo.videoeditor.timeline.data
 
 open class Segment(
-    val id: Int,
+    val id: Long,
     var left: Int,
     var right: Int,
     val type: SegmentType

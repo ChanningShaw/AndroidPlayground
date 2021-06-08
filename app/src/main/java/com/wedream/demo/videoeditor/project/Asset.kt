@@ -1,9 +1,10 @@
 package com.wedream.demo.videoeditor.project
 
 class Asset(
-    val id: Int,
-    val start: Double,
-    val end: Double
+    val id: Long,
+    val type: AssetType,
+    var start: Double,
+    var end: Double
 ) {
     val duration
         get() = end - start
