@@ -2,12 +2,15 @@ package com.wedream.demo.videoeditor
 
 import android.os.Bundle
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import com.wedream.demo.R
 import com.wedream.demo.app.DeviceParams
 import com.wedream.demo.app.DisposableActivity
 import com.wedream.demo.videoeditor.controller.TimelineCanvasController
 import com.wedream.demo.videoeditor.controller.TrackContainerController
 import com.wedream.demo.videoeditor.editor.VideoEditor
+import com.wedream.demo.videoeditor.menu.MenuController
+import com.wedream.demo.videoeditor.menu.MenuViewModel
 import com.wedream.demo.videoeditor.timeline.config.Config.TIMELINE_HEIGHT
 import com.wedream.demo.videoeditor.timeline.data.TimelineViewModel
 import com.wedream.demo.videoeditor.timeline.utils.OperateScaleHelper
@@ -23,9 +26,11 @@ class VideoEditorActivity : DisposableActivity() {
     private lateinit var trackContainer: MyFrameLayout
     private lateinit var scrollView: MyHorizontalScrollView
     private lateinit var timelineAxisView: TimelineAxisView
+    private lateinit var menuContainer: LinearLayout
 
     private var videoEditor = VideoEditor()
     private val timelineViewModel = TimelineViewModel(videoEditor)
+    private val menuViewModel = MenuViewModel()
     private var timelineWrapWidth = TimelineUtils.time2Width(5.0 * 60, timelineViewModel.getScale())
     private var scalingStartScale = 1.0
     private var scalingStartScrollX = 0
@@ -44,6 +49,8 @@ class VideoEditorActivity : DisposableActivity() {
         trackContainer = findViewById(R.id.track_container)
         scrollView = findViewById(R.id.timeline_scroll_view)
         timelineAxisView = findViewById(R.id.timeline)
+        menuContainer = findViewById(R.id.menu_container)
+
         trackContainer.layoutParams?.let {
             it as ViewGroup.MarginLayoutParams
             it.marginStart = DeviceParams.SCREEN_WIDTH / 2
@@ -107,5 +114,7 @@ class VideoEditorActivity : DisposableActivity() {
         trackContainerController.bind(timelineViewModel, timelineAxisView)
         val timelineCanvasController = TimelineCanvasController()
         timelineCanvasController.bind(timelineViewModel, timelineAxisView)
+        val menuController = MenuController()
+        menuController.bind(menuViewModel, menuContainer)
     }
 }

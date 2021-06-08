@@ -30,6 +30,10 @@ abstract class Controller<M : ViewModel> {
         return model
     }
 
+    fun getRootView(): View {
+        return rootView
+    }
+
     fun <T : View> findViewById(id: Int): T {
         return rootView.findViewById(id)
     }
