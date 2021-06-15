@@ -8,4 +8,8 @@ sealed class Action {
         val duration: Double,
         val assetType: AssetType
     ) : Action()
+
+    class DeleteAssetAction(
+        val id: Long
+    ) : Action()
 }

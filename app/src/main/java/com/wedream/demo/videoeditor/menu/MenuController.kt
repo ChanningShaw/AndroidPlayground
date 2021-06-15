@@ -19,6 +19,14 @@ class MenuController(private val videoEditor: VideoEditor) : Controller<MenuView
                     AssetType.Video
                 )
             )
+        },
+        MenuEntity("删除素材") {
+            val currentTime = videoEditor.timelineViewModel.getCurrentTime()
+            videoEditor.getAssetByTime(currentTime)?.let {
+                videoEditor.handleAction(
+                    Action.DeleteAssetAction(it.id)
+                )
+            }
         }
     )
 

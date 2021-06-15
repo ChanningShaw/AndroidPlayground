@@ -2,8 +2,9 @@ package com.wedream.demo.videoeditor.editor
 
 import com.wedream.demo.util.IdUtils
 import com.wedream.demo.util.LogUtils.printAndDie
+import com.wedream.demo.videoeditor.contains
 import com.wedream.demo.videoeditor.editor.action.Action
-import com.wedream.demo.videoeditor.project.Asset
+import com.wedream.demo.videoeditor.project.asset.Asset
 import com.wedream.demo.videoeditor.project.AssetType
 import com.wedream.demo.videoeditor.timeline.data.TimelineViewModel
 import io.reactivex.BackpressureStrategy
@@ -11,6 +12,7 @@ import io.reactivex.subjects.PublishSubject
 
 class VideoEditor {
 
+    // 主轨素材，有序
     private var assets = arrayListOf<Asset>()
     private var assetMap = hashMapOf<Long, Asset>()
     lateinit var timelineViewModel: TimelineViewModel
@@ -27,7 +29,7 @@ class VideoEditor {
         val duration = 5.0
         for (i in 0..5) {
             val id = IdUtils.nextId()
-            assets.add(Asset(id, AssetType.Video, offset, offset + duration))
+            assets.add(Asset(id, AssetType.Video, duration))
             offset += duration
         }
     }
@@ -52,24 +54,51 @@ class VideoEditor {
         return assetMap[id]
     }
 
+    fun getAssetByTime(time: Double): Asset? {
+        var start = 0.0
+        var end = 0.0
+        for (asset in assets) {
+            end += asset.duration
+            if (time in start..end) {
+                return asset
+            }
+            start += asset.duration
+        }
+        return null
+    }
+
     fun handleAction(action: Action) {
         when (action) {
             is Action.AddAssetAction -> {
-                val duration = action.duration
-                var index = assets.lastIndex
+                var start = 0.0
+                var end = 0.0
                 for ((i, asset) in assets.withIndex()) {
-                    if (action.pos >= asset.start && action.pos <= asset.end) {
-                        index = i + 1
+                    end += asset.duration
+                    if (action.pos in start..end) {
+                        val id = IdUtils.nextId()
                         val newAsset =
-                            Asset(IdUtils.nextId(), action.assetType, asset.end, asset.end + action.duration)
-                        assets.add(index, newAsset)
+                            Asset(
+                                id,
+                                action.assetType,
+                                action.duration
+                            )
+                        assetMap[id] = newAsset
+                        assets.add(i + 1, newAsset)
+                        break
+                    }
+                    start += asset.duration
+                }
+                notifyProjectChanged()
+            }
+            is Action.DeleteAssetAction -> {
+                val iterator = assets.iterator()
+                while (iterator.hasNext()) {
+                    if (iterator.next().id == action.id) {
+                        iterator.remove()
                         break
                     }
                 }
-                for (i in index + 1 until assets.size) {
-                    assets[i].start += duration
-                    assets[i].end += duration
-                }
+                assetMap.remove(action.id)
                 notifyProjectChanged()
             }
         }

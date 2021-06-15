@@ -28,11 +28,15 @@ class TimelineViewModel(private val videoEditor: VideoEditor) : ViewModel() {
         segmentMap.clear()
         timelineRealWidth = 0
         val assets = videoEditor.getAssets()
+        var assetStart = 0.0
+        var assetEnd = 0.0
         for (asset in assets) {
-            val start = TimelineUtils.time2Width(asset.start, scale)
-            val end = TimelineUtils.time2Width(asset.end, scale)
+            assetEnd += asset.duration
+            val start = TimelineUtils.time2Width(assetStart, scale)
+            val end = TimelineUtils.time2Width(assetEnd, scale)
             timelineRealWidth += (end - start)
             segmentMap[asset.id] = TextSegment(asset.id, start, end, asset.id.toString())
+            assetStart += asset.duration
         }
         sendMessage(MSG_TIMELINE_CHANGE)
     }
