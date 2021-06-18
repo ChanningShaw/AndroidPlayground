@@ -15,10 +15,6 @@ class SegmentContainer(context: Context, attrs: AttributeSet?, defStyle: Int) :
     private var disposable : Disposable ?= null
 
     fun setViewModel(viewModel: TimelineViewModel) {
-        val disposable = viewModel.message.subscribe({
 
-        }, {
-            it.printAndDie()
-        })
     }
 }

@@ -11,10 +11,11 @@ import com.wedream.demo.videoeditor.controller.TrackContainerController
 import com.wedream.demo.videoeditor.editor.VideoEditor
 import com.wedream.demo.videoeditor.menu.MenuController
 import com.wedream.demo.videoeditor.menu.MenuViewModel
+import com.wedream.demo.videoeditor.message.MessageChannel
+import com.wedream.demo.videoeditor.message.TimeLineMessageHelper
 import com.wedream.demo.videoeditor.timeline.config.Config.TIMELINE_HEIGHT
 import com.wedream.demo.videoeditor.timeline.data.TimelineViewModel
 import com.wedream.demo.videoeditor.timeline.utils.OperateScaleHelper
-import com.wedream.demo.videoeditor.timeline.utils.TimeLineMessageHelper
 import com.wedream.demo.videoeditor.timeline.utils.TimelineUtils
 import com.wedream.demo.videoeditor.timeline.widget.MyHorizontalScrollView
 import com.wedream.demo.videoeditor.timeline.widget.TimelineAxisView
@@ -45,7 +46,7 @@ class VideoEditorActivity : DisposableActivity() {
         initViews()
         initListeners()
         initControllers()
-        timelineViewModel.loadProject()
+        videoEditor.loadProject()
     }
 
     private fun initViews() {
@@ -88,13 +89,11 @@ class VideoEditorActivity : DisposableActivity() {
     }
 
     private fun initListeners() {
-        addToAutoDisposable(timelineViewModel.message.subscribe({
-            if (it == TimeLineMessageHelper.MSG_TIMELINE_CHANGE) {
+        MessageChannel.subscribe(TimeLineMessageHelper.MSG_TIMELINE_CHANGED) {
+            TimeLineMessageHelper.unpackTimelineChangedMessage(it) {
                 handleTimelineChanged()
             }
-        }, {
-            it.printStackTrace()
-        }))
+        }
     }
 
     private fun handleTimelineChanged() {

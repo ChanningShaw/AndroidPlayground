@@ -1,13 +1,14 @@
 package com.wedream.demo.videoeditor.timeline.data
 
 import androidx.lifecycle.ViewModel
+import com.wedream.demo.videoeditor.editor.EditorData
 import com.wedream.demo.videoeditor.editor.VideoEditor
-import com.wedream.demo.videoeditor.timeline.utils.TimeLineMessageHelper
-import com.wedream.demo.videoeditor.timeline.utils.TimeLineMessageHelper.MSG_TIMELINE_CHANGE
+import com.wedream.demo.videoeditor.message.MessageChannel
+import com.wedream.demo.videoeditor.message.TimeLineMessageHelper
+import com.wedream.demo.videoeditor.project.ActionType
+import com.wedream.demo.videoeditor.project.AssetType
+import com.wedream.demo.videoeditor.project.asset.PlacedAsset
 import com.wedream.demo.videoeditor.timeline.utils.TimelineUtils
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
-import io.reactivex.subjects.PublishSubject
 
 class TimelineViewModel(private val videoEditor: VideoEditor) : ViewModel() {
 
@@ -16,34 +17,55 @@ class TimelineViewModel(private val videoEditor: VideoEditor) : ViewModel() {
     private var scale = 1.0
     private var timelineScrollX = 0
 
-    private var _message = PublishSubject.create<Int>()
-
     init {
         videoEditor.onProjectChange {
-            loadProject()
+            updateTimeline(it)
         }
     }
 
-    fun loadProject() {
-        segmentMap.clear()
-        timelineRealWidth = 0
-        val assets = videoEditor.getAssets()
-        var assetStart = 0.0
-        var assetEnd = 0.0
-        for (asset in assets) {
-            assetEnd += asset.duration
-            val start = TimelineUtils.time2Width(assetStart, scale)
-            val end = TimelineUtils.time2Width(assetEnd, scale)
-            timelineRealWidth += (end - start)
-            segmentMap[asset.id] = TextSegment(asset.id, start, end, asset.id.toString())
-            assetStart += asset.duration
+    private fun updateTimeline(editorData: EditorData) {
+        timelineRealWidth = TimelineUtils.time2Width(videoEditor.getProjectDuration(), scale)
+        for (event in editorData.events) {
+            if (event.actionType == ActionType.Add) {
+                val asset = videoEditor.getAsset(event.id) ?: continue
+                if (asset is PlacedAsset) {
+                    val start = TimelineUtils.time2Width(asset.getStart(), scale)
+                    val end = TimelineUtils.time2Width(asset.getEnd(), scale)
+                    segmentMap[asset.id] = TextSegment(asset.id, start, end, asset.id.toString())
+                } else {
+                    segmentMap[asset.id] = TextSegment(asset.id, 0, 0, asset.id.toString())
+                }
+            } else if (event.actionType == ActionType.Delete) {
+                segmentMap.remove(event.id)
+            } else if (event.actionType == ActionType.Modify) {
+                val asset = videoEditor.getAsset(event.id) ?: continue
+                if (asset is PlacedAsset) {
+                    val start = TimelineUtils.time2Width(asset.getStart(), scale)
+                    val end = TimelineUtils.time2Width(asset.getEnd(), scale)
+                    segmentMap[asset.id]?.let {
+                        it.left = start
+                        it.right = end
+                    }
+                }
+            }
         }
-        sendMessage(MSG_TIMELINE_CHANGE)
-    }
-
-    val message: Flowable<Int> = _message.toFlowable(BackpressureStrategy.MISSING)
-    fun sendMessage(what: Int) {
-        _message.onNext(what)
+        if (editorData.mainTrackModified) {
+            // 主轨被修改了，修改全部重新计算
+            val assets = videoEditor.getAssets()
+            var assetStart = 0.0
+            var assetEnd = 0.0
+            for (asset in assets) {
+                assetEnd += asset.duration
+                val start = TimelineUtils.time2Width(assetStart, scale)
+                val end = TimelineUtils.time2Width(assetEnd, scale)
+                segmentMap[asset.id]?.let {
+                    it.left = start
+                    it.right = end
+                }
+                assetStart += asset.duration
+            }
+        }
+        MessageChannel.sendMessage(TimeLineMessageHelper.packTimelineChangedMessage(editorData))
     }
 
     fun getSegments(): List<Segment> {
@@ -56,12 +78,12 @@ class TimelineViewModel(private val videoEditor: VideoEditor) : ViewModel() {
 
     fun setScale(scale: Double) {
         this.scale = scale
-        loadProject()
+//        updateTimeline()
     }
 
     fun setScrollX(scrollX: Int) {
         this.timelineScrollX = scrollX
-        sendMessage(TimeLineMessageHelper.MSG_TIMELINE_SCROLL_CHANGED)
+        MessageChannel.sendMessage(TimeLineMessageHelper.MSG_TIMELINE_SCROLL_CHANGED)
     }
 
     fun getScrollX(): Int {
@@ -83,6 +105,10 @@ class TimelineViewModel(private val videoEditor: VideoEditor) : ViewModel() {
             }
         }
         return null
+    }
+
+    fun getSegment(id: Long): Segment? {
+        return segmentMap[id]
     }
 
     fun getCurrentSegment(): Segment? {
