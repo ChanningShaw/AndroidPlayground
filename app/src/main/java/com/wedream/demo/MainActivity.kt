@@ -20,6 +20,7 @@ import com.wedream.demo.videoeditor.VideoEditorActivity
 import com.wedream.demo.investment.BTCPredictActivity
 import com.wedream.demo.jni.GL2JNIActivity
 import com.wedream.demo.jni.HelloJNIActivity
+import com.wedream.demo.lifecycle.BadWindowTokenActivity
 import com.wedream.demo.planegeometry.PlaneGeometryActivity
 import com.wedream.demo.render.*
 import com.wedream.demo.render.gl3.GLColorActivity
@@ -75,6 +76,11 @@ class MainActivity : CategoryActivity() {
                 TranslateActivity::class.java
             )
         )
+        val lifecycle = Category("lifecycle").addComponentCategories(
+            listOf(
+                BadWindowTokenActivity::class.java
+            )
+        )
         val multiThreading = Category("multiThreading").addComponentCategories(
             listOf(
                 CoroutineActivity::class.java,
@@ -107,7 +113,7 @@ class MainActivity : CategoryActivity() {
         )
         val editor = ComponentCategory(VideoEditorActivity::class.java)
         return listOf(
-            viewCategory, multiThreading, algorithm, render, editor, investment
+            viewCategory, lifecycle, multiThreading, algorithm, render, editor, investment
         )
     }
 }
