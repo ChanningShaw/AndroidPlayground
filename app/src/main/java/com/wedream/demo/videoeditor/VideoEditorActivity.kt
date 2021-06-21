@@ -6,6 +6,7 @@ import android.widget.LinearLayout
 import com.wedream.demo.R
 import com.wedream.demo.app.DeviceParams
 import com.wedream.demo.app.DisposableActivity
+import com.wedream.demo.util.LogUtils.log
 import com.wedream.demo.videoeditor.controller.TimelineCanvasController
 import com.wedream.demo.videoeditor.controller.TrackContainerController
 import com.wedream.demo.videoeditor.editor.VideoEditor

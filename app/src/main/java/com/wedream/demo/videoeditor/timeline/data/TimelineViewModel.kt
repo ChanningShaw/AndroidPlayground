@@ -5,6 +5,7 @@ import com.wedream.demo.videoeditor.editor.EditorData
 import com.wedream.demo.videoeditor.editor.VideoEditor
 import com.wedream.demo.videoeditor.message.MessageChannel
 import com.wedream.demo.videoeditor.message.TimeLineMessageHelper
+import com.wedream.demo.videoeditor.project.ActionEvent
 import com.wedream.demo.videoeditor.project.ActionType
 import com.wedream.demo.videoeditor.project.AssetType
 import com.wedream.demo.videoeditor.project.asset.PlacedAsset
@@ -61,6 +62,7 @@ class TimelineViewModel(private val videoEditor: VideoEditor) : ViewModel() {
                 segmentMap[asset.id]?.let {
                     it.left = start
                     it.right = end
+                    editorData.events.add(ActionEvent(it.id, ActionType.Modify))
                 }
                 assetStart += asset.duration
             }

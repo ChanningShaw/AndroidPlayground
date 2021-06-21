@@ -28,6 +28,7 @@ class VideoProject {
     }
 
     private fun notifyProjectChanged() {
+        projectDuration = 0.0
         for (asset in assets) {
             projectDuration += asset.duration
         }
@@ -114,8 +115,8 @@ class VideoProject {
         val iterator = assets.iterator()
         var asset: Asset? = null
         while (iterator.hasNext()) {
-            if (iterator.next().id == id) {
-                asset = iterator.next()
+            asset = iterator.next()
+            if (asset.id == id) {
                 iterator.remove()
                 break
             }
