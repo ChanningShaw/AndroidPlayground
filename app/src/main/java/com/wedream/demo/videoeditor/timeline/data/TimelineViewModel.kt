@@ -7,7 +7,6 @@ import com.wedream.demo.videoeditor.message.MessageChannel
 import com.wedream.demo.videoeditor.message.TimeLineMessageHelper
 import com.wedream.demo.videoeditor.project.ActionEvent
 import com.wedream.demo.videoeditor.project.ActionType
-import com.wedream.demo.videoeditor.project.AssetType
 import com.wedream.demo.videoeditor.project.asset.PlacedAsset
 import com.wedream.demo.videoeditor.timeline.utils.TimelineUtils
 

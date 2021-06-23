@@ -9,8 +9,6 @@ class PlacedAsset(
     private var start: Double,
     private var end: Double
 ) : Asset(id, assetType, fixDuration) {
-    override val duration
-        get() = end - start
 
     fun getStart(): Double {
         return start

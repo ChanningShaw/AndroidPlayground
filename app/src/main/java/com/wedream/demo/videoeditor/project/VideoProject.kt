@@ -3,12 +3,13 @@ package com.wedream.demo.videoeditor.project
 import android.view.Choreographer
 import com.wedream.demo.util.IdUtils
 import com.wedream.demo.util.LogUtils.printAndDie
+import com.wedream.demo.util.ToastUtils
 import com.wedream.demo.videoeditor.project.asset.Asset
 import com.wedream.demo.videoeditor.editor.EditorData
 import io.reactivex.BackpressureStrategy
 import io.reactivex.subjects.PublishSubject
 
-class VideoProject {
+class VideoProject : ProjectModifyListener {
     // 主轨素材，有序
     private var assets = arrayListOf<Asset>()
     private var assetMap = hashMapOf<Long, Asset>()
@@ -43,13 +44,18 @@ class VideoProject {
         _projectChanged.onNext(timelineData)
     }
 
-    private fun notifyItemAdded(asset: Asset) {
+    override fun notifyItemAdded(asset: Asset) {
         changedMap[asset] = ActionType.Add
         resetFrameCallback()
     }
 
-    private fun notifyItemDeleted(asset: Asset) {
+    override fun notifyItemDeleted(asset: Asset) {
         changedMap[asset] = ActionType.Delete
+        resetFrameCallback()
+    }
+
+    override fun notifyItemModified(asset: Asset) {
+        changedMap[asset] = ActionType.Modify
         resetFrameCallback()
     }
 
@@ -108,10 +114,15 @@ class VideoProject {
     fun addAsset(asset: Asset, index: Int) {
         assetMap[asset.id] = asset
         assets.add(index, asset)
+        asset.setModifyListener(this)
         notifyItemAdded(asset)
     }
 
     fun deleteAsset(id: Long) {
+        if (assets.size <= 1) {
+            ToastUtils.showToast("视频只剩下一个片段，不能再删除")
+            return
+        }
         val iterator = assets.iterator()
         var asset: Asset? = null
         while (iterator.hasNext()) {
@@ -123,7 +134,21 @@ class VideoProject {
         }
         assetMap.remove(id)
         asset?.let {
-            notifyItemDeleted(asset)
+            it.removeModifyListener()
+            notifyItemDeleted(it)
         }
+    }
+
+    fun findAssetIndex(pos: Double): Int {
+        var start = 0.0
+        var end = 0.0
+        for ((i, asset) in getAssets().withIndex()) {
+            end += asset.duration
+            if (pos in start..end) {
+                return i
+            }
+            start += asset.duration
+        }
+        return -1
     }
 }
