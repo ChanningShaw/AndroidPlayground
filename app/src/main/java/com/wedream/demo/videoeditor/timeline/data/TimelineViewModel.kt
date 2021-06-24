@@ -79,7 +79,12 @@ class TimelineViewModel(private val videoEditor: VideoEditor) : ViewModel() {
 
     fun setScale(scale: Double) {
         this.scale = scale
-//        updateTimeline()
+        val editorData = EditorData()
+        editorData.mainTrackModified = true
+        for (asset in videoEditor.getAssets()) {
+            editorData.events.add(ActionEvent(asset.id, ActionType.Modify))
+        }
+        updateTimeline(editorData)
     }
 
     fun setScrollX(scrollX: Int) {
