@@ -5,6 +5,16 @@
   android:layout_height="match_parent"
   android:background="@color/color_gray">
 
+
+  <TextView
+    android:id="@+id/preview_text"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:text="预览区域"
+    app:layout_constraintBottom_toTopOf="@id/timeline"
+    app:layout_constraintTop_toTopOf="parent" />
+
   <com.wedream.demo.videoeditor.timeline.widget.TimelineAxisView
     android:id="@+id/timeline"
     android:layout_width="match_parent"

@@ -3,10 +3,12 @@ package com.wedream.demo.videoeditor
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.wedream.demo.R
 import com.wedream.demo.app.DeviceParams
 import com.wedream.demo.app.DisposableActivity
 import com.wedream.demo.util.LogUtils.log
+import com.wedream.demo.videoeditor.controller.PreviewController
 import com.wedream.demo.videoeditor.controller.TimelineCanvasController
 import com.wedream.demo.videoeditor.controller.TrackContainerController
 import com.wedream.demo.videoeditor.editor.VideoEditor
@@ -29,6 +31,7 @@ class VideoEditorActivity : DisposableActivity() {
     private lateinit var scrollView: MyHorizontalScrollView
     private lateinit var timelineAxisView: TimelineAxisView
     private lateinit var menuContainer: LinearLayout
+    private lateinit var preview: TextView
 
     private var videoEditor = VideoEditor()
     private val timelineViewModel = TimelineViewModel(videoEditor)
@@ -56,6 +59,7 @@ class VideoEditorActivity : DisposableActivity() {
         scrollView = findViewById(R.id.timeline_scroll_view)
         timelineAxisView = findViewById(R.id.timeline)
         menuContainer = findViewById(R.id.menu_container)
+        preview = findViewById(R.id.preview_text)
 
         trackContainer.layoutParams?.let {
             it as ViewGroup.MarginLayoutParams
@@ -120,5 +124,7 @@ class VideoEditorActivity : DisposableActivity() {
         timelineCanvasController.bind(timelineViewModel, timelineAxisView)
         val menuController = MenuController(videoEditor)
         menuController.bind(menuViewModel, menuContainer)
+        val previewController = PreviewController()
+        previewController.bind(timelineViewModel, preview)
     }
 }
