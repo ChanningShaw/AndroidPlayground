@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import com.wedream.demo.util.ToastUtils
-import com.wedream.demo.videoeditor.controller.Controller
+import com.wedream.demo.videoeditor.controller.ViewController
 import com.wedream.demo.videoeditor.editor.VideoEditor
 import com.wedream.demo.videoeditor.editor.VideoEditor.Companion.MIN_ASSET_DURATION
 import com.wedream.demo.videoeditor.editor.action.Action
@@ -12,7 +12,7 @@ import com.wedream.demo.videoeditor.project.AssetType
 import com.wedream.demo.videoeditor.timeline.utils.TimelineUtils
 import kotlin.math.abs
 
-class MenuController(private val videoEditor: VideoEditor) : Controller<MenuViewModel>() {
+class MenuController(private val videoEditor: VideoEditor) : ViewController<MenuViewModel>() {
 
     private val menuList = listOf(
         MenuEntity("新增素材") {

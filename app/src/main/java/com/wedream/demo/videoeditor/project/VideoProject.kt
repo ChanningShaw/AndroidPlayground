@@ -1,11 +1,11 @@
 package com.wedream.demo.videoeditor.project
 
-import android.view.Choreographer
 import com.wedream.demo.util.IdUtils
 import com.wedream.demo.util.LogUtils.printAndDie
 import com.wedream.demo.util.ToastUtils
 import com.wedream.demo.videoeditor.project.asset.Asset
 import com.wedream.demo.videoeditor.editor.EditorData
+import com.wedream.demo.videoeditor.editor.EditorUpdater
 import io.reactivex.BackpressureStrategy
 import io.reactivex.subjects.PublishSubject
 
@@ -14,66 +14,23 @@ class VideoProject : ProjectModifyListener {
     private var assets = arrayListOf<Asset>()
     private var assetMap = hashMapOf<Long, Asset>()
 
-    private var _projectChanged = PublishSubject.create<EditorData>()
-    private var projectChanged = _projectChanged.toFlowable(BackpressureStrategy.LATEST)
+    private var updater: EditorUpdater? = null
 
-    private var changedMap = hashMapOf<Asset, ActionType>()
-    private var projectDuration = 0.0
-
-    private var frameCallback = Choreographer.FrameCallback {
-        notifyProjectChanged()
-    }
-
-    fun load() {
+    fun load(updater: EditorUpdater) {
+        this.updater = updater
         initProject()
     }
 
-    private fun notifyProjectChanged() {
-        projectDuration = 0.0
-        for (asset in assets) {
-            projectDuration += asset.duration
-        }
-        val timelineData = EditorData()
-        for (e in changedMap) {
-            if (e.key.type == AssetType.Video) {
-                timelineData.mainTrackModified = true
-            }
-            timelineData.events.add(ActionEvent(e.key.id, e.value))
-        }
-        changedMap.clear()
-        _projectChanged.onNext(timelineData)
-    }
-
     override fun notifyItemAdded(asset: Asset) {
-        changedMap[asset] = ActionType.Add
-        resetFrameCallback()
+        updater?.notifyItemAdded(asset)
     }
 
     override fun notifyItemDeleted(asset: Asset) {
-        changedMap[asset] = ActionType.Delete
-        resetFrameCallback()
+        updater?.notifyItemDeleted(asset)
     }
 
     override fun notifyItemModified(asset: Asset) {
-        changedMap[asset] = ActionType.Modify
-        resetFrameCallback()
-    }
-
-    private fun resetFrameCallback() {
-        Choreographer.getInstance().removeFrameCallback(frameCallback)
-        Choreographer.getInstance().postFrameCallback(frameCallback)
-    }
-
-    fun onProjectChange(block: (editorData: EditorData) -> Unit) {
-        val d = projectChanged.subscribe({
-            block.invoke(it)
-        }, {
-            it.printAndDie()
-        })
-    }
-
-    fun getProjectDuration(): Double {
-        return projectDuration
+        updater?.notifyItemModified(asset)
     }
 
     private fun initProject() {

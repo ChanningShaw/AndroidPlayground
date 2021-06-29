@@ -8,7 +8,7 @@ import com.wedream.demo.videoeditor.timeline.config.Config
 import com.wedream.demo.videoeditor.timeline.data.TimelineViewModel
 import com.wedream.demo.view.canvas.MyCanvasView
 
-class TimelineCanvasController : Controller<TimelineViewModel>() {
+class TimelineCanvasController : ViewController<TimelineViewModel>() {
 
     private lateinit var canvasView: MyCanvasView
 

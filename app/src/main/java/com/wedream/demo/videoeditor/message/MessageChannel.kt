@@ -3,6 +3,7 @@ package com.wedream.demo.videoeditor.message
 import com.wedream.demo.util.LogUtils.printAndDie
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 
 object MessageChannel {
@@ -20,16 +21,16 @@ object MessageChannel {
         args.recycle()
     }
 
-    fun subscribe(block: (msg: KyMessage) -> Unit) {
-        val d = message.subscribe({
+    fun subscribe(block: (msg: KyMessage) -> Unit): Disposable {
+        return message.subscribe({
             block.invoke(it)
         }, {
             it.printAndDie()
         })
     }
 
-    fun subscribe(what: Int, block: (msg: KyMessage) -> Unit) {
-        val d = message.subscribe({
+    fun subscribe(what: Int, block: (msg: KyMessage) -> Unit): Disposable {
+        return message.subscribe({
             if (what == it.what) {
                 block.invoke(it)
             }

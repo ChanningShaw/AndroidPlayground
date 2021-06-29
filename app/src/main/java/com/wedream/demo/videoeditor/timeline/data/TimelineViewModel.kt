@@ -2,6 +2,7 @@ package com.wedream.demo.videoeditor.timeline.data
 
 import androidx.lifecycle.ViewModel
 import com.wedream.demo.videoeditor.editor.EditorData
+import com.wedream.demo.videoeditor.editor.EditorUpdater
 import com.wedream.demo.videoeditor.editor.VideoEditor
 import com.wedream.demo.videoeditor.message.MessageChannel
 import com.wedream.demo.videoeditor.message.TimeLineMessageHelper
@@ -18,9 +19,11 @@ class TimelineViewModel(private val videoEditor: VideoEditor) : ViewModel() {
     private var timelineScrollX = 0
 
     init {
-        videoEditor.onProjectChange {
-            updateTimeline(it)
-        }
+        EditorUpdater.getNotifier().registerEditorUpdateListener(object : EditorUpdater.EditorUpdateListener{
+            override fun onEditorUpdate(data: EditorData) {
+                updateTimeline(data)
+            }
+        })
     }
 
     private fun updateTimeline(editorData: EditorData) {

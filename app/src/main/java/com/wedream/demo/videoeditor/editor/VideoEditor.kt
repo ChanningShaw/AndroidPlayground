@@ -6,25 +6,29 @@ import com.wedream.demo.videoeditor.project.asset.Asset
 import com.wedream.demo.videoeditor.project.VideoProject
 import com.wedream.demo.videoeditor.timeline.data.TimelineViewModel
 
-class VideoEditor {
+class VideoEditor : EditorUpdater.EditorUpdateListener {
 
     lateinit var timelineViewModel: TimelineViewModel
     private var project = VideoProject()
+    private var projectDuration = 0.0
 
     companion object {
         const val MIN_ASSET_DURATION = 0.1
     }
 
-    fun loadProject(){
-        project.load()
+    fun loadProject(updater: EditorUpdater){
+        project.load(updater)
     }
 
     fun getCurrentTime(): Double {
         return timelineViewModel.getCurrentTime()
     }
 
-    fun onProjectChange(block: (editorData: EditorData) -> Unit) {
-        project.onProjectChange(block)
+    override fun onEditorUpdate(data: EditorData) {
+        projectDuration = 0.0
+        for (asset in getAssets()) {
+            projectDuration += asset.duration
+        }
     }
 
     fun getAssets(): List<Asset> {
@@ -40,7 +44,7 @@ class VideoEditor {
     }
 
     fun getProjectDuration(): Double {
-        return project.getProjectDuration()
+        return projectDuration
     }
 
     fun handleAction(action: Action) {

@@ -4,6 +4,8 @@ import android.content.Context
 import android.view.View
 import com.wedream.demo.R
 import com.wedream.demo.util.LogUtils.log
+import com.wedream.demo.videoeditor.message.MessageChannel
+import com.wedream.demo.videoeditor.message.TimeLineMessageHelper
 import com.wedream.demo.videoeditor.timeline.data.Segment
 
 class SegmentTouchListener(context: Context) : AbsTouchListener(context, true) {
@@ -31,5 +33,6 @@ class SegmentTouchListener(context: Context) : AbsTouchListener(context, true) {
     override fun onClick(v: View) {
         val segment = v.getTag(R.id.view_tag_segment) as? Segment ?: return
         log { "$segment onClick" }
+        MessageChannel.sendMessage(TimeLineMessageHelper.packSegmentClickMsg(segment))
     }
 }

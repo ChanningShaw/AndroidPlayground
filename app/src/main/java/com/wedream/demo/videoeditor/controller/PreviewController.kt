@@ -5,7 +5,7 @@ import com.wedream.demo.videoeditor.message.MessageChannel
 import com.wedream.demo.videoeditor.message.TimeLineMessageHelper
 import com.wedream.demo.videoeditor.timeline.data.TimelineViewModel
 
-class PreviewController : Controller<TimelineViewModel>() {
+class PreviewController : ViewController<TimelineViewModel>() {
 
     lateinit var previewTextView: TextView
 

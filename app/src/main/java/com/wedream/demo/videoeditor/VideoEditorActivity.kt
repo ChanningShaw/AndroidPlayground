@@ -7,10 +7,11 @@ import android.widget.TextView
 import com.wedream.demo.R
 import com.wedream.demo.app.DeviceParams
 import com.wedream.demo.app.DisposableActivity
-import com.wedream.demo.util.LogUtils.log
 import com.wedream.demo.videoeditor.controller.PreviewController
 import com.wedream.demo.videoeditor.controller.TimelineCanvasController
 import com.wedream.demo.videoeditor.controller.TrackContainerController
+import com.wedream.demo.videoeditor.editor.EditorState
+import com.wedream.demo.videoeditor.editor.EditorUpdater
 import com.wedream.demo.videoeditor.editor.VideoEditor
 import com.wedream.demo.videoeditor.menu.MenuController
 import com.wedream.demo.videoeditor.menu.MenuViewModel
@@ -34,6 +35,8 @@ class VideoEditorActivity : DisposableActivity() {
     private lateinit var preview: TextView
 
     private var videoEditor = VideoEditor()
+    private var editorState = EditorState()
+    private var editorUpdater = EditorUpdater(videoEditor, editorState)
     private val timelineViewModel = TimelineViewModel(videoEditor)
     private val menuViewModel = MenuViewModel()
     private var timelineWrapWidth = TimelineUtils.time2Width(5.0 * 60, timelineViewModel.getScale())
@@ -50,7 +53,7 @@ class VideoEditorActivity : DisposableActivity() {
         initViews()
         initListeners()
         initControllers()
-        videoEditor.loadProject()
+        videoEditor.loadProject(editorUpdater)
     }
 
     private fun initViews() {

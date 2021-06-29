@@ -14,11 +14,12 @@ import com.wedream.demo.videoeditor.timeline.widget.SegmentTouchListener
 import com.wedream.demo.view.MyFrameLayout
 import com.wedream.demo.view.trackmove.CrossTrackMovementActivity
 
-class TrackContainerController : Controller<TimelineViewModel>() {
+class TrackContainerController : ViewController<TimelineViewModel>() {
 
     private lateinit var trackContainer: MyFrameLayout
     private var segmentViewMap = hashMapOf<Long, View>()
     private var segmentTouchListener: SegmentTouchListener? = null
+    private var lastSelectedId = -1L
 
     override fun onBind() {
         trackContainer = findViewById(R.id.track_container)
@@ -52,6 +53,7 @@ class TrackContainerController : Controller<TimelineViewModel>() {
                         }
                     }
                 }
+                handleSelect(it.currentSelectedId)
             }
         }
     }
@@ -64,5 +66,11 @@ class TrackContainerController : Controller<TimelineViewModel>() {
         view.setOnTouchListener(segmentTouchListener)
         CrossTrackMovementActivity.setViewBg(view, segment.id)
         view.translationX = segment.left.toFloat()
+    }
+
+    private fun handleSelect(selectId: Long) {
+        if (selectId != -1L) {
+
+        }
     }
 }
