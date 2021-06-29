@@ -17,7 +17,6 @@ class TimelineViewModel(private val videoEditor: VideoEditor) : ViewModel() {
     private var timelineRealWidth = 0
     private var scale = 1.0
     private var timelineScrollX = 0
-
     init {
         EditorUpdater.getNotifier().registerEditorUpdateListener(object : EditorUpdater.EditorUpdateListener{
             override fun onEditorUpdate(data: EditorData) {

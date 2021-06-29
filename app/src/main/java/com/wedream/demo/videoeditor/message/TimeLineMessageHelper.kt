@@ -7,6 +7,8 @@ object TimeLineMessageHelper {
     const val MSG_TIMELINE_CHANGED = 0
     const val MSG_TIMELINE_SCROLL_CHANGED = 1
     const val MSG_SEGMENT_CLICK = 2
+    const val MSG_TIMELINE_SEEK_TO = 3
+    const val MSG_SEGMENT_SELECTED = 4
 
     fun packTimelineChangedMessage(data: EditorData): KyMessage {
         return KyMessage.obtain().apply {
@@ -28,5 +30,16 @@ object TimeLineMessageHelper {
 
     fun unpackSegmentClickMsg(msg: KyMessage, block: (segment: Segment) -> Unit) {
         block.invoke(msg.arg1 as Segment)
+    }
+
+    fun packSegmentSelectedMsg(id: Long): KyMessage {
+        return KyMessage.obtain().apply {
+            what = MSG_SEGMENT_SELECTED
+            arg1 = id
+        }
+    }
+
+    fun unpackSegmentSelectedMsg(msg: KyMessage, block: (id: Long) -> Unit) {
+        block.invoke(msg.arg1 as Long)
     }
 }

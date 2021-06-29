@@ -1,11 +1,9 @@
 package com.wedream.demo.videoeditor
 
 import android.os.Bundle
-import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.wedream.demo.R
-import com.wedream.demo.app.DeviceParams
 import com.wedream.demo.app.DisposableActivity
 import com.wedream.demo.videoeditor.controller.PreviewController
 import com.wedream.demo.videoeditor.controller.TimelineCanvasController
@@ -64,11 +62,6 @@ class VideoEditorActivity : DisposableActivity() {
         menuContainer = findViewById(R.id.menu_container)
         preview = findViewById(R.id.preview_text)
 
-        trackContainer.layoutParams?.let {
-            it as ViewGroup.MarginLayoutParams
-            it.marginStart = DeviceParams.SCREEN_WIDTH / 2
-            trackContainer.layoutParams = it
-        }
         scrollView.setOnScrollChangeListener { _, scrollX, _, _, _ ->
             if (scrollX > timelineViewModel.getRealTimeWidth()) {
                 scrollView.scrollTo(timelineViewModel.getRealTimeWidth(), 0)
@@ -97,11 +90,25 @@ class VideoEditorActivity : DisposableActivity() {
     }
 
     private fun initListeners() {
-        MessageChannel.subscribe(TimeLineMessageHelper.MSG_TIMELINE_CHANGED) {
-            TimeLineMessageHelper.unpackTimelineChangedMessage(it) {
-                handleTimelineChanged()
+        addToAutoDisposable(MessageChannel.subscribe {
+            if (it.what == TimeLineMessageHelper.MSG_TIMELINE_CHANGED) {
+                TimeLineMessageHelper.unpackTimelineChangedMessage(it) {
+                    handleTimelineChanged()
+                }
+            } else if (it.what == TimeLineMessageHelper.MSG_SEGMENT_SELECTED) {
+                TimeLineMessageHelper.unpackSegmentSelectedMsg(it) {
+                    timelineViewModel.getSegment(it)?.let {
+                        if (timelineViewModel.getScrollX() !in it.left..it.right) {
+                            seekTo(it.left + 1)
+                        }
+                    }
+                }
             }
-        }
+        })
+    }
+
+    private fun seekTo(pos: Int) {
+        scrollView.scrollTo(pos, 0)
     }
 
     private fun handleTimelineChanged() {

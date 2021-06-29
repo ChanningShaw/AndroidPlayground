@@ -5,6 +5,8 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
 import com.wedream.demo.R
+import com.wedream.demo.app.DeviceParams
+import com.wedream.demo.videoeditor.decorview.DecorViewManager
 import com.wedream.demo.videoeditor.message.MessageChannel
 import com.wedream.demo.videoeditor.message.TimeLineMessageHelper
 import com.wedream.demo.videoeditor.project.ActionType
@@ -16,14 +18,16 @@ import com.wedream.demo.view.trackmove.CrossTrackMovementActivity
 
 class TrackContainerController : ViewController<TimelineViewModel>() {
 
+    private var decorViewManager: DecorViewManager? = null
+
     private lateinit var trackContainer: MyFrameLayout
     private var segmentViewMap = hashMapOf<Long, View>()
     private var segmentTouchListener: SegmentTouchListener? = null
-    private var lastSelectedId = -1L
 
     override fun onBind() {
         trackContainer = findViewById(R.id.track_container)
         segmentTouchListener = SegmentTouchListener(getActivity())
+        decorViewManager = DecorViewManager((getModel()), trackContainer.context)
         initListeners()
     }
 
@@ -53,7 +57,7 @@ class TrackContainerController : ViewController<TimelineViewModel>() {
                         }
                     }
                 }
-                handleSelect(it.currentSelectedId)
+                decorViewManager?.handleSelect(it.currentSelectedId, trackContainer)
             }
         }
     }
@@ -65,12 +69,6 @@ class TrackContainerController : ViewController<TimelineViewModel>() {
         view.setTag(R.id.view_tag_segment, segment)
         view.setOnTouchListener(segmentTouchListener)
         CrossTrackMovementActivity.setViewBg(view, segment.id)
-        view.translationX = segment.left.toFloat()
-    }
-
-    private fun handleSelect(selectId: Long) {
-        if (selectId != -1L) {
-
-        }
+        view.translationX = DeviceParams.SCREEN_WIDTH * 0.5f + segment.left.toFloat()
     }
 }
