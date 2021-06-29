@@ -74,6 +74,13 @@ class VideoEditor : EditorUpdater.EditorUpdateListener {
                 addAssetAt(asset, getCurrentTime())
                 originAsset.setClipEnd(action.pos)
             }
+
+            is Action.CopyAssetAction -> {
+                val originAsset = getAsset(action.id) ?: return
+                val newAsset = originAsset.cloneObject()
+                addAssetAt(newAsset, getCurrentTime())
+            }
+
             else -> {
 
             }

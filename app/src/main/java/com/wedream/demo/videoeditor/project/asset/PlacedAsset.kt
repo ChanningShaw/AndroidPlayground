@@ -1,5 +1,6 @@
 package com.wedream.demo.videoeditor.project.asset
 
+import com.wedream.demo.util.IdUtils
 import com.wedream.demo.videoeditor.project.AssetType
 
 class PlacedAsset(
@@ -29,5 +30,9 @@ class PlacedAsset(
     fun setDuration(start: Double, end: Double) {
         this.start = start
         this.end = end
+    }
+
+    override fun cloneObject(): PlacedAsset {
+        return PlacedAsset(IdUtils.nextId(), type, fixDuration, start, end)
     }
 }

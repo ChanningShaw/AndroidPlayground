@@ -15,7 +15,7 @@ import kotlin.math.abs
 class MenuController(private val videoEditor: VideoEditor) : ViewController<MenuViewModel>() {
 
     private val menuList = listOf(
-        MenuEntity("新增素材") {
+        MenuEntity("新增") {
             videoEditor.handleAction(
                 Action.AddAssetAction(
                     videoEditor.timelineViewModel.getCurrentTime(),
@@ -24,7 +24,7 @@ class MenuController(private val videoEditor: VideoEditor) : ViewController<Menu
                 )
             )
         },
-        MenuEntity("删除素材") {
+        MenuEntity("删除") {
             val currentTime = videoEditor.timelineViewModel.getCurrentTime()
             videoEditor.getAssetByTime(currentTime)?.let {
                 videoEditor.handleAction(
@@ -32,7 +32,7 @@ class MenuController(private val videoEditor: VideoEditor) : ViewController<Menu
                 )
             }
         },
-        MenuEntity("分割素材") {
+        MenuEntity("分割") {
             val currentSegment = videoEditor.timelineViewModel.getCurrentSegment() ?: return@MenuEntity
             val startTime = TimelineUtils.width2time(currentSegment.left, videoEditor.timelineViewModel.getScale())
             val endTime = TimelineUtils.width2time(currentSegment.right, videoEditor.timelineViewModel.getScale())
@@ -43,6 +43,12 @@ class MenuController(private val videoEditor: VideoEditor) : ViewController<Menu
             }
             videoEditor.handleAction(
                 Action.SplitAssetAction(currentSegment.id, currentTime - startTime)
+            )
+        },
+        MenuEntity("复制") {
+            val currentSegment = videoEditor.timelineViewModel.getCurrentSegment() ?: return@MenuEntity
+            videoEditor.handleAction(
+                Action.CopyAssetAction(currentSegment.id)
             )
         }
     )

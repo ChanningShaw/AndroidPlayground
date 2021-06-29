@@ -17,4 +17,6 @@ sealed class Action {
      * @param pos 分割的位置（相对素材的时间）
      */
     class SplitAssetAction(val id: Long, val pos: Double) : Action()
+
+    class CopyAssetAction(val id: Long) : Action()
 }

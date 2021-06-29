@@ -1,5 +1,6 @@
 package com.wedream.demo.videoeditor.project.asset
 
+import com.wedream.demo.util.IdUtils
 import com.wedream.demo.videoeditor.const.Constants.MIN_ASSET_DURATION
 import com.wedream.demo.videoeditor.project.AssetType
 import com.wedream.demo.videoeditor.project.ProjectModifyListener
@@ -26,27 +27,33 @@ open class Asset(
     }
 
     fun setClipStart(start: Double) {
-        clipStart = if (start < 0.0) {
+        val start = if (start < 0.0) {
             0.0
         } else {
             start
         }
-        if (clipEnd - clipStart < MIN_ASSET_DURATION) {
-            clipStart = clipEnd - MIN_ASSET_DURATION
+        if (start != clipStart) {
+            clipStart = start
+            if (clipEnd - clipStart < MIN_ASSET_DURATION) {
+                clipStart = clipEnd - MIN_ASSET_DURATION
+            }
+            modifyListener?.notifyItemModified(this)
         }
-        modifyListener?.notifyItemModified(this)
     }
 
     fun setClipEnd(end: Double) {
-        clipEnd = if (end > fixDuration) {
+        val end = if (end > fixDuration) {
             fixDuration
         } else {
             end
         }
-        if (clipEnd - clipStart < MIN_ASSET_DURATION) {
-            clipEnd = clipStart + MIN_ASSET_DURATION
+        if (end != clipEnd) {
+            clipEnd = end
+            if (clipEnd - clipStart < MIN_ASSET_DURATION) {
+                clipEnd = clipStart + MIN_ASSET_DURATION
+            }
+            modifyListener?.notifyItemModified(this)
         }
-        modifyListener?.notifyItemModified(this)
     }
 
     fun setModifyListener(listener: ProjectModifyListener) {
@@ -55,5 +62,9 @@ open class Asset(
 
     fun removeModifyListener() {
         this.modifyListener = null
+    }
+
+    open fun cloneObject(): Asset {
+        return Asset(IdUtils.nextId(), type, fixDuration, clipStart, clipEnd)
     }
 }

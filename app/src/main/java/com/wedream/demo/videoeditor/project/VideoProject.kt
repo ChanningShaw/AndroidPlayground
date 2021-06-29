@@ -36,7 +36,7 @@ class VideoProject : ProjectModifyListener {
     private fun initProject() {
         var offset = 0.0
         val duration = 5.0
-        for (i in 0..5) {
+        for (i in 0..500) {
             val id = IdUtils.nextId()
             addAsset(Asset(id, AssetType.Video, duration))
             offset += duration
