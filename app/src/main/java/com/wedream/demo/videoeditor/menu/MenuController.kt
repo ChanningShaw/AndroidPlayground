@@ -4,9 +4,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import com.wedream.demo.util.ToastUtils
+import com.wedream.demo.videoeditor.const.Constants.MIN_ASSET_DURATION
 import com.wedream.demo.videoeditor.controller.ViewController
 import com.wedream.demo.videoeditor.editor.VideoEditor
-import com.wedream.demo.videoeditor.editor.VideoEditor.Companion.MIN_ASSET_DURATION
 import com.wedream.demo.videoeditor.editor.action.Action
 import com.wedream.demo.videoeditor.project.AssetType
 import com.wedream.demo.videoeditor.timeline.utils.TimelineUtils

@@ -7,6 +7,7 @@ import android.widget.TextView
 import com.wedream.demo.R
 import com.wedream.demo.app.DeviceParams
 import com.wedream.demo.videoeditor.decorview.DecorViewManager
+import com.wedream.demo.videoeditor.editor.VideoEditor
 import com.wedream.demo.videoeditor.message.MessageChannel
 import com.wedream.demo.videoeditor.message.TimeLineMessageHelper
 import com.wedream.demo.videoeditor.project.ActionType
@@ -16,7 +17,7 @@ import com.wedream.demo.videoeditor.timeline.widget.SegmentTouchListener
 import com.wedream.demo.view.MyFrameLayout
 import com.wedream.demo.view.trackmove.CrossTrackMovementActivity
 
-class TrackContainerController : ViewController<TimelineViewModel>() {
+class TrackContainerController(val videoEditor: VideoEditor) : ViewController<TimelineViewModel>() {
 
     private var decorViewManager: DecorViewManager? = null
 
@@ -27,7 +28,7 @@ class TrackContainerController : ViewController<TimelineViewModel>() {
     override fun onBind() {
         trackContainer = findViewById(R.id.track_container)
         segmentTouchListener = SegmentTouchListener(getActivity())
-        decorViewManager = DecorViewManager((getModel()), trackContainer.context)
+        decorViewManager = DecorViewManager(videoEditor, getModel(), trackContainer.context)
         initListeners()
     }
 

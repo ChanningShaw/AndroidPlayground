@@ -13,7 +13,6 @@ class VideoEditor : EditorUpdater.EditorUpdateListener {
     private var projectDuration = 0.0
 
     companion object {
-        const val MIN_ASSET_DURATION = 0.1
     }
 
     fun loadProject(updater: EditorUpdater){

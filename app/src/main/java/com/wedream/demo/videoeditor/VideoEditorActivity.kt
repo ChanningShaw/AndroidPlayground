@@ -128,7 +128,7 @@ class VideoEditorActivity : DisposableActivity() {
     }
 
     private fun initControllers() {
-        val trackContainerController = TrackContainerController()
+        val trackContainerController = TrackContainerController(videoEditor)
         trackContainerController.bind(timelineViewModel, timelineAxisView)
         val timelineCanvasController = TimelineCanvasController()
         timelineCanvasController.bind(timelineViewModel, timelineAxisView)
