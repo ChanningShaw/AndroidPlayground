@@ -15,7 +15,6 @@ class HorizontalScrollActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_horizontal_scroll)
         scrollView = findViewById<HorizontalScrollView>(R.id.scrollView)
-        scrollView.setOnTouchListener(ClickDetectTouchListener())
         scrollView.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
             if (scrollX > 1000) {
                 scrollView.scrollTo(1000, 0)

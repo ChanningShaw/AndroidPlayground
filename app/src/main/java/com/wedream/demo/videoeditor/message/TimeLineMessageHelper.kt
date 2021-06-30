@@ -9,6 +9,7 @@ object TimeLineMessageHelper {
     const val MSG_SEGMENT_CLICK = 2
     const val MSG_TIMELINE_SEEK_TO = 3
     const val MSG_SEGMENT_SELECTED = 4
+    const val MSG_TIMELINE_BLANK_CLICK = 5
 
     fun packTimelineChangedMessage(data: EditorData): KyMessage {
         return KyMessage.obtain().apply {

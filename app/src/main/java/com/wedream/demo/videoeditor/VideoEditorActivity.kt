@@ -1,6 +1,8 @@
 package com.wedream.demo.videoeditor
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.wedream.demo.R
@@ -19,6 +21,7 @@ import com.wedream.demo.videoeditor.timeline.config.Config.TIMELINE_HEIGHT
 import com.wedream.demo.videoeditor.timeline.data.TimelineViewModel
 import com.wedream.demo.videoeditor.timeline.utils.OperateScaleHelper
 import com.wedream.demo.videoeditor.timeline.utils.TimelineUtils
+import com.wedream.demo.videoeditor.timeline.widget.ClickDetectTouchListener
 import com.wedream.demo.videoeditor.timeline.widget.MyHorizontalScrollView
 import com.wedream.demo.videoeditor.timeline.widget.TimelineAxisView
 import com.wedream.demo.view.MyFrameLayout
@@ -54,6 +57,7 @@ class VideoEditorActivity : DisposableActivity() {
         videoEditor.loadProject(editorUpdater)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun initViews() {
         timelineContainer = findViewById(R.id.timeline_container)
         trackContainer = findViewById(R.id.track_container)
@@ -83,6 +87,11 @@ class VideoEditorActivity : DisposableActivity() {
             }
 
             override fun onScaleEnd(scale: Float) {
+            }
+        })
+        scrollView.setOnTouchListener(object : ClickDetectTouchListener() {
+            override fun onclick(view: View) {
+                MessageChannel.sendMessage(TimeLineMessageHelper.MSG_TIMELINE_BLANK_CLICK)
             }
         })
         timelineContainer.setSpecificDimen(timelineWrapWidth, TIMELINE_HEIGHT)

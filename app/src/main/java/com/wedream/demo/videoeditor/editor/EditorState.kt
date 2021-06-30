@@ -19,15 +19,19 @@ class EditorState : EditorUpdater.EditorUpdateListener {
     }
 
     private fun initListeners() {
-        MessageChannel.subscribe(TimeLineMessageHelper.MSG_SEGMENT_CLICK) {
-            TimeLineMessageHelper.unpackSegmentClickMsg(it) {
-                if (it.id == selectedSegmentId) {
-                    // 反选
-                    selectedSegmentId = Constants.INVALID_ID
-                } else {
-                    selectedSegmentId = it.id
-                    MessageChannel.sendMessage(TimeLineMessageHelper.packSegmentSelectedMsg(it.id))
+        MessageChannel.subscribe {
+            if (it.what == TimeLineMessageHelper.MSG_SEGMENT_CLICK) {
+                TimeLineMessageHelper.unpackSegmentClickMsg(it) {
+                    if (it.id == selectedSegmentId) {
+                        // 反选
+                        selectedSegmentId = Constants.INVALID_ID
+                    } else {
+                        selectedSegmentId = it.id
+                        MessageChannel.sendMessage(TimeLineMessageHelper.packSegmentSelectedMsg(it.id))
+                    }
                 }
+            } else if (it.what == TimeLineMessageHelper.MSG_TIMELINE_BLANK_CLICK) {
+                selectedSegmentId = Constants.INVALID_ID
             }
             editorUpdater?.notifyEditorStateChanged()
         }
