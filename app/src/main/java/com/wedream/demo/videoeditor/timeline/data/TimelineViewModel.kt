@@ -1,6 +1,8 @@
 package com.wedream.demo.videoeditor.timeline.data
 
 import androidx.lifecycle.ViewModel
+import com.wedream.demo.app.DeviceParams
+import com.wedream.demo.util.LogUtils.log
 import com.wedream.demo.videoeditor.editor.EditorData
 import com.wedream.demo.videoeditor.editor.EditorUpdater
 import com.wedream.demo.videoeditor.editor.VideoEditor
@@ -9,6 +11,7 @@ import com.wedream.demo.videoeditor.message.TimeLineMessageHelper
 import com.wedream.demo.videoeditor.project.ActionEvent
 import com.wedream.demo.videoeditor.project.ActionType
 import com.wedream.demo.videoeditor.project.asset.PlacedAsset
+import com.wedream.demo.videoeditor.timeline.utils.TimeRange
 import com.wedream.demo.videoeditor.timeline.utils.TimelineUtils
 
 class TimelineViewModel(private val videoEditor: VideoEditor) : ViewModel() {
@@ -17,6 +20,8 @@ class TimelineViewModel(private val videoEditor: VideoEditor) : ViewModel() {
     private var timelineRealWidth = 0
     private var scale = 1.0
     private var timelineScrollX = 0
+    private var visibleRange = TimeRange(-DeviceParams.SCREEN_WIDTH, DeviceParams.SCREEN_WIDTH * 2)
+
     init {
         EditorUpdater.getNotifier().registerEditorUpdateListener(object : EditorUpdater.EditorUpdateListener{
             override fun onEditorUpdate(data: EditorData) {
@@ -71,6 +76,10 @@ class TimelineViewModel(private val videoEditor: VideoEditor) : ViewModel() {
         MessageChannel.sendMessage(TimeLineMessageHelper.packTimelineChangedMessage(editorData))
     }
 
+    fun getVisibleRange(): TimeRange {
+        return TimeRange(visibleRange.left, visibleRange.right)
+    }
+
     fun getSegments(): List<Segment> {
         return segmentMap.values.toList()
     }
@@ -91,7 +100,10 @@ class TimelineViewModel(private val videoEditor: VideoEditor) : ViewModel() {
 
     fun setScrollX(scrollX: Int) {
         this.timelineScrollX = scrollX
-        MessageChannel.sendMessage(TimeLineMessageHelper.MSG_TIMELINE_SCROLL_CHANGED)
+        visibleRange.set(-DeviceParams.SCREEN_WIDTH + scrollX, DeviceParams.SCREEN_WIDTH * 2 + scrollX)
+        val editorData = EditorData()
+        editorData.timelineScrollX = timelineScrollX
+        updateTimeline(editorData)
     }
 
     fun getScrollX(): Int {

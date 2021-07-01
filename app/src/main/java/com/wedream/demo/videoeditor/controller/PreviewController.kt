@@ -13,7 +13,7 @@ class PreviewController : ViewController<TimelineViewModel>() {
         super.onBind()
         previewTextView = getRootView() as TextView
         MessageChannel.subscribe {
-            if (it.what == TimeLineMessageHelper.MSG_TIMELINE_CHANGED || it.what == TimeLineMessageHelper.MSG_TIMELINE_SCROLL_CHANGED) {
+            if (it.what == TimeLineMessageHelper.MSG_TIMELINE_CHANGED) {
                 updatePreview()
             }
             updatePreview()

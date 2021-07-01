@@ -5,7 +5,7 @@ import com.wedream.demo.BuildConfig
 import java.lang.StringBuilder
 
 object LogUtils {
-    private const val TAG = "LogUtils"
+    private const val TAG = "xcm"
     fun <T, R> T.log(msg: T.() -> R?) {
         val m = msg()
         Log.e(TAG, m?.toString() ?: "null")

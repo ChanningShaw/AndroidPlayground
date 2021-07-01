@@ -30,10 +30,11 @@ class EditorState : EditorUpdater.EditorUpdateListener {
                         MessageChannel.sendMessage(TimeLineMessageHelper.packSegmentSelectedMsg(it.id))
                     }
                 }
+                editorUpdater?.notifyEditorStateChanged()
             } else if (it.what == TimeLineMessageHelper.MSG_TIMELINE_BLANK_CLICK) {
                 selectedSegmentId = Constants.INVALID_ID
+                editorUpdater?.notifyEditorStateChanged()
             }
-            editorUpdater?.notifyEditorStateChanged()
         }
     }
 

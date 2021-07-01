@@ -6,6 +6,8 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import com.wedream.demo.R
 import com.wedream.demo.app.DeviceParams
+import com.wedream.demo.util.KtUtils.ifNullAndElse
+import com.wedream.demo.util.LogUtils.log
 import com.wedream.demo.videoeditor.decorview.DecorViewManager
 import com.wedream.demo.videoeditor.editor.VideoEditor
 import com.wedream.demo.videoeditor.message.MessageChannel
@@ -23,6 +25,7 @@ class TrackContainerController(val videoEditor: VideoEditor) : ViewController<Ti
 
     private lateinit var trackContainer: MyFrameLayout
     private var segmentViewMap = hashMapOf<Long, View>()
+    private var pendingAction = hashMapOf<Long, ActionType>()
     private var segmentTouchListener: SegmentTouchListener? = null
 
     override fun onBind() {
@@ -33,37 +36,94 @@ class TrackContainerController(val videoEditor: VideoEditor) : ViewController<Ti
     }
 
     private fun initListeners() {
-        MessageChannel.subscribe(TimeLineMessageHelper.MSG_TIMELINE_CHANGED) {
-            TimeLineMessageHelper.unpackTimelineChangedMessage(it) {
-                for (event in it.events) {
-                    if (event.actionType == ActionType.Add) {
-                        val segment = getModel().getSegment(event.id) ?: continue
-                        val view = TextView(getActivity())
-                        segmentViewMap[event.id] = view
-                        trackContainer.addView(view, segment.width, FrameLayout.LayoutParams.MATCH_PARENT)
-                        updateSegmentView(view, segment)
-                    } else if (event.actionType == ActionType.Delete) {
-                        segmentViewMap.remove(event.id)?.let {
-                            trackContainer.removeView(it)
-                        }
-                    } else if (event.actionType == ActionType.Modify) {
-                        val segment = getModel().getSegment(event.id) ?: continue
-                        segmentViewMap[event.id]?.let { segmentView ->
-                            // view.layout(0, 0, s.width, TIMELINE_HEIGHT)
-                            segmentView.layoutParams?.let {
-                                it.width = segment.width
-                                segmentView.layoutParams = it
+        MessageChannel.subscribe {
+            when (it.what) {
+                TimeLineMessageHelper.MSG_TIMELINE_CHANGED -> {
+                    TimeLineMessageHelper.unpackTimelineChangedMessage(it) {
+                        val visibleRange = getModel().getVisibleRange()
+                        for (event in it.events) {
+                            if (event.actionType == ActionType.Add) {
+                                val segment = getModel().getSegment(event.id) ?: continue
+                                if (!visibleRange.overlap(segment.left, segment.right)) {
+                                    pendingAction[segment.id] = event.actionType
+                                    removeSegmentView(event.id)
+                                } else {
+                                    pendingAction.remove(segment.id)
+                                    addSegmentView(segment)
+                                }
+                            } else if (event.actionType == ActionType.Delete) {
+                                removeSegmentView(event.id)
+                                pendingAction.remove(event.id)
+                            } else if (event.actionType == ActionType.Modify) {
+                                val segment = getModel().getSegment(event.id) ?: continue
+                                if (!visibleRange.overlap(segment.left, segment.right)) {
+                                    pendingAction[segment.id] = event.actionType
+                                    removeSegmentView(event.id)
+                                } else {
+                                    pendingAction.remove(event.id)
+                                    updateSegmentView(segment)
+                                }
                             }
-                            updateSegmentView(segmentView, segment)
                         }
+                        handlePendingActions()
+                        decorViewManager?.handleSelect(it.currentSelectedId, trackContainer)
                     }
                 }
-                decorViewManager?.handleSelect(it.currentSelectedId, trackContainer)
             }
         }
     }
 
-    private fun updateSegmentView(view: View, segment: Segment) {
+    private fun handlePendingActions() {
+        val visibleRange = getModel().getVisibleRange()
+        log { "visibleRange = $visibleRange" }
+        val iterator = pendingAction.iterator()
+        while (iterator.hasNext()) {
+            val entity = iterator.next()
+            val segment = getModel().getSegment(entity.key)
+            log { "pending segment = $segment" }
+            if (segment == null) {
+                iterator.remove()
+                continue
+            } else {
+                if (visibleRange.overlap(segment.left, segment.right)) {
+                    if (entity.value == ActionType.Add) {
+                        addSegmentView(segment)
+                    } else if (entity.value == ActionType.Modify) {
+                        updateSegmentView(segment)
+                    }
+                    iterator.remove()
+                }
+            }
+        }
+    }
+
+    private fun addSegmentView(segment: Segment) {
+        val view = TextView(getActivity())
+        segmentViewMap[segment.id] = view
+        trackContainer.addView(view, segment.width, FrameLayout.LayoutParams.MATCH_PARENT)
+        bindSegmentView(view, segment)
+    }
+
+    private fun removeSegmentView(id: Long) {
+        segmentViewMap.remove(id)?.let {
+            trackContainer.removeView(it)
+        }
+    }
+
+    private fun updateSegmentView(segment: Segment) {
+        segmentViewMap[segment.id].ifNullAndElse({
+            addSegmentView(segment)
+        }, { segmentView ->
+            segmentView.layoutParams?.let {
+                it.width = segment.width
+                segmentView.layoutParams = it
+            }
+            log { "update ${segment}" }
+            bindSegmentView(segmentView, segment)
+        })
+    }
+
+    private fun bindSegmentView(view: View, segment: Segment) {
         view as TextView
         view.setTextColor(Color.WHITE)
         view.text = segment.id.toString()

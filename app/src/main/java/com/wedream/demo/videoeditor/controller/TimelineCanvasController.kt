@@ -27,8 +27,6 @@ class TimelineCanvasController : ViewController<TimelineViewModel>() {
                     lastSelectedId = it.currentSelectedId
                     invalidateHighlight()
                 }
-            } else if (it.what == TimeLineMessageHelper.MSG_TIMELINE_SCROLL_CHANGED) {
-                invalidateHighlight()
             }
         }
     }

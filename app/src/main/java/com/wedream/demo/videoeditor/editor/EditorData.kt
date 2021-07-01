@@ -7,5 +7,6 @@ class EditorData {
     var mainTrackModified = false
 
     var currentSelectedId = Constants.INVALID_ID
+    var timelineScrollX = 0
     var events = arrayListOf<ActionEvent>()
 }

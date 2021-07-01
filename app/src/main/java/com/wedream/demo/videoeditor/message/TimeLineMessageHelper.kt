@@ -5,7 +5,6 @@ import com.wedream.demo.videoeditor.timeline.data.Segment
 
 object TimeLineMessageHelper {
     const val MSG_TIMELINE_CHANGED = 0
-    const val MSG_TIMELINE_SCROLL_CHANGED = 1
     const val MSG_SEGMENT_CLICK = 2
     const val MSG_TIMELINE_SEEK_TO = 3
     const val MSG_SEGMENT_SELECTED = 4
