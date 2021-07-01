@@ -5,7 +5,6 @@
   android:layout_height="match_parent"
   android:background="@color/color_gray">
 
-
   <TextView
     android:id="@+id/preview_text"
     android:layout_width="match_parent"
@@ -13,8 +12,23 @@
     android:gravity="center"
     android:textSize="30sp"
     android:text="预览区域"
-    app:layout_constraintBottom_toTopOf="@id/timeline"
+    app:layout_constraintBottom_toTopOf="@id/editor_status_bar"
     app:layout_constraintTop_toTopOf="parent" />
+
+  <androidx.appcompat.widget.LinearLayoutCompat
+    android:id="@+id/editor_status_bar"
+    android:layout_width="match_parent"
+    app:layout_constraintBottom_toTopOf="@id/timeline"
+    android:orientation="horizontal"
+    android:layout_height="60dp">
+
+    <TextView
+      android:id="@+id/editor_current_time"
+      android:layout_width="wrap_content"
+      android:gravity="bottom"
+      android:layout_height="match_parent"/>
+
+  </androidx.appcompat.widget.LinearLayoutCompat>
 
   <com.wedream.demo.videoeditor.timeline.widget.TimelineAxisView
     android:id="@+id/timeline"
