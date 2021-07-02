@@ -16,15 +16,16 @@ import com.wedream.demo.concurrent.kotlin.CoroutineActivity
 import com.wedream.demo.concurrent.kotlin.FlowActivity
 import com.wedream.demo.concurrent.kotlin.FunctionProgrammingActivity
 import com.wedream.demo.concurrent.rxjava.RxJavaDemoActivity
-import com.wedream.demo.videoeditor.VideoEditorActivity
 import com.wedream.demo.investment.BTCPredictActivity
 import com.wedream.demo.jni.GL2JNIActivity
 import com.wedream.demo.jni.HelloJNIActivity
 import com.wedream.demo.lifecycle.BadWindowTokenActivity
+import com.wedream.demo.media.AudioRecordActivity
 import com.wedream.demo.planegeometry.PlaneGeometryActivity
 import com.wedream.demo.render.*
 import com.wedream.demo.render.gl3.GLColorActivity
 import com.wedream.demo.util.LogUtils.log
+import com.wedream.demo.videoeditor.VideoEditorActivity
 import com.wedream.demo.view.*
 import com.wedream.demo.view.canvas.CanvasActivity
 import com.wedream.demo.view.colormatrix.ColorMatrixCategoryActivity
@@ -106,14 +107,15 @@ class MainActivity : CategoryActivity() {
                 GLColorActivity::class.java
             )
         )
+        val editor = ComponentCategory(VideoEditorActivity::class.java)
+        val recorder = ComponentCategory(AudioRecordActivity::class.java)
         val investment = Category("investment").addComponentCategories(
             listOf(
                 BTCPredictActivity::class.java
             )
         )
-        val editor = ComponentCategory(VideoEditorActivity::class.java)
         return listOf(
-            viewCategory, lifecycle, multiThreading, algorithm, render, editor, investment
+            viewCategory, lifecycle, multiThreading, algorithm, render, editor, recorder, investment
         )
     }
 }
