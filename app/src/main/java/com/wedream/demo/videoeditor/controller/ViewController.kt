@@ -4,14 +4,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 
-abstract class ViewController<M : ViewModel> : Controller<M>() {
-    private lateinit var rootView: View
-
-    fun bind(model: M, view: View) {
-        this.rootView = view
-        super.bind(model)
-    }
-
+abstract class ViewController(private val rootView: View) : Controller() {
     fun getRootView(): View {
         return rootView
     }
@@ -20,7 +13,7 @@ abstract class ViewController<M : ViewModel> : Controller<M>() {
         return rootView.findViewById(id)
     }
 
-    fun getActivity() : AppCompatActivity {
+    fun getActivity(): AppCompatActivity {
         return rootView.context as AppCompatActivity
     }
 }

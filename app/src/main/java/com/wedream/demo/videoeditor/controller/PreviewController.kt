@@ -1,13 +1,18 @@
 package com.wedream.demo.videoeditor.controller
 
+import android.view.View
 import android.widget.TextView
+import com.wedream.demo.inject.Inject
 import com.wedream.demo.videoeditor.message.MessageChannel
 import com.wedream.demo.videoeditor.message.TimeLineMessageHelper
 import com.wedream.demo.videoeditor.timeline.data.TimelineViewModel
 
-class PreviewController : ViewController<TimelineViewModel>() {
+class PreviewController(rootView: View) : ViewController(rootView) {
 
     lateinit var previewTextView: TextView
+
+    @Inject
+    lateinit var timelineViewModel: TimelineViewModel
 
     override fun onBind() {
         super.onBind()
@@ -21,7 +26,7 @@ class PreviewController : ViewController<TimelineViewModel>() {
     }
 
     private fun updatePreview() {
-        getModel().getCurrentSegment()?.let {
+        timelineViewModel.getCurrentSegment()?.let {
             previewTextView.text = it.id.toString()
         }
     }

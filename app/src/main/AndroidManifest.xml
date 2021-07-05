@@ -63,6 +63,7 @@
         <activity android:name=".view.TranslateActivity" />
       <activity android:name=".lifecycle.BadWindowTokenActivity" />
       <activity android:name=".media.AudioRecordActivity" />
+      <activity android:name=".inject.AnnotationTestActivity" />
     </application>
 
 </manifest>

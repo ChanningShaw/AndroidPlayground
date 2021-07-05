@@ -1,8 +1,10 @@
 package com.wedream.demo.videoeditor.menu
 
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
+import com.wedream.demo.inject.Inject
 import com.wedream.demo.util.ToastUtils
 import com.wedream.demo.videoeditor.const.Constants.MIN_ASSET_DURATION
 import com.wedream.demo.videoeditor.controller.ViewController
@@ -12,7 +14,10 @@ import com.wedream.demo.videoeditor.project.AssetType
 import com.wedream.demo.videoeditor.timeline.utils.TimelineUtils
 import kotlin.math.abs
 
-class MenuController(private val videoEditor: VideoEditor) : ViewController<MenuViewModel>() {
+class MenuController(rootView: View) : ViewController(rootView) {
+
+    @Inject
+    lateinit var videoEditor: VideoEditor
 
     private val menuList = listOf(
         MenuEntity("新增") {

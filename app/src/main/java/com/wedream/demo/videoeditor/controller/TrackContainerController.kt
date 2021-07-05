@@ -6,6 +6,7 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import com.wedream.demo.R
 import com.wedream.demo.app.DeviceParams
+import com.wedream.demo.inject.Inject
 import com.wedream.demo.util.KtUtils.ifNullAndElse
 import com.wedream.demo.util.LogUtils.log
 import com.wedream.demo.videoeditor.decorview.DecorViewManager
@@ -19,7 +20,13 @@ import com.wedream.demo.videoeditor.timeline.widget.SegmentTouchListener
 import com.wedream.demo.view.MyFrameLayout
 import com.wedream.demo.view.trackmove.CrossTrackMovementActivity
 
-class TrackContainerController(val videoEditor: VideoEditor) : ViewController<TimelineViewModel>() {
+class TrackContainerController(rootView: View) : ViewController(rootView) {
+
+    @Inject
+    lateinit var timelineViewModel: TimelineViewModel
+
+    @Inject
+    lateinit var videoEditor: VideoEditor
 
     private var decorViewManager: DecorViewManager? = null
 
@@ -28,10 +35,11 @@ class TrackContainerController(val videoEditor: VideoEditor) : ViewController<Ti
     private var pendingAction = hashMapOf<Long, ActionType>()
     private var segmentTouchListener: SegmentTouchListener? = null
 
+
     override fun onBind() {
         trackContainer = findViewById(R.id.track_container)
         segmentTouchListener = SegmentTouchListener(getActivity())
-        decorViewManager = DecorViewManager(videoEditor, getModel(), trackContainer.context)
+        decorViewManager = DecorViewManager(videoEditor, timelineViewModel, trackContainer.context)
         initListeners()
     }
 
@@ -40,10 +48,10 @@ class TrackContainerController(val videoEditor: VideoEditor) : ViewController<Ti
             when (it.what) {
                 TimeLineMessageHelper.MSG_TIMELINE_CHANGED -> {
                     TimeLineMessageHelper.unpackTimelineChangedMessage(it) {
-                        val visibleRange = getModel().getVisibleRange()
+                        val visibleRange = timelineViewModel.getVisibleRange()
                         for (event in it.events) {
                             if (event.actionType == ActionType.Add) {
-                                val segment = getModel().getSegment(event.id) ?: continue
+                                val segment = timelineViewModel.getSegment(event.id) ?: continue
                                 if (!visibleRange.overlap(segment.left, segment.right)) {
                                     pendingAction[segment.id] = event.actionType
                                     removeSegmentView(event.id)
@@ -55,7 +63,7 @@ class TrackContainerController(val videoEditor: VideoEditor) : ViewController<Ti
                                 removeSegmentView(event.id)
                                 pendingAction.remove(event.id)
                             } else if (event.actionType == ActionType.Modify) {
-                                val segment = getModel().getSegment(event.id) ?: continue
+                                val segment = timelineViewModel.getSegment(event.id) ?: continue
                                 if (!visibleRange.overlap(segment.left, segment.right)) {
                                     pendingAction[segment.id] = event.actionType
                                     removeSegmentView(event.id)
@@ -74,12 +82,12 @@ class TrackContainerController(val videoEditor: VideoEditor) : ViewController<Ti
     }
 
     private fun handlePendingActions() {
-        val visibleRange = getModel().getVisibleRange()
+        val visibleRange = timelineViewModel.getVisibleRange()
         log { "visibleRange = $visibleRange" }
         val iterator = pendingAction.iterator()
         while (iterator.hasNext()) {
             val entity = iterator.next()
-            val segment = getModel().getSegment(entity.key)
+            val segment = timelineViewModel.getSegment(entity.key)
             log { "pending segment = $segment" }
             if (segment == null) {
                 iterator.remove()

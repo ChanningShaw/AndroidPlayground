@@ -14,7 +14,6 @@ import com.wedream.demo.videoeditor.editor.EditorState
 import com.wedream.demo.videoeditor.editor.EditorUpdater
 import com.wedream.demo.videoeditor.editor.VideoEditor
 import com.wedream.demo.videoeditor.menu.MenuController
-import com.wedream.demo.videoeditor.menu.MenuViewModel
 import com.wedream.demo.videoeditor.message.MessageChannel
 import com.wedream.demo.videoeditor.message.TimeLineMessageHelper
 import com.wedream.demo.videoeditor.timeline.config.Config.TIMELINE_HEIGHT
@@ -25,6 +24,7 @@ import com.wedream.demo.videoeditor.timeline.widget.ClickDetectTouchListener
 import com.wedream.demo.videoeditor.timeline.widget.MyHorizontalScrollView
 import com.wedream.demo.videoeditor.timeline.widget.TimelineAxisView
 import com.wedream.demo.view.MyFrameLayout
+import java.util.*
 
 class VideoEditorActivity : DisposableActivity() {
 
@@ -39,7 +39,6 @@ class VideoEditorActivity : DisposableActivity() {
     private var editorState = EditorState()
     private var editorUpdater = EditorUpdater(videoEditor, editorState)
     private val timelineViewModel = TimelineViewModel(videoEditor)
-    private val menuViewModel = MenuViewModel()
     private var timelineWrapWidth = TimelineUtils.time2Width(5.0 * 60, timelineViewModel.getScale())
     private var scalingStartScale = 1.0
     private var scalingStartScrollX = 0
@@ -137,13 +136,14 @@ class VideoEditorActivity : DisposableActivity() {
     }
 
     private fun initControllers() {
-        val trackContainerController = TrackContainerController(videoEditor)
-        trackContainerController.bind(timelineViewModel, timelineAxisView)
-        val timelineCanvasController = TimelineCanvasController()
-        timelineCanvasController.bind(timelineViewModel, timelineAxisView)
-        val menuController = MenuController(videoEditor)
-        menuController.bind(menuViewModel, menuContainer)
-        val previewController = PreviewController()
-        previewController.bind(timelineViewModel, preview)
+        val objects = arrayOf(timelineViewModel, videoEditor)
+        val trackContainerController = TrackContainerController(timelineAxisView)
+        trackContainerController.bind(objects)
+        val timelineCanvasController = TimelineCanvasController(timelineAxisView)
+        timelineCanvasController.bind(objects)
+        val menuController = MenuController(menuContainer)
+        menuController.bind(objects)
+        val previewController = PreviewController(preview)
+        previewController.bind(objects)
     }
 }

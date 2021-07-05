@@ -16,6 +16,7 @@ import com.wedream.demo.concurrent.kotlin.CoroutineActivity
 import com.wedream.demo.concurrent.kotlin.FlowActivity
 import com.wedream.demo.concurrent.kotlin.FunctionProgrammingActivity
 import com.wedream.demo.concurrent.rxjava.RxJavaDemoActivity
+import com.wedream.demo.inject.AnnotationTestActivity
 import com.wedream.demo.investment.BTCPredictActivity
 import com.wedream.demo.jni.GL2JNIActivity
 import com.wedream.demo.jni.HelloJNIActivity
@@ -109,13 +110,18 @@ class MainActivity : CategoryActivity() {
         )
         val editor = ComponentCategory(VideoEditorActivity::class.java)
         val recorder = ComponentCategory(AudioRecordActivity::class.java)
+        val inject = Category("inject").addComponentCategories(
+            listOf(
+                AnnotationTestActivity::class.java
+            )
+        )
         val investment = Category("investment").addComponentCategories(
             listOf(
                 BTCPredictActivity::class.java
             )
         )
         return listOf(
-            viewCategory, lifecycle, multiThreading, algorithm, render, editor, recorder, investment
+            viewCategory, lifecycle, multiThreading, algorithm, render, editor, recorder, inject, investment
         )
     }
 }

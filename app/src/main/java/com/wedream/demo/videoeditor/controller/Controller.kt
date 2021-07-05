@@ -1,16 +1,16 @@
 package com.wedream.demo.videoeditor.controller
 
-import androidx.lifecycle.ViewModel
+import com.wedream.demo.inject.Inject
+import com.wedream.demo.util.LogUtils.log
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
-abstract class Controller<M : ViewModel> {
+abstract class Controller {
 
-    private lateinit var model: M
     private var compositeDisposable = CompositeDisposable()
 
-    fun bind(model: M) {
-        this.model = model
+    fun bind(objects: Array<Any>) {
+        inject(objects)
         onBind()
     }
 
@@ -22,10 +22,6 @@ abstract class Controller<M : ViewModel> {
 
     }
 
-    fun getModel(): M {
-        return model
-    }
-
     fun addToAutoDisposes(disposable: Disposable) {
         compositeDisposable.add(disposable)
     }
@@ -33,5 +29,23 @@ abstract class Controller<M : ViewModel> {
     fun destroy() {
         onUnBind()
         compositeDisposable.clear()
+    }
+
+    private fun inject(objects: Array<Any>){
+        val clazz = this.javaClass
+        val fields = clazz.declaredFields
+        for (field in fields) {
+            if (field.isAnnotationPresent(Inject::class.java)) {
+                // 有Inject声明
+                val inject = field.getAnnotation(Inject::class.java)
+                log { "fieldType:${field.type}" }
+                log { "inject:$inject" }
+                for (obj in objects) {
+                    if (obj.javaClass == field.type) {
+                        field.set(this, obj)
+                    }
+                }
+            }
+        }
     }
 }

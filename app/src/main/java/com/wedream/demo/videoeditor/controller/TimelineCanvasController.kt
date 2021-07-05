@@ -1,7 +1,9 @@
 package com.wedream.demo.videoeditor.controller
 
+import android.view.View
 import com.wedream.demo.R
 import com.wedream.demo.app.DeviceParams
+import com.wedream.demo.inject.Inject
 import com.wedream.demo.videoeditor.const.Constants
 import com.wedream.demo.videoeditor.message.MessageChannel
 import com.wedream.demo.videoeditor.message.TimeLineMessageHelper
@@ -9,9 +11,13 @@ import com.wedream.demo.videoeditor.timeline.config.Config
 import com.wedream.demo.videoeditor.timeline.data.TimelineViewModel
 import com.wedream.demo.view.canvas.MyCanvasView
 
-class TimelineCanvasController : ViewController<TimelineViewModel>() {
+class TimelineCanvasController(rootView: View) : ViewController(rootView) {
 
     private lateinit var canvasView: MyCanvasView
+
+    @Inject
+    lateinit var timelineViewModel: TimelineViewModel
+
     private var lastSelectedId = Constants.INVALID_ID
 
     override fun onBind() {
@@ -33,8 +39,8 @@ class TimelineCanvasController : ViewController<TimelineViewModel>() {
 
     private fun invalidateHighlight() {
         if (lastSelectedId == Constants.INVALID_ID) {
-            getModel().getCurrentSegment()?.let {
-                val left = it.left - getModel().getScrollX() + DeviceParams.SCREEN_WIDTH / 2
+            timelineViewModel.getCurrentSegment()?.let {
+                val left = it.left - timelineViewModel.getScrollX() + DeviceParams.SCREEN_WIDTH / 2
                 val right = left + it.width
                 canvasView.setRect(left, 0, right, Config.TIMELINE_HEIGHT)
             }
