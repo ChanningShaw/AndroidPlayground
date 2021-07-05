@@ -42,7 +42,7 @@ class TimelineCanvasController(rootView: View) : ViewController(rootView) {
             timelineViewModel.getCurrentSegment()?.let {
                 val left = it.left - timelineViewModel.getScrollX() + DeviceParams.SCREEN_WIDTH / 2
                 val right = left + it.width
-                canvasView.setRect(left, 0, right, Config.TIMELINE_HEIGHT)
+                canvasView.setRect(left, 0, right, Config.MAIN_TRACK_HEIGHT)
             }
         } else {
             canvasView.setRect(0, 0, -1, -1)

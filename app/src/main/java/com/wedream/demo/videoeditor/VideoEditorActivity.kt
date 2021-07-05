@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.widget.LinearLayoutCompat
 import com.wedream.demo.R
 import com.wedream.demo.app.DisposableActivity
 import com.wedream.demo.videoeditor.controller.PreviewController
@@ -16,7 +17,8 @@ import com.wedream.demo.videoeditor.editor.VideoEditor
 import com.wedream.demo.videoeditor.menu.MenuController
 import com.wedream.demo.videoeditor.message.MessageChannel
 import com.wedream.demo.videoeditor.message.TimeLineMessageHelper
-import com.wedream.demo.videoeditor.timeline.config.Config.TIMELINE_HEIGHT
+import com.wedream.demo.videoeditor.statusbar.EditorStatusBarController
+import com.wedream.demo.videoeditor.timeline.config.Config.MAIN_TRACK_HEIGHT
 import com.wedream.demo.videoeditor.timeline.data.TimelineViewModel
 import com.wedream.demo.videoeditor.timeline.utils.OperateScaleHelper
 import com.wedream.demo.videoeditor.timeline.utils.TimelineUtils
@@ -33,6 +35,7 @@ class VideoEditorActivity : DisposableActivity() {
     private lateinit var scrollView: MyHorizontalScrollView
     private lateinit var timelineAxisView: TimelineAxisView
     private lateinit var menuContainer: LinearLayout
+    private lateinit var editorStatusBar: LinearLayoutCompat
     private lateinit var preview: TextView
 
     private var videoEditor = VideoEditor()
@@ -64,6 +67,7 @@ class VideoEditorActivity : DisposableActivity() {
         timelineAxisView = findViewById(R.id.timeline)
         menuContainer = findViewById(R.id.menu_container)
         preview = findViewById(R.id.preview_text)
+        editorStatusBar = findViewById(R.id.editor_status_bar)
 
         scrollView.setOnScrollChangeListener { _, scrollX, _, _, _ ->
             if (scrollX > timelineViewModel.getRealTimeWidth()) {
@@ -93,8 +97,8 @@ class VideoEditorActivity : DisposableActivity() {
                 MessageChannel.sendMessage(TimeLineMessageHelper.MSG_TIMELINE_BLANK_CLICK)
             }
         })
-        timelineContainer.setSpecificDimen(timelineWrapWidth, TIMELINE_HEIGHT)
-        trackContainer.setSpecificDimen(timelineWrapWidth, TIMELINE_HEIGHT)
+        timelineContainer.setSpecificDimen(timelineWrapWidth, MAIN_TRACK_HEIGHT)
+        trackContainer.setSpecificDimen(timelineWrapWidth, MAIN_TRACK_HEIGHT)
     }
 
     private fun initListeners() {
@@ -127,8 +131,8 @@ class VideoEditorActivity : DisposableActivity() {
             changed = true
         }
         if (changed) {
-            timelineContainer.setSpecificDimen(timelineWrapWidth, TIMELINE_HEIGHT)
-            trackContainer.setSpecificDimen(timelineWrapWidth, TIMELINE_HEIGHT)
+            timelineContainer.setSpecificDimen(timelineWrapWidth, MAIN_TRACK_HEIGHT)
+            trackContainer.setSpecificDimen(timelineWrapWidth, MAIN_TRACK_HEIGHT)
         }
         if (scrollView.scrollX > timelineViewModel.getRealTimeWidth()) {
             scrollView.scrollTo(timelineViewModel.getRealTimeWidth(), 0)
@@ -145,5 +149,7 @@ class VideoEditorActivity : DisposableActivity() {
         menuController.bind(objects)
         val previewController = PreviewController(preview)
         previewController.bind(objects)
+        val editorStatusBarController = EditorStatusBarController(editorStatusBar)
+        editorStatusBarController.bind(objects)
     }
 }

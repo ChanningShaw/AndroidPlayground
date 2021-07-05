@@ -10,23 +10,27 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
-    android:textSize="30sp"
     android:text="预览区域"
+    android:textSize="30sp"
     app:layout_constraintBottom_toTopOf="@id/editor_status_bar"
     app:layout_constraintTop_toTopOf="parent" />
 
   <androidx.appcompat.widget.LinearLayoutCompat
     android:id="@+id/editor_status_bar"
     android:layout_width="match_parent"
-    app:layout_constraintBottom_toTopOf="@id/timeline"
+    android:layout_height="40dp"
     android:orientation="horizontal"
-    android:layout_height="60dp">
+    android:background="@color/color_gray"
+    app:layout_constraintBottom_toTopOf="@id/timeline">
 
     <TextView
       android:id="@+id/editor_current_time"
-      android:layout_width="wrap_content"
-      android:gravity="bottom"
-      android:layout_height="match_parent"/>
+      android:layout_width="80dp"
+      android:layout_height="match_parent"
+      android:layout_gravity="center_vertical"
+      android:textSize="11sp"
+      android:textColor="@color/color_white"
+      android:gravity="center" />
 
   </androidx.appcompat.widget.LinearLayoutCompat>
 
