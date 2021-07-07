@@ -75,7 +75,8 @@ class MainActivity : CategoryActivity() {
                 LottieActivity::class.java,
                 ColorMatrixCategoryActivity::class.java,
                 CanvasActivity::class.java,
-                TranslateActivity::class.java
+                TranslateActivity::class.java,
+                RefreshRateActivity::class.java
             )
         )
         val lifecycle = Category("lifecycle").addComponentCategories(
