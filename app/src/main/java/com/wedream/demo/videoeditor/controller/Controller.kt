@@ -48,7 +48,7 @@ abstract class Controller {
 //                log { "fieldType:${field.type}" }
 //                log { "inject:$inject" }
                 for (obj in objects) {
-                    if (obj.javaClass == field.type) {
+                    if (obj.javaClass == field.type || field.type.isAssignableFrom(obj.javaClass)) {
                         field.set(target, obj)
                     }
                 }

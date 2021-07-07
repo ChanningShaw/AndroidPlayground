@@ -19,5 +19,5 @@ open class Segment(
 }
 
 enum class SegmentType {
-    Text,
+    Video, Text
 }

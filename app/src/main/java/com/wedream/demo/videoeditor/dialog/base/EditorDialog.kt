@@ -58,6 +58,10 @@ class EditorDialog private constructor(
         ViewAnimatorHelper.popWindowAnimation(editorDialogView, editorDialogView, decorView, false)
     }
 
+    fun addExtraArgs(obj: Any) {
+        callerContext?.add(obj)
+    }
+
     private fun initDialogView() {
         editorDialogView = FrameLayout(context).apply {
             val params =

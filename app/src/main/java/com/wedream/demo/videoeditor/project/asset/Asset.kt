@@ -64,6 +64,10 @@ open class Asset(
         this.modifyListener = null
     }
 
+    fun markDirty() {
+        modifyListener?.notifyItemModified(this)
+    }
+
     open fun cloneObject(): Asset {
         return Asset(IdUtils.nextId(), type, fixDuration, clipStart, clipEnd)
     }

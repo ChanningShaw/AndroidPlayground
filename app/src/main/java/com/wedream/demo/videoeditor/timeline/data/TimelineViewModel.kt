@@ -2,7 +2,6 @@ package com.wedream.demo.videoeditor.timeline.data
 
 import androidx.lifecycle.ViewModel
 import com.wedream.demo.app.DeviceParams
-import com.wedream.demo.util.LogUtils.log
 import com.wedream.demo.videoeditor.editor.EditorData
 import com.wedream.demo.videoeditor.editor.EditorUpdater
 import com.wedream.demo.videoeditor.editor.VideoEditor
@@ -10,7 +9,10 @@ import com.wedream.demo.videoeditor.message.MessageChannel
 import com.wedream.demo.videoeditor.message.TimeLineMessageHelper
 import com.wedream.demo.videoeditor.project.ActionEvent
 import com.wedream.demo.videoeditor.project.ActionType
+import com.wedream.demo.videoeditor.project.asset.Asset
+import com.wedream.demo.videoeditor.project.asset.MainTrackAsset
 import com.wedream.demo.videoeditor.project.asset.PlacedAsset
+import com.wedream.demo.videoeditor.project.asset.operation.ISpeed
 import com.wedream.demo.videoeditor.timeline.utils.TimeRange
 import com.wedream.demo.videoeditor.timeline.utils.TimelineUtils
 
@@ -35,20 +37,18 @@ class TimelineViewModel(private val videoEditor: VideoEditor) : ViewModel() {
         for (event in editorData.events) {
             if (event.actionType == ActionType.Add) {
                 val asset = videoEditor.getAsset(event.id) ?: continue
-                if (asset is PlacedAsset) {
-                    val start = TimelineUtils.time2Width(asset.getStart(), scale)
-                    val end = TimelineUtils.time2Width(asset.getEnd(), scale)
-                    segmentMap[asset.id] = TextSegment(asset.id, start, end, asset.id.toString())
-                } else {
-                    segmentMap[asset.id] = TextSegment(asset.id, 0, 0, asset.id.toString())
-                }
+                addSegment(asset)
             } else if (event.actionType == ActionType.Delete) {
                 segmentMap.remove(event.id)
             } else if (event.actionType == ActionType.Modify) {
                 val asset = videoEditor.getAsset(event.id) ?: continue
                 if (asset is PlacedAsset) {
                     val start = TimelineUtils.time2Width(asset.getStart(), scale)
-                    val end = TimelineUtils.time2Width(asset.getEnd(), scale)
+                    val end = if (asset is ISpeed) {
+                        start + TimelineUtils.time2Width(asset.duration / asset.getSpeed(), scale)
+                    } else {
+                        TimelineUtils.time2Width(asset.getEnd(), scale)
+                    }
                     segmentMap[asset.id]?.let {
                         it.left = start
                         it.right = end
@@ -60,20 +60,50 @@ class TimelineViewModel(private val videoEditor: VideoEditor) : ViewModel() {
             // 主轨被修改了，修改全部重新计算
             val assets = videoEditor.getAssets()
             var assetStart = 0.0
-            var assetEnd = 0.0
             for (asset in assets) {
-                assetEnd += asset.duration
+                val realDuration = if (asset is ISpeed) {
+                    asset.duration / asset.getSpeed()
+                } else {
+                    asset.duration
+                }
                 val start = TimelineUtils.time2Width(assetStart, scale)
-                val end = TimelineUtils.time2Width(assetEnd, scale)
+                val end = start + TimelineUtils.time2Width(realDuration, scale)
                 segmentMap[asset.id]?.let {
                     it.left = start
-                    it.right = end
+                    it.right = end.toInt()
                     editorData.events.add(ActionEvent(it.id, ActionType.Modify))
                 }
-                assetStart += asset.duration
+                assetStart += realDuration
             }
         }
         MessageChannel.sendMessage(TimeLineMessageHelper.packTimelineChangedMessage(editorData))
+    }
+
+    private fun addSegment(asset: Asset) {
+        if (asset is PlacedAsset) {
+            if (asset is ISpeed) {
+                val start = TimelineUtils.time2Width(asset.getStart(), scale)
+                val end = start + TimelineUtils.time2Width(asset.duration / asset.getSpeed(), scale)
+                segmentMap[asset.id] = generateSegment(asset, start, end)
+            } else {
+                val start = TimelineUtils.time2Width(asset.getStart(), scale)
+                val end = start + TimelineUtils.time2Width(asset.getEnd(), scale)
+                segmentMap[asset.id] = generateSegment(asset, start, end)
+            }
+        } else {
+            segmentMap[asset.id] = generateSegment(asset, 0, 0)
+        }
+    }
+
+    private fun generateSegment(asset: Asset, start: Int, end: Int): Segment {
+        return when (asset) {
+            is MainTrackAsset -> {
+                VideoSegment(asset.id, 0, 0, "")
+            }
+            else -> {
+                TextSegment(asset.id, start, end, asset.id.toString())
+            }
+        }
     }
 
     fun getVisibleRange(): TimeRange {

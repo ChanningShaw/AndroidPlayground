@@ -7,9 +7,17 @@ import com.wedream.demo.videoeditor.project.asset.operation.SpeedImpl
 class PipAsset(
     id: Long,
     private var path: String,
-    assetType: AssetType,
     fixDuration: Double,
     start: Double, end: Double
-) : PlacedAsset(id, assetType, fixDuration, start, end), ISpeed by SpeedImpl(){
+) : PlacedAsset(id, AssetType.Video, fixDuration, start, end), ISpeed {
 
+    private val speedImpl = SpeedImpl(this)
+
+    override fun setSpeed(speed: Double) {
+        speedImpl.setSpeed(speed)
+    }
+
+    override fun getSpeed(): Double {
+        return speedImpl.getSpeed()
+    }
 }

@@ -9,6 +9,15 @@ class MainTrackAsset(
     private var path: String,
     assetType: AssetType,
     fixDuration: Double,
-) : Asset(id, assetType, fixDuration), ISpeed by SpeedImpl() {
+) : Asset(id, assetType, fixDuration), ISpeed {
 
+    private val speedImpl = SpeedImpl(this)
+
+    override fun setSpeed(speed: Double) {
+        speedImpl.setSpeed(speed)
+    }
+
+    override fun getSpeed(): Double {
+        return speedImpl.getSpeed()
+    }
 }
