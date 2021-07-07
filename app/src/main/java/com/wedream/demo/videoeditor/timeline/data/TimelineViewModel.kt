@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.wedream.demo.app.DeviceParams
 import com.wedream.demo.videoeditor.editor.EditorData
 import com.wedream.demo.videoeditor.editor.EditorUpdater
-import com.wedream.demo.videoeditor.editor.VideoEditor
+import com.wedream.demo.videoeditor.editor.EditorGovernor
 import com.wedream.demo.videoeditor.message.MessageChannel
 import com.wedream.demo.videoeditor.message.TimeLineMessageHelper
 import com.wedream.demo.videoeditor.project.ActionEvent
@@ -16,7 +16,7 @@ import com.wedream.demo.videoeditor.project.asset.operation.ISpeed
 import com.wedream.demo.videoeditor.timeline.utils.TimeRange
 import com.wedream.demo.videoeditor.timeline.utils.TimelineUtils
 
-class TimelineViewModel(private val videoEditor: VideoEditor) : ViewModel() {
+class TimelineViewModel(private val editorGovernor: EditorGovernor) : ViewModel() {
 
     private var segmentMap = hashMapOf<Long, Segment>()
     private var timelineRealWidth = 0
@@ -33,15 +33,15 @@ class TimelineViewModel(private val videoEditor: VideoEditor) : ViewModel() {
     }
 
     private fun updateTimeline(editorData: EditorData) {
-        timelineRealWidth = TimelineUtils.time2Width(videoEditor.getProjectDuration(), scale)
+        timelineRealWidth = TimelineUtils.time2Width(editorGovernor.getProjectDuration(), scale)
         for (event in editorData.events) {
             if (event.actionType == ActionType.Add) {
-                val asset = videoEditor.getAsset(event.id) ?: continue
+                val asset = editorGovernor.getAsset(event.id) ?: continue
                 addSegment(asset)
             } else if (event.actionType == ActionType.Delete) {
                 segmentMap.remove(event.id)
             } else if (event.actionType == ActionType.Modify) {
-                val asset = videoEditor.getAsset(event.id) ?: continue
+                val asset = editorGovernor.getAsset(event.id) ?: continue
                 if (asset is PlacedAsset) {
                     val start = TimelineUtils.time2Width(asset.getStart(), scale)
                     val end = if (asset is ISpeed) {
@@ -58,7 +58,7 @@ class TimelineViewModel(private val videoEditor: VideoEditor) : ViewModel() {
         }
         if (editorData.mainTrackModified) {
             // 主轨被修改了，修改全部重新计算
-            val assets = videoEditor.getAssets()
+            val assets = editorGovernor.getAssets()
             var assetStart = 0.0
             for (asset in assets) {
                 val realDuration = if (asset is ISpeed) {
@@ -122,7 +122,7 @@ class TimelineViewModel(private val videoEditor: VideoEditor) : ViewModel() {
         this.scale = scale
         val editorData = EditorData()
         editorData.mainTrackModified = true
-        for (asset in videoEditor.getAssets()) {
+        for (asset in editorGovernor.getAssets()) {
             editorData.events.add(ActionEvent(asset.id, ActionType.Modify))
         }
         updateTimeline(editorData)

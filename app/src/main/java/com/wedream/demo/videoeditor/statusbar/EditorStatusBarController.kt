@@ -4,6 +4,7 @@ import android.widget.TextView
 import com.wedream.demo.R
 import com.wedream.demo.inject.Inject
 import com.wedream.demo.videoeditor.controller.ViewController
+import com.wedream.demo.videoeditor.editor.EditorGovernor
 import com.wedream.demo.videoeditor.editor.VideoEditor
 import com.wedream.demo.videoeditor.message.MessageChannel
 import com.wedream.demo.videoeditor.message.TimeLineMessageHelper
@@ -14,7 +15,7 @@ class EditorStatusBarController : ViewController() {
     lateinit var timelineViewModel: TimelineViewModel
 
     @Inject
-    lateinit var videoEditor: VideoEditor
+    lateinit var editorGovernor: EditorGovernor
 
     lateinit var currentTimeTextView: TextView
 
@@ -22,7 +23,7 @@ class EditorStatusBarController : ViewController() {
         currentTimeTextView = findViewById(R.id.editor_current_time)
         addToAutoDisposes(MessageChannel.subscribe(TimeLineMessageHelper.MSG_TIMELINE_CHANGED) {
             val time = String.format("%.2f", timelineViewModel.getCurrentTime())
-            val projectDuration = String.format("%.2f", videoEditor.getProjectDuration())
+            val projectDuration = String.format("%.2f", editorGovernor.getProjectDuration())
             currentTimeTextView.text = "$time/$projectDuration"
         })
     }

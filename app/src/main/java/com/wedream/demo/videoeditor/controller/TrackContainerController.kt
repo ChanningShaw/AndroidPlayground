@@ -8,9 +8,8 @@ import com.wedream.demo.R
 import com.wedream.demo.app.DeviceParams
 import com.wedream.demo.inject.Inject
 import com.wedream.demo.util.KtUtils.ifNullAndElse
-import com.wedream.demo.util.LogUtils.log
 import com.wedream.demo.videoeditor.decorview.DecorViewManager
-import com.wedream.demo.videoeditor.editor.VideoEditor
+import com.wedream.demo.videoeditor.editor.EditorGovernor
 import com.wedream.demo.videoeditor.message.MessageChannel
 import com.wedream.demo.videoeditor.message.TimeLineMessageHelper
 import com.wedream.demo.videoeditor.project.ActionType
@@ -26,7 +25,7 @@ class TrackContainerController : ViewController() {
     lateinit var timelineViewModel: TimelineViewModel
 
     @Inject
-    lateinit var videoEditor: VideoEditor
+    lateinit var editorGovernor: EditorGovernor
 
     private var decorViewManager: DecorViewManager? = null
 
@@ -39,7 +38,7 @@ class TrackContainerController : ViewController() {
     override fun onBind() {
         trackContainer = findViewById(R.id.track_container)
         segmentTouchListener = SegmentTouchListener(getActivity())
-        decorViewManager = DecorViewManager(videoEditor, timelineViewModel, trackContainer.context)
+        decorViewManager = DecorViewManager(editorGovernor, timelineViewModel, trackContainer.context)
         initListeners()
     }
 
@@ -83,12 +82,10 @@ class TrackContainerController : ViewController() {
 
     private fun handlePendingActions() {
         val visibleRange = timelineViewModel.getVisibleRange()
-        log { "visibleRange = $visibleRange" }
         val iterator = pendingAction.iterator()
         while (iterator.hasNext()) {
             val entity = iterator.next()
             val segment = timelineViewModel.getSegment(entity.key)
-            log { "pending segment = $segment" }
             if (segment == null) {
                 iterator.remove()
                 continue
@@ -126,7 +123,6 @@ class TrackContainerController : ViewController() {
                 it.width = segment.width
                 segmentView.layoutParams = it
             }
-            log { "update ${segment}" }
             bindSegmentView(segmentView, segment)
         })
     }

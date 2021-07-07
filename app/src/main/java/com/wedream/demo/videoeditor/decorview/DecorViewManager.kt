@@ -8,13 +8,13 @@ import com.wedream.demo.R
 import com.wedream.demo.app.DeviceParams
 import com.wedream.demo.util.LogUtils.log
 import com.wedream.demo.videoeditor.const.Constants
-import com.wedream.demo.videoeditor.editor.VideoEditor
+import com.wedream.demo.videoeditor.editor.EditorGovernor
 import com.wedream.demo.videoeditor.timeline.data.TimelineViewModel
 import com.wedream.demo.videoeditor.timeline.utils.TimelineUtils
 import com.wedream.demo.videoeditor.timeline.widget.AbsTouchListener
 
 class DecorViewManager(
-    private val videoEditor: VideoEditor,
+    private val editorGovernor: EditorGovernor,
     private val timelineViewModel: TimelineViewModel,
     private val context: Context
 ) {
@@ -29,7 +29,7 @@ class DecorViewManager(
         private var originEnd = 0.0
 
         override fun onActionDown(v: View, x: Int, y: Int) {
-            videoEditor.getAsset(lastSelectedId)?.let {
+            editorGovernor.getAsset(lastSelectedId)?.let {
                 originStart = it.getClipStart()
                 originEnd = it.getClipEnd()
             }
@@ -42,7 +42,7 @@ class DecorViewManager(
         override fun onMoving(v: View, deltaX: Int, deltaY: Int) {
             log { "deltaX = $deltaX" }
             val isLeft = v === leftDecorView
-            videoEditor.getAsset(lastSelectedId)?.let {
+            editorGovernor.getAsset(lastSelectedId)?.let {
                 if (isLeft) {
                     it.setClipStart(originStart + TimelineUtils.width2time(deltaX, timelineViewModel.getScale()))
                 } else {

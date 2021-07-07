@@ -6,6 +6,7 @@ import android.widget.TextView
 import com.wedream.demo.R
 import com.wedream.demo.inject.Inject
 import com.wedream.demo.util.LogUtils.log
+import com.wedream.demo.videoeditor.editor.EditorGovernor
 import com.wedream.demo.videoeditor.editor.VideoEditor
 import com.wedream.demo.videoeditor.project.asset.operation.ISpeed
 import com.wedream.demo.videoeditor.timeline.data.Segment
@@ -16,7 +17,7 @@ class SpeedDialogController : DialogController() {
     lateinit var currentSegment: Segment
 
     @Inject
-    lateinit var videoEditor: VideoEditor
+    lateinit var editorGovernor: EditorGovernor
 
     lateinit var confirmBtn: View
     lateinit var seekBar: SeekBar
@@ -24,7 +25,7 @@ class SpeedDialogController : DialogController() {
     lateinit var currentAsset: ISpeed
 
     override fun onBind() {
-        currentAsset = videoEditor.getAsset(currentSegment.id) as ISpeed
+        currentAsset = editorGovernor.getAsset(currentSegment.id) as ISpeed
         initViews()
         log { currentSegment }
     }

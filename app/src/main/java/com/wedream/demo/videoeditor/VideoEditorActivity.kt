@@ -11,9 +11,9 @@ import com.wedream.demo.app.DisposableActivity
 import com.wedream.demo.videoeditor.controller.PreviewController
 import com.wedream.demo.videoeditor.controller.TimelineCanvasController
 import com.wedream.demo.videoeditor.controller.TrackContainerController
+import com.wedream.demo.videoeditor.editor.EditorGovernor
 import com.wedream.demo.videoeditor.editor.EditorState
 import com.wedream.demo.videoeditor.editor.EditorUpdater
-import com.wedream.demo.videoeditor.editor.VideoEditor
 import com.wedream.demo.videoeditor.menu.MenuController
 import com.wedream.demo.videoeditor.message.MessageChannel
 import com.wedream.demo.videoeditor.message.TimeLineMessageHelper
@@ -38,18 +38,18 @@ class VideoEditorActivity : DisposableActivity() {
     private lateinit var editorStatusBar: LinearLayoutCompat
     private lateinit var preview: TextView
 
-    private var videoEditor = VideoEditor()
     private var editorState = EditorState()
-    private var editorUpdater = EditorUpdater(videoEditor, editorState)
-    private val timelineViewModel = TimelineViewModel(videoEditor)
+    private var editorUpdater = EditorUpdater(editorState)
+    private var editorGovernor = EditorGovernor()
+    private val timelineViewModel = TimelineViewModel(editorGovernor)
     private var timelineWrapWidth = TimelineUtils.time2Width(5.0 * 60, timelineViewModel.getScale())
     private var scalingStartScale = 1.0
     private var scalingStartScrollX = 0
 
-    val objects = listOf(timelineViewModel, videoEditor)
+    val objects = listOf(timelineViewModel, editorGovernor)
 
     init {
-        videoEditor.timelineViewModel = timelineViewModel
+        editorGovernor.setTimelineViewModel(timelineViewModel)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,7 +58,7 @@ class VideoEditorActivity : DisposableActivity() {
         initViews()
         initListeners()
         initControllers()
-        videoEditor.loadProject(editorUpdater)
+        editorGovernor.loadProject(editorUpdater)
     }
 
     @SuppressLint("ClickableViewAccessibility")

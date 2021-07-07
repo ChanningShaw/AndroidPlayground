@@ -6,11 +6,10 @@ import com.wedream.demo.videoeditor.project.ActionType
 import com.wedream.demo.videoeditor.project.AssetType
 import com.wedream.demo.videoeditor.project.asset.Asset
 
-class EditorUpdater(
-    private val videoEditor: VideoEditor,
-    private val editorState: EditorState
-) {
+class EditorUpdater(private val editorState: EditorState) {
+
     private var assetChangedMap = hashMapOf<Asset, ActionType>()
+    private var videoEditorListener: EditorUpdateListener? = null
     private var updateListeners = arrayListOf<EditorUpdateListener>()
     private val updateNotifier = EditorUpdateNotifier()
 
@@ -43,7 +42,7 @@ class EditorUpdater(
         reset()
 
         // 1.先更新 videoEditor
-        videoEditor.onEditorUpdate(editorData)
+        videoEditorListener?.onEditorUpdate(editorData)
         // 2.在更新 EditorState
         editorState.onEditorUpdate(editorData)
         // 3.最后更新其他listener
@@ -80,8 +79,12 @@ class EditorUpdater(
     }
 
     inner class EditorUpdateNotifier {
-        fun registerEditorUpdateListener(listener: EditorUpdateListener) {
-            updateListeners.add(listener)
+        fun registerEditorUpdateListener(listener: EditorUpdateListener, fromEditor: Boolean = false) {
+            if (fromEditor) {
+                updateListeners.add(listener)
+            } else {
+                videoEditorListener = listener
+            }
         }
 
         fun removeEditorUpdateListener(listener: EditorUpdateListener) {
