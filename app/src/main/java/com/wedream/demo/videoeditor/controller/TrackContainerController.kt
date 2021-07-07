@@ -20,7 +20,7 @@ import com.wedream.demo.videoeditor.timeline.widget.SegmentTouchListener
 import com.wedream.demo.view.MyFrameLayout
 import com.wedream.demo.view.trackmove.CrossTrackMovementActivity
 
-class TrackContainerController(rootView: View) : ViewController(rootView) {
+class TrackContainerController : ViewController() {
 
     @Inject
     lateinit var timelineViewModel: TimelineViewModel

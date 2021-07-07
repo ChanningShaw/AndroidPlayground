@@ -16,4 +16,5 @@
   <color name="red_dot_color">#F91C1B</color>
 
   <color name="marker_text_style_b_color">#9E5CE6</color>
+  <color name="edit_pop_window_top_bar_color">#1E1E1E</color>
 </resources>

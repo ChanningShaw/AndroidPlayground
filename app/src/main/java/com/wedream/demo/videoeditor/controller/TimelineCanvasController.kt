@@ -1,6 +1,5 @@
 package com.wedream.demo.videoeditor.controller
 
-import android.view.View
 import com.wedream.demo.R
 import com.wedream.demo.app.DeviceParams
 import com.wedream.demo.inject.Inject
@@ -11,7 +10,7 @@ import com.wedream.demo.videoeditor.timeline.config.Config
 import com.wedream.demo.videoeditor.timeline.data.TimelineViewModel
 import com.wedream.demo.view.canvas.MyCanvasView
 
-class TimelineCanvasController(rootView: View) : ViewController(rootView) {
+class TimelineCanvasController : ViewController() {
 
     private lateinit var canvasView: MyCanvasView
 

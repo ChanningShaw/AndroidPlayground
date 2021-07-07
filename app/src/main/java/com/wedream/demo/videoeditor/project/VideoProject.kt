@@ -6,6 +6,7 @@ import com.wedream.demo.util.ToastUtils
 import com.wedream.demo.videoeditor.project.asset.Asset
 import com.wedream.demo.videoeditor.editor.EditorData
 import com.wedream.demo.videoeditor.editor.EditorUpdater
+import com.wedream.demo.videoeditor.project.asset.MainTrackAsset
 import io.reactivex.BackpressureStrategy
 import io.reactivex.subjects.PublishSubject
 
@@ -38,7 +39,7 @@ class VideoProject : ProjectModifyListener {
         val duration = 5.0
         for (i in 0..20) {
             val id = IdUtils.nextId()
-            addAsset(Asset(id, AssetType.Video, duration))
+            addAsset(MainTrackAsset(id, "", AssetType.Video, duration))
             offset += duration
         }
     }

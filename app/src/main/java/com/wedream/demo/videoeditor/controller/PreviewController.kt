@@ -1,13 +1,12 @@
 package com.wedream.demo.videoeditor.controller
 
-import android.view.View
 import android.widget.TextView
 import com.wedream.demo.inject.Inject
 import com.wedream.demo.videoeditor.message.MessageChannel
 import com.wedream.demo.videoeditor.message.TimeLineMessageHelper
 import com.wedream.demo.videoeditor.timeline.data.TimelineViewModel
 
-class PreviewController(rootView: View) : ViewController(rootView) {
+class PreviewController : ViewController() {
 
     lateinit var previewTextView: TextView
 

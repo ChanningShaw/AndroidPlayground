@@ -4,7 +4,14 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 
-abstract class ViewController(private val rootView: View) : Controller() {
+abstract class ViewController : Controller() {
+
+    private lateinit var rootView: View
+
+    fun create(view: View) {
+        rootView = view
+    }
+
     fun getRootView(): View {
         return rootView
     }

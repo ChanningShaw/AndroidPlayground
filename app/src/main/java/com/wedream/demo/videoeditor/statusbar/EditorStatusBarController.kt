@@ -1,6 +1,5 @@
 package com.wedream.demo.videoeditor.statusbar
 
-import android.view.View
 import android.widget.TextView
 import com.wedream.demo.R
 import com.wedream.demo.inject.Inject
@@ -10,7 +9,7 @@ import com.wedream.demo.videoeditor.message.MessageChannel
 import com.wedream.demo.videoeditor.message.TimeLineMessageHelper
 import com.wedream.demo.videoeditor.timeline.data.TimelineViewModel
 
-class EditorStatusBarController(rootView: View) : ViewController(rootView) {
+class EditorStatusBarController : ViewController() {
     @Inject
     lateinit var timelineViewModel: TimelineViewModel
 

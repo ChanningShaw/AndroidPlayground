@@ -46,6 +46,8 @@ class VideoEditorActivity : DisposableActivity() {
     private var scalingStartScale = 1.0
     private var scalingStartScrollX = 0
 
+    val objects = listOf(timelineViewModel, videoEditor)
+
     init {
         videoEditor.timelineViewModel = timelineViewModel
     }
@@ -140,16 +142,20 @@ class VideoEditorActivity : DisposableActivity() {
     }
 
     private fun initControllers() {
-        val objects = arrayOf(timelineViewModel, videoEditor)
-        val trackContainerController = TrackContainerController(timelineAxisView)
+        val trackContainerController = TrackContainerController()
+        trackContainerController.create(timelineAxisView)
         trackContainerController.bind(objects)
-        val timelineCanvasController = TimelineCanvasController(timelineAxisView)
+        val timelineCanvasController = TimelineCanvasController()
+        timelineCanvasController.create(timelineAxisView)
         timelineCanvasController.bind(objects)
-        val menuController = MenuController(menuContainer)
+        val menuController = MenuController()
+        menuController.create(menuContainer)
         menuController.bind(objects)
-        val previewController = PreviewController(preview)
+        val previewController = PreviewController()
+        previewController.create(preview)
         previewController.bind(objects)
-        val editorStatusBarController = EditorStatusBarController(editorStatusBar)
+        val editorStatusBarController = EditorStatusBarController()
+        editorStatusBarController.create(editorStatusBar)
         editorStatusBarController.bind(objects)
     }
 }

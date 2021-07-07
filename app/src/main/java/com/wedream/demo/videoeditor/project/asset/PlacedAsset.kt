@@ -3,7 +3,7 @@ package com.wedream.demo.videoeditor.project.asset
 import com.wedream.demo.util.IdUtils
 import com.wedream.demo.videoeditor.project.AssetType
 
-class PlacedAsset(
+open class PlacedAsset(
     id: Long,
     assetType: AssetType,
     fixDuration: Double,

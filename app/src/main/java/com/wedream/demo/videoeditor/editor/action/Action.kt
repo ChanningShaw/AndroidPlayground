@@ -19,4 +19,6 @@ sealed class Action {
     class SplitAssetAction(val id: Long, val pos: Double) : Action()
 
     class CopyAssetAction(val id: Long) : Action()
+
+    class SpeedAction(val id: Long, val speed: Double) : Action()
 }

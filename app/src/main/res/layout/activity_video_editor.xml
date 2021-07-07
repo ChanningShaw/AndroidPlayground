@@ -19,8 +19,8 @@
     android:id="@+id/editor_status_bar"
     android:layout_width="match_parent"
     android:layout_height="40dp"
-    android:orientation="horizontal"
     android:background="@color/color_gray"
+    android:orientation="horizontal"
     app:layout_constraintBottom_toTopOf="@id/timeline">
 
     <TextView
@@ -28,9 +28,9 @@
       android:layout_width="80dp"
       android:layout_height="match_parent"
       android:layout_gravity="center_vertical"
-      android:textSize="11sp"
+      android:gravity="center"
       android:textColor="@color/color_white"
-      android:gravity="center" />
+      android:textSize="11sp" />
 
   </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -39,7 +39,7 @@
     android:layout_width="match_parent"
     android:layout_height="200dp"
     android:background="@color/color_black"
-    app:layout_constraintBottom_toTopOf="@id/menu_container"
+    app:layout_constraintBottom_toTopOf="@id/menu_scrollview"
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintRight_toRightOf="parent">
 
@@ -88,14 +88,20 @@
 
   </com.wedream.demo.videoeditor.timeline.widget.TimelineAxisView>
 
-  <LinearLayout
-    android:id="@+id/menu_container"
+
+  <HorizontalScrollView
+    android:id="@+id/menu_scrollview"
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:orientation="horizontal"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintRight_toLeftOf="parent">
-  </LinearLayout>
-
+      <LinearLayout
+        android:id="@+id/menu_container"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+      </LinearLayout>
+  </HorizontalScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

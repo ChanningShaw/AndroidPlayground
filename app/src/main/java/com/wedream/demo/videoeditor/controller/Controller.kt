@@ -1,17 +1,24 @@
 package com.wedream.demo.videoeditor.controller
 
 import com.wedream.demo.inject.Inject
-import com.wedream.demo.util.LogUtils.log
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
 abstract class Controller {
 
     private var compositeDisposable = CompositeDisposable()
+    private var objectsContext = arrayListOf<Any>()
 
-    fun bind(objects: Array<Any>) {
-        inject(objects)
+    fun bind(objects: List<Any>?) {
+        objects?.let {
+            objectsContext.addAll(it)
+            inject(this, it)
+        }
         onBind()
+    }
+
+    protected fun getObjectsContext(): List<Any> {
+        return objectsContext
     }
 
     protected open fun onBind() {
@@ -31,18 +38,18 @@ abstract class Controller {
         compositeDisposable.clear()
     }
 
-    private fun inject(objects: Array<Any>){
-        val clazz = this.javaClass
-        val fields = clazz.declaredFields
+    private fun inject(target: Any, objects: List<Any>) {
+        val clazz = target.javaClass
+        val fields = clazz.fields
         for (field in fields) {
             if (field.isAnnotationPresent(Inject::class.java)) {
                 // 有Inject声明
                 val inject = field.getAnnotation(Inject::class.java)
-                log { "fieldType:${field.type}" }
-                log { "inject:$inject" }
+//                log { "fieldType:${field.type}" }
+//                log { "inject:$inject" }
                 for (obj in objects) {
                     if (obj.javaClass == field.type) {
-                        field.set(this, obj)
+                        field.set(target, obj)
                     }
                 }
             }
