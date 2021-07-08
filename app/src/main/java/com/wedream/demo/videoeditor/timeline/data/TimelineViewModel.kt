@@ -1,5 +1,6 @@
 package com.wedream.demo.videoeditor.timeline.data
 
+import android.view.Choreographer
 import androidx.lifecycle.ViewModel
 import com.wedream.demo.app.DeviceParams
 import com.wedream.demo.videoeditor.editor.EditorData

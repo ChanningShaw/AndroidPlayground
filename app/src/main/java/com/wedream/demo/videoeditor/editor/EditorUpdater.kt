@@ -11,6 +11,7 @@ class EditorUpdater(private val editorState: EditorState) {
     private var assetChangedMap = hashMapOf<Asset, ActionType>()
     private var videoEditorListener: EditorUpdateListener? = null
     private var updateListeners = arrayListOf<EditorUpdateListener>()
+    private var pendingActions = arrayListOf<Runnable>()
     private val updateNotifier = EditorUpdateNotifier()
 
     private var frameCallback = Choreographer.FrameCallback {
@@ -43,11 +44,17 @@ class EditorUpdater(private val editorState: EditorState) {
 
         // 1.先更新 videoEditor
         videoEditorListener?.onEditorUpdate(editorData)
-        // 2.在更新 EditorState
+        // 2.再更新 EditorState
         editorState.onEditorUpdate(editorData)
         // 3.最后更新其他listener
         for (l in updateListeners) {
             l.onEditorUpdate(editorData)
+        }
+        // 4.执行pendingActions
+        val actions = pendingActions.toTypedArray()
+        pendingActions.clear()
+        for (action in actions) {
+            action.run()
         }
     }
     fun reset(){
@@ -89,6 +96,10 @@ class EditorUpdater(private val editorState: EditorState) {
 
         fun removeEditorUpdateListener(listener: EditorUpdateListener) {
             updateListeners.remove(listener)
+        }
+
+        fun postAction(runnable: Runnable) {
+            pendingActions.add(runnable)
         }
     }
 

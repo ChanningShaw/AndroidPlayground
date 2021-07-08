@@ -117,6 +117,10 @@ class VideoEditorActivity : DisposableActivity() {
                         }
                     }
                 }
+            } else if (it.what == TimeLineMessageHelper.MSG_TIMELINE_SEEK_TO) {
+                TimeLineMessageHelper.unpackTimelineSeekToMsg(it) {
+                    seekTo(it)
+                }
             }
         })
     }

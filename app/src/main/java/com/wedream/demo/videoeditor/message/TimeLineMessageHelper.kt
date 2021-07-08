@@ -32,6 +32,17 @@ object TimeLineMessageHelper {
         block.invoke(msg.arg1 as Segment)
     }
 
+    fun packTimelineSeekToMsg(pos: Int) : KyMessage {
+        return KyMessage.obtain().apply {
+            what = MSG_TIMELINE_SEEK_TO
+            argi1 = pos
+        }
+    }
+
+    fun unpackTimelineSeekToMsg(msg: KyMessage, block: (pos: Int) -> Unit) {
+        block.invoke(msg.argi1)
+    }
+
     fun packSegmentSelectedMsg(id: Long): KyMessage {
         return KyMessage.obtain().apply {
             what = MSG_SEGMENT_SELECTED

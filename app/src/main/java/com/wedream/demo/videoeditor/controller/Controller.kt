@@ -21,6 +21,15 @@ abstract class Controller {
         return objectsContext
     }
 
+    protected fun <T> getInjectedObject(clazz: Class<T>): T? {
+        for (obj in objectsContext) {
+            if (obj.javaClass == clazz || clazz.isAssignableFrom(obj.javaClass)) {
+                return obj as? T
+            }
+        }
+        return null
+    }
+
     protected open fun onBind() {
 
     }

@@ -1,8 +1,12 @@
 package com.wedream.demo.videoeditor.editor
 
+import android.view.Choreographer
 import com.wedream.demo.util.IdUtils
 import com.wedream.demo.videoeditor.editor.action.Action
+import com.wedream.demo.videoeditor.message.MessageChannel
+import com.wedream.demo.videoeditor.message.TimeLineMessageHelper
 import com.wedream.demo.videoeditor.project.asset.Asset
+import com.wedream.demo.videoeditor.project.asset.operation.ISpeed
 import com.wedream.demo.videoeditor.timeline.data.TimelineViewModel
 
 class EditorGovernor {
@@ -38,6 +42,10 @@ class EditorGovernor {
         return videoEditor.getAssets()
     }
 
+    fun post(runnable: Runnable) {
+        EditorUpdater.getNotifier().postAction(runnable)
+    }
+
     fun handleAction(action: Action) {
         when (action) {
             is Action.AddAssetAction -> {
@@ -53,7 +61,6 @@ class EditorGovernor {
             is Action.DeleteAssetAction -> {
                 videoEditor.deleteAsset(action.id)
             }
-
             is Action.SplitAssetAction -> {
                 val originAsset = videoEditor.getAsset(action.id) ?: return
                 val asset = Asset(
@@ -66,16 +73,42 @@ class EditorGovernor {
                 videoEditor.addAssetAt(asset, getCurrentTime())
                 originAsset.setClipEnd(action.pos)
             }
-
             is Action.CopyAssetAction -> {
                 val originAsset = videoEditor.getAsset(action.id) ?: return
                 val newAsset = originAsset.cloneObject()
                 videoEditor.addAssetAt(newAsset, getCurrentTime())
             }
-
+            is Action.SpeedAction -> {
+                val originAsset = videoEditor.getAsset(action.id) as? ISpeed ?: return
+                originAsset.setSpeed(action.speed)
+                post {
+                    playAsset(action.id)
+                }
+            }
             else -> {
 
             }
         }
+    }
+
+    fun playAsset(id: Long) {
+        timelineViewModel?.getSegment(id)?.let {
+            play(it.left, it.right)
+        }
+    }
+
+    fun play(from: Int, to: Int) {
+        var current = from
+        var callback: Choreographer.FrameCallback? = null
+        callback= Choreographer.FrameCallback {
+            if (current < to) {
+                current += 1
+                MessageChannel.sendMessage(TimeLineMessageHelper.packTimelineSeekToMsg(current))
+                Choreographer.getInstance().postFrameCallback(callback)
+            } else {
+                MessageChannel.sendMessage(TimeLineMessageHelper.packTimelineSeekToMsg(to))
+            }
+        }
+        Choreographer.getInstance().postFrameCallback(callback)
     }
 }

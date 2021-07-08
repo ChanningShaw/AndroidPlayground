@@ -8,26 +8,32 @@ import com.wedream.demo.inject.Inject
 import com.wedream.demo.util.LogUtils.log
 import com.wedream.demo.videoeditor.editor.EditorGovernor
 import com.wedream.demo.videoeditor.editor.VideoEditor
+import com.wedream.demo.videoeditor.editor.action.Action
+import com.wedream.demo.videoeditor.message.MessageChannel
+import com.wedream.demo.videoeditor.message.TimeLineMessageHelper
 import com.wedream.demo.videoeditor.project.asset.operation.ISpeed
 import com.wedream.demo.videoeditor.timeline.data.Segment
+import com.wedream.demo.videoeditor.timeline.data.TimelineViewModel
 
 class SpeedDialogController : DialogController() {
 
     @Inject
-    lateinit var currentSegment: Segment
+    lateinit var editorGovernor: EditorGovernor
 
     @Inject
-    lateinit var editorGovernor: EditorGovernor
+    lateinit var timelineViewModel: TimelineViewModel
+
+    var currentSegmentId = 0L
 
     lateinit var confirmBtn: View
     lateinit var seekBar: SeekBar
     lateinit var speedTextView: TextView
-    lateinit var currentAsset: ISpeed
 
     override fun onBind() {
-        currentAsset = editorGovernor.getAsset(currentSegment.id) as ISpeed
         initViews()
-        log { currentSegment }
+        currentSegmentId = getInjectedObject(Segment::class.java)?.id ?: 0L
+        initSeekBar(currentSegmentId)
+        initListeners()
     }
     private fun initViews() {
         confirmBtn = findViewById(R.id.confirm_bt)
@@ -36,11 +42,6 @@ class SpeedDialogController : DialogController() {
         confirmBtn.setOnClickListener {
             dialog.dismiss()
         }
-        val currentSpeed = currentAsset.getSpeed()
-        speedTextView.text = currentSpeed.toString()
-        val value = speedToProgress(currentSpeed)
-        log { "value = $value" }
-        seekBar.progress = value
         seekBar.setOnSeekBarChangeListener(object :SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
 
@@ -53,9 +54,23 @@ class SpeedDialogController : DialogController() {
             override fun onStopTrackingTouch(seekBar: SeekBar) {
                 val speed = progressToSpeed(seekBar.progress)
                 speedTextView.text = speed.toString()
-                currentAsset.setSpeed(speed)
+                editorGovernor.handleAction(Action.SpeedAction(currentSegmentId, speed))
             }
         })
+    }
+
+    private fun initSeekBar(id: Long){
+        val currentSpeed = (editorGovernor.getAsset(id) as? ISpeed)?.getSpeed() ?: 1.0
+        speedTextView.text = currentSpeed.toString()
+        val value = speedToProgress(currentSpeed)
+        seekBar.progress = value
+    }
+
+    private fun initListeners() {
+        MessageChannel.subscribe(TimeLineMessageHelper.MSG_TIMELINE_CHANGED) {
+            currentSegmentId = timelineViewModel.getCurrentSegment()?.id ?: 0L
+            initSeekBar(currentSegmentId)
+        }
     }
 
     private fun speedToProgress(speed: Double): Int {
