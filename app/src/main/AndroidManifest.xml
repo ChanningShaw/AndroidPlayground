@@ -3,7 +3,7 @@
   package="com.wedream.demo">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
       android:name=".app.MyApplication"
@@ -38,7 +38,8 @@
         <activity android:name=".view.newtips.NewTipsActivity" />
         <activity android:name=".view.TabLayoutActivity" />
         <activity android:name=".view.ViewPagerActivity" />
-        <activity android:name=".view.multitrack.TrackActivity"
+        <activity
+          android:name=".view.multitrack.TrackActivity"
           android:screenOrientation="landscape" />
         <activity android:name=".view.HorizontalScrollActivity" />
         <activity android:name=".app.CategoryActivity" />
@@ -59,11 +60,13 @@
         <activity android:name=".view.colormatrix.ColorHueActivity" />
         <activity android:name=".view.colormatrix.ColorFilterActivity" />
         <activity android:name=".videoeditor.VideoEditorActivity" />
-        <activity android:name=".view.canvas.CanvasActivity" />
+        <activity android:name=".view.canvas.DrawViewActivity" />
         <activity android:name=".view.TranslateActivity" />
-      <activity android:name=".lifecycle.BadWindowTokenActivity" />
-      <activity android:name=".media.AudioRecordActivity" />
-      <activity android:name=".inject.AnnotationTestActivity" /><activity android:name=".view.RefreshRateActivity" />
+        <activity android:name=".lifecycle.BadWindowTokenActivity" />
+        <activity android:name=".media.AudioRecordActivity" />
+        <activity android:name=".inject.AnnotationTestActivity" />
+        <activity android:name=".view.RefreshRateActivity" />
+        <activity android:name=".view.OutlineActivity" />
     </application>
 
 </manifest>

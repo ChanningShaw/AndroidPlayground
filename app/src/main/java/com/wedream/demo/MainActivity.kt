@@ -28,7 +28,7 @@ import com.wedream.demo.render.gl3.GLColorActivity
 import com.wedream.demo.util.LogUtils.log
 import com.wedream.demo.videoeditor.VideoEditorActivity
 import com.wedream.demo.view.*
-import com.wedream.demo.view.canvas.CanvasActivity
+import com.wedream.demo.view.canvas.DrawViewActivity
 import com.wedream.demo.view.colormatrix.ColorMatrixCategoryActivity
 import com.wedream.demo.view.multitrack.TrackActivity
 import com.wedream.demo.view.newtips.NewTipsActivity
@@ -74,9 +74,10 @@ class MainActivity : CategoryActivity() {
                 InterceptEventActivity::class.java,
                 LottieActivity::class.java,
                 ColorMatrixCategoryActivity::class.java,
-                CanvasActivity::class.java,
+                DrawViewActivity::class.java,
                 TranslateActivity::class.java,
-                RefreshRateActivity::class.java
+                RefreshRateActivity::class.java,
+                OutlineActivity::class.java
             )
         )
         val lifecycle = Category("lifecycle").addComponentCategories(
