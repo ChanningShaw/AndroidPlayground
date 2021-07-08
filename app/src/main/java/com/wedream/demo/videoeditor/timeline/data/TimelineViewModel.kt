@@ -1,11 +1,10 @@
 package com.wedream.demo.videoeditor.timeline.data
 
-import android.view.Choreographer
 import androidx.lifecycle.ViewModel
 import com.wedream.demo.app.DeviceParams
 import com.wedream.demo.videoeditor.editor.EditorData
-import com.wedream.demo.videoeditor.editor.EditorUpdater
 import com.wedream.demo.videoeditor.editor.EditorGovernor
+import com.wedream.demo.videoeditor.editor.EditorUpdater
 import com.wedream.demo.videoeditor.message.MessageChannel
 import com.wedream.demo.videoeditor.message.TimeLineMessageHelper
 import com.wedream.demo.videoeditor.project.ActionEvent
@@ -13,7 +12,6 @@ import com.wedream.demo.videoeditor.project.ActionType
 import com.wedream.demo.videoeditor.project.asset.Asset
 import com.wedream.demo.videoeditor.project.asset.MainTrackAsset
 import com.wedream.demo.videoeditor.project.asset.PlacedAsset
-import com.wedream.demo.videoeditor.project.asset.operation.ISpeed
 import com.wedream.demo.videoeditor.timeline.utils.TimeRange
 import com.wedream.demo.videoeditor.timeline.utils.TimelineUtils
 
@@ -26,7 +24,7 @@ class TimelineViewModel(private val editorGovernor: EditorGovernor) : ViewModel(
     private var visibleRange = TimeRange(-DeviceParams.SCREEN_WIDTH, DeviceParams.SCREEN_WIDTH * 2)
 
     init {
-        EditorUpdater.getNotifier().registerEditorUpdateListener(object : EditorUpdater.EditorUpdateListener{
+        EditorUpdater.getNotifier().registerEditorUpdateListener(object : EditorUpdater.EditorUpdateListener {
             override fun onEditorUpdate(data: EditorData) {
                 updateTimeline(data)
             }
@@ -45,11 +43,7 @@ class TimelineViewModel(private val editorGovernor: EditorGovernor) : ViewModel(
                 val asset = editorGovernor.getAsset(event.id) ?: continue
                 if (asset is PlacedAsset) {
                     val start = TimelineUtils.time2Width(asset.getStart(), scale)
-                    val end = if (asset is ISpeed) {
-                        start + TimelineUtils.time2Width(asset.duration / asset.getSpeed(), scale)
-                    } else {
-                        TimelineUtils.time2Width(asset.getEnd(), scale)
-                    }
+                    val end = TimelineUtils.time2Width(asset.getEnd(), scale)
                     segmentMap[asset.id]?.let {
                         it.left = start
                         it.right = end
@@ -62,11 +56,7 @@ class TimelineViewModel(private val editorGovernor: EditorGovernor) : ViewModel(
             val assets = editorGovernor.getAssets()
             var assetStart = 0.0
             for (asset in assets) {
-                val realDuration = if (asset is ISpeed) {
-                    asset.duration / asset.getSpeed()
-                } else {
-                    asset.duration
-                }
+                val realDuration = asset.duration
                 val start = TimelineUtils.time2Width(assetStart, scale)
                 val end = start + TimelineUtils.time2Width(realDuration, scale)
                 segmentMap[asset.id]?.let {
@@ -82,15 +72,9 @@ class TimelineViewModel(private val editorGovernor: EditorGovernor) : ViewModel(
 
     private fun addSegment(asset: Asset) {
         if (asset is PlacedAsset) {
-            if (asset is ISpeed) {
-                val start = TimelineUtils.time2Width(asset.getStart(), scale)
-                val end = start + TimelineUtils.time2Width(asset.duration / asset.getSpeed(), scale)
-                segmentMap[asset.id] = generateSegment(asset, start, end)
-            } else {
-                val start = TimelineUtils.time2Width(asset.getStart(), scale)
-                val end = start + TimelineUtils.time2Width(asset.getEnd(), scale)
-                segmentMap[asset.id] = generateSegment(asset, start, end)
-            }
+            val start = TimelineUtils.time2Width(asset.getStart(), scale)
+            val end = start + TimelineUtils.time2Width(asset.getEnd(), scale)
+            segmentMap[asset.id] = generateSegment(asset, start, end)
         } else {
             segmentMap[asset.id] = generateSegment(asset, 0, 0)
         }

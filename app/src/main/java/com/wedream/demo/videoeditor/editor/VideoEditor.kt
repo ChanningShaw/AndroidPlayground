@@ -2,7 +2,6 @@ package com.wedream.demo.videoeditor.editor
 
 import com.wedream.demo.videoeditor.project.VideoProject
 import com.wedream.demo.videoeditor.project.asset.Asset
-import com.wedream.demo.videoeditor.project.asset.operation.ISpeed
 
 internal class VideoEditor : IEditor {
 
@@ -17,11 +16,7 @@ internal class VideoEditor : IEditor {
             override fun onEditorUpdate(data: EditorData) {
                 projectDuration = 0.0
                 for (asset in getAssets()) {
-                    projectDuration += if (asset is ISpeed) {
-                        asset.duration / asset.getSpeed()
-                    } else {
-                        asset.duration
-                    }
+                    projectDuration += asset.duration
                 }
             }
         }, true)

@@ -11,6 +11,9 @@ class PipAsset(
     start: Double, end: Double
 ) : PlacedAsset(id, AssetType.Video, fixDuration, start, end), ISpeed {
 
+    override val duration: Double
+        get() = super.duration / getSpeed()
+
     private val speedImpl = SpeedImpl(this)
 
     override fun setSpeed(speed: Double) {

@@ -13,6 +13,9 @@ class MainTrackAsset(
 
     private val speedImpl = SpeedImpl(this)
 
+    override val duration: Double
+        get() = super.duration / getSpeed()
+
     override fun setSpeed(speed: Double) {
         speedImpl.setSpeed(speed)
     }
