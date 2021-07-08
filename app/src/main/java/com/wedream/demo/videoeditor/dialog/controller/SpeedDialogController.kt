@@ -6,6 +6,7 @@ import android.widget.TextView
 import com.wedream.demo.R
 import com.wedream.demo.inject.Inject
 import com.wedream.demo.util.LogUtils.log
+import com.wedream.demo.videoeditor.const.Constants
 import com.wedream.demo.videoeditor.editor.EditorGovernor
 import com.wedream.demo.videoeditor.editor.VideoEditor
 import com.wedream.demo.videoeditor.editor.action.Action
@@ -23,7 +24,7 @@ class SpeedDialogController : DialogController() {
     @Inject
     lateinit var timelineViewModel: TimelineViewModel
 
-    var currentSegmentId = 0L
+    var currentSegmentId = Constants.INVALID_ID
 
     lateinit var confirmBtn: View
     lateinit var seekBar: SeekBar
@@ -31,7 +32,7 @@ class SpeedDialogController : DialogController() {
 
     override fun onBind() {
         initViews()
-        currentSegmentId = getInjectedObject(Segment::class.java)?.id ?: 0L
+        currentSegmentId = getInjectedObject(Segment::class.java)?.id ?: Constants.INVALID_ID
         initSeekBar(currentSegmentId)
         initListeners()
     }
@@ -68,8 +69,11 @@ class SpeedDialogController : DialogController() {
 
     private fun initListeners() {
         MessageChannel.subscribe(TimeLineMessageHelper.MSG_TIMELINE_CHANGED) {
-            currentSegmentId = timelineViewModel.getCurrentSegment()?.id ?: 0L
-            initSeekBar(currentSegmentId)
+            val newSegmentId = timelineViewModel.getCurrentSegment()?.id ?: Constants.INVALID_ID
+            if (newSegmentId != currentSegmentId) {
+                currentSegmentId = newSegmentId
+                initSeekBar(currentSegmentId)
+            }
         }
     }
 

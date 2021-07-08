@@ -2,6 +2,7 @@ package com.wedream.demo.videoeditor.controller
 
 import android.widget.TextView
 import com.wedream.demo.inject.Inject
+import com.wedream.demo.videoeditor.const.Constants
 import com.wedream.demo.videoeditor.message.MessageChannel
 import com.wedream.demo.videoeditor.message.TimeLineMessageHelper
 import com.wedream.demo.videoeditor.timeline.data.TimelineViewModel
@@ -12,6 +13,8 @@ class PreviewController : ViewController() {
 
     @Inject
     lateinit var timelineViewModel: TimelineViewModel
+
+    var currentSegmentId = Constants.INVALID_ID
 
     override fun onBind() {
         super.onBind()
@@ -25,8 +28,10 @@ class PreviewController : ViewController() {
     }
 
     private fun updatePreview() {
-        timelineViewModel.getCurrentSegment()?.let {
-            previewTextView.text = it.id.toString()
+        val newSegmentId = timelineViewModel.getCurrentSegment()?.id ?: Constants.INVALID_ID
+        if (currentSegmentId != newSegmentId) {
+            currentSegmentId = newSegmentId
+            previewTextView.text = currentSegmentId.toString()
         }
     }
 }

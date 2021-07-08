@@ -120,8 +120,10 @@ class TrackContainerController : ViewController() {
             addSegmentView(segment)
         }, { segmentView ->
             segmentView.layoutParams?.let {
-                it.width = segment.width
-                segmentView.layoutParams = it
+                if (it.width != segment.width) {
+                    it.width = segment.width
+                    segmentView.layoutParams = it
+                }
             }
             bindSegmentView(segmentView, segment)
         })

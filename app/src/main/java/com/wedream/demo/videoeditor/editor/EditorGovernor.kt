@@ -102,7 +102,7 @@ class EditorGovernor {
         var callback: Choreographer.FrameCallback? = null
         callback= Choreographer.FrameCallback {
             if (current < to) {
-                current += 1
+                current += 5
                 MessageChannel.sendMessage(TimeLineMessageHelper.packTimelineSeekToMsg(current))
                 Choreographer.getInstance().postFrameCallback(callback)
             } else {

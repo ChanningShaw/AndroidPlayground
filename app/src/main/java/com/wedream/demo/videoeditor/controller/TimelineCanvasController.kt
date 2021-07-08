@@ -30,7 +30,7 @@ class TimelineCanvasController : ViewController() {
             if (it.what == TimeLineMessageHelper.MSG_TIMELINE_CHANGED) {
                 TimeLineMessageHelper.unpackTimelineChangedMessage(it) {
                     lastSelectedId = it.currentSelectedId
-                    invalidateHighlight()
+//                    invalidateHighlight()
                 }
             }
         }
