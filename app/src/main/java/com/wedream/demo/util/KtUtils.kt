@@ -8,4 +8,8 @@ object KtUtils {
             block.invoke(this)
         }
     }
+
+    fun <T> Any?.asTo(): T? {
+        return this as? T
+    }
 }

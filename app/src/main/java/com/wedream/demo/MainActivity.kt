@@ -77,7 +77,9 @@ class MainActivity : CategoryActivity() {
                 DrawViewActivity::class.java,
                 TranslateActivity::class.java,
                 RefreshRateActivity::class.java,
-                OutlineActivity::class.java
+                OutlineActivity::class.java,
+                CanvasBitmapActivity::class.java,
+                WaveView2Activity::class.java
             )
         )
         val lifecycle = Category("lifecycle").addComponentCategories(

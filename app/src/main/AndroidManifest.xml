@@ -67,6 +67,8 @@
         <activity android:name=".inject.AnnotationTestActivity" />
         <activity android:name=".view.RefreshRateActivity" />
         <activity android:name=".view.OutlineActivity" />
+        <activity android:name=".view.CanvasBitmapActivity" />
+        <activity android:name=".render.WaveView2Activity" />
     </application>
 
 </manifest>

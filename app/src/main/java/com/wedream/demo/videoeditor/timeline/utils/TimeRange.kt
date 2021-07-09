@@ -6,6 +6,9 @@ class TimeRange(var left: Int, var right: Int) {
         checkRange()
     }
 
+    val duration
+        get() = right - left
+
     fun set(left: Int, right: Int) {
         this.left = left
         this.right = right
@@ -18,7 +21,7 @@ class TimeRange(var left: Int, var right: Int) {
     }
 
     fun overlap(left: Int, right: Int): Boolean {
-        return !(right < this.left || left > this.right)
+        return !(right <= this.left || left >= this.right)
     }
 
     private fun checkRange() {
