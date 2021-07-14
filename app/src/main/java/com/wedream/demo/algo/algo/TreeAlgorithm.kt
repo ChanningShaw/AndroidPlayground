@@ -7,6 +7,7 @@ object TreeAlgorithm {
     fun getModels(): List<AlgorithmModel> {
         return listOf(
             TreeTraverse(),
+            TreeSerialize(),
             GetTreeLevel(),
             UpdateTreeNodeLevel(),
             PrintTreeNode(),

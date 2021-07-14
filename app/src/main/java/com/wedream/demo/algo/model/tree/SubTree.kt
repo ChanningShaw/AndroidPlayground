@@ -41,7 +41,7 @@ class SubTree : AlgorithmModel() {
         n22.right = n25
         n24.right = n28
         n25.left = n29
-        val output = n22.isSubTreeOf(n1)
+        val output = n22.isSubTreeOf1(n1)
         return Pair("${n1.string()}\n ${n22.string()}", output.string())
     }
 
@@ -61,12 +61,22 @@ class SubTree : AlgorithmModel() {
 /**
  * root 是不是当前树的子树
  */
-fun <T> BinaryTree.Node<T>?.isSubTreeOf(that: BinaryTree.Node<T>?): Boolean {
+fun <T> BinaryTree.Node<T>?.isSubTreeOf1(that: BinaryTree.Node<T>?): Boolean {
     if (this == null) {
         return true
     }
     if (that == null) {
         return false
     }
-    return subTree(this, that) || isSubTreeOf(that.left) || isSubTreeOf(that.right)
+    return subTree(this, that) || isSubTreeOf1(that.left) || isSubTreeOf1(that.right)
+}
+
+fun <T> BinaryTree.Node<T>?.isSubTreeOf2(that: BinaryTree.Node<T>?): Boolean {
+    if (this == null) {
+        return true
+    }
+    if (that == null) {
+        return false
+    }
+    return false
 }

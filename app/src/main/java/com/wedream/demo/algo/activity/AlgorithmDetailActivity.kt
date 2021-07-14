@@ -91,7 +91,7 @@ class AlgorithmDetailActivity : AppCompatActivity() {
         executeButton.setOnClickListener {
             val item = optionsSelector.selectedItemPosition
             var option: Option? = null
-            if (item > 0) {
+            if (item >= 0) {
                 option = options[item]
             }
             val result = model.execute(option)
