@@ -9,13 +9,15 @@ import java.util.*
 import kotlin.math.max
 import kotlin.math.min
 
-class TowErrorNodesOfBST : AlgorithmModel() {
+class TwoErrorNodesOfBST : AlgorithmModel() {
     override var name = "找到并调整搜索二叉树中两个错误节点"
 
     override var title = "一颗二叉树原本是搜索二叉树，但是其中有两个节点调整了位置，" +
             "请找到这两个节点并返回。"
 
-    override var tips = ""
+    override var tips = "如果是搜索二叉树，那么按中序遍历，会的一个得升序的序列。" +
+            "现在因为两个节点对换了，这个序列中起码会有一个降序，那么第一个错误节点就是，" +
+            "第一次降序时较大的节点，第二个节点是最后一次降序时较小的节点（分别位于两端）"
 
 
     override fun execute(option: Option?): Pair<String, String> {

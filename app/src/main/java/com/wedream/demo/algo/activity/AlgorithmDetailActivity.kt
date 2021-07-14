@@ -33,10 +33,10 @@ class AlgorithmDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        var algoType = intent.extras?.getString(KEY_ALGO_TYPE, TYPE_LINEAR) ?: TYPE_LINEAR
+        var algoType = intent.extras?.getString(KEY_ALGO_TYPE, TYPE_LINEAR) ?: ""
         var index = intent.extras?.getInt(KEY_INDEX, -1) ?: -1
 
-        if (algoType == TYPE_LINEAR) {
+        if (algoType.isEmpty()) {
             algoType = mmkv.getString(KEY_ALGO_TYPE, TYPE_LINEAR) ?: TYPE_LINEAR
         } else {
             mmkv.putString(KEY_ALGO_TYPE, algoType)

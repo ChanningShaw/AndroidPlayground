@@ -2,6 +2,7 @@ package com.wedream.demo.algo.algo
 
 import com.wedream.demo.algo.model.*
 import com.wedream.demo.algo.model.array.*
+import com.wedream.demo.algo.model.classics.KMP
 import com.wedream.demo.algo.model.list.*
 
 object LinearAlgorithm {
@@ -21,7 +22,8 @@ object LinearAlgorithm {
             DeleteDuplicateNodeInList(),
             DeleteNodeInList(),
             InsertIntoOrderCircleList(),
-            MergeOrderedList()
+            MergeOrderedList(),
+            KMP()
         )
     }
 }

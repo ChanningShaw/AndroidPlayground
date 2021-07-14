@@ -13,7 +13,9 @@ object TreeAlgorithm {
             GetMaxLengthWithSum(),
             MaxBST(),
             MaxBSTTopology(),
-            TowErrorNodesOfBST()
+            TwoErrorNodesOfBST(),
+            TreeContains(),
+            SubTree()
         )
     }
 }
