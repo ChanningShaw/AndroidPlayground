@@ -96,7 +96,7 @@ class TreeTraverse : AlgorithmModel() {
                     builder.append(it.value)
                 }
             } else {
-                midTraverseRecur(root) {
+                midTraverseNonRecur(root) {
                     builder.append(it.value)
                 }
             }
@@ -180,7 +180,7 @@ class TreeTraverse : AlgorithmModel() {
         /**
          * 使用栈和一个当前指针实现
          */
-        fun <T> midTraverseRecur(
+        fun <T> midTraverseNonRecur(
             root: BinaryTree.Node<T>?,
             block: (node: BinaryTree.Node<T>) -> Unit
         ) {

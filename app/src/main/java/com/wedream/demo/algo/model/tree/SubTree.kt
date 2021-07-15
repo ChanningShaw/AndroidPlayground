@@ -3,6 +3,7 @@ package com.wedream.demo.algo.model.tree
 import com.wedream.demo.algo.model.AlgorithmModel
 import com.wedream.demo.algo.model.ExecuteResult
 import com.wedream.demo.algo.model.Option
+import com.wedream.demo.algo.model.classics.KMP
 import com.wedream.demo.algo.model.tree.SubTree.Companion.subTree
 import com.wedream.demo.algo.structure.BinaryTree
 import com.wedream.demo.util.string
@@ -42,7 +43,7 @@ class SubTree : AlgorithmModel() {
         n22.right = n25
         n24.right = n28
         n25.left = n29
-        val output = n22.isSubTreeOf1(n1)
+        val output = n22.isSubTreeOf2(n1)
         return ExecuteResult("${n1.string()}\n ${n22.string()}", output.string())
     }
 
@@ -79,5 +80,7 @@ fun <T> BinaryTree.Node<T>?.isSubTreeOf2(that: BinaryTree.Node<T>?): Boolean {
     if (that == null) {
         return false
     }
-    return false
+    val thisString = TreeSerialize.serializeByPre(this)
+    val thatString = TreeSerialize.serializeByPre(that)
+    return KMP.getIndexOf(thatString, thisString) != -1
 }
