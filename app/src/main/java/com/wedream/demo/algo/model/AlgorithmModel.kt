@@ -9,10 +9,12 @@ abstract class AlgorithmModel(
         return emptyList()
     }
 
-    abstract fun execute(option: Option?): Pair<String, String>
+    abstract fun execute(option: Option?): ExecuteResult
 }
 
 class Option(
     val id: Int,
     val name: String
 )
+
+class ExecuteResult(val input: String, val output: String)

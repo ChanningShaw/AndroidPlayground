@@ -1,6 +1,7 @@
 package com.wedream.demo.algo.model.tree
 
 import com.wedream.demo.algo.model.AlgorithmModel
+import com.wedream.demo.algo.model.ExecuteResult
 import com.wedream.demo.algo.model.Option
 import com.wedream.demo.algo.structure.BinaryTree
 import com.wedream.demo.util.string
@@ -33,7 +34,7 @@ class TreeTraverse : AlgorithmModel() {
         return optionList
     }
 
-    override fun execute(option: Option?): Pair<String, String> {
+    override fun execute(option: Option?): ExecuteResult {
         val root = BinaryTree.Node(0)
         val n1 = BinaryTree.Node(1)
         val n2 = BinaryTree.Node(2)
@@ -70,7 +71,7 @@ class TreeTraverse : AlgorithmModel() {
                 preTraverse(root, Mode.Recur)
             }
         }
-        return Pair(root.string(), output)
+        return ExecuteResult(root.string(), output)
     }
 
     companion object {

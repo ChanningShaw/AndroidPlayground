@@ -1,6 +1,7 @@
 package com.wedream.demo.algo.model.list
 
 import com.wedream.demo.algo.model.AlgorithmModel
+import com.wedream.demo.algo.model.ExecuteResult
 import com.wedream.demo.algo.model.Option
 import com.wedream.demo.algo.structure.LinkedList
 import com.wedream.demo.util.string
@@ -15,7 +16,7 @@ class DeleteNodeInList : AlgorithmModel() {
     override var tips = "顺序遍历，找到第一个不为num的节点作为头结点，\n" +
             "然后再继续遍历，如果节点为num，删除即可"
 
-    override fun execute(option: Option?): Pair<String, String> {
+    override fun execute(option: Option?): ExecuteResult {
         val head = LinkedList.Node(1)
         val n1 = LinkedList.Node(2)
         val n2 = LinkedList.Node(3)
@@ -28,7 +29,7 @@ class DeleteNodeInList : AlgorithmModel() {
         val input = head.string()
         val num = 3
         deleteNum(head, num)
-        return Pair("$input, $num", head.string())
+        return ExecuteResult("$input, $num", head.string())
     }
 
     companion object {

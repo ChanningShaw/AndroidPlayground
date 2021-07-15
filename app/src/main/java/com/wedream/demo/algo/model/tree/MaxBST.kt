@@ -1,6 +1,7 @@
 package com.wedream.demo.algo.model.tree
 
 import com.wedream.demo.algo.model.AlgorithmModel
+import com.wedream.demo.algo.model.ExecuteResult
 import com.wedream.demo.algo.model.Option
 import com.wedream.demo.algo.structure.BinaryTree
 import com.wedream.demo.util.string
@@ -22,7 +23,7 @@ class MaxBST : AlgorithmModel() {
             "所需要的最大最小值max、min"
 
 
-    override fun execute(option: Option?): Pair<String, String> {
+    override fun execute(option: Option?): ExecuteResult {
         val root = BinaryTree.Node(6)
         val n0 = BinaryTree.Node(0)
         val n1 = BinaryTree.Node(1)
@@ -59,7 +60,7 @@ class MaxBST : AlgorithmModel() {
         n13.left = n20
         n13.right = n16
         val output = getMaxBSTSize(root)
-        return Pair(root.string(), output.string())
+        return ExecuteResult(root.string(), output.string())
     }
 
     companion object {

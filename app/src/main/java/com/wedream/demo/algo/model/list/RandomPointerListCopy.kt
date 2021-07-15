@@ -1,6 +1,7 @@
 package com.wedream.demo.algo.model.list
 
 import com.wedream.demo.algo.model.AlgorithmModel
+import com.wedream.demo.algo.model.ExecuteResult
 import com.wedream.demo.algo.model.Option
 import com.wedream.demo.algo.structure.LinkedList
 import com.wedream.demo.util.string
@@ -19,7 +20,7 @@ class RandomPointerListCopy : AlgorithmModel() {
             "新节点的next = 原节点的next对应的新节点\n" +
             "新节点的rand = 原节点的rand对应的新节点\n"
 
-    override fun execute(option: Option?): Pair<String, String> {
+    override fun execute(option: Option?): ExecuteResult {
         val head = LinkedList.Node(1)
         val n1 = LinkedList.Node(2)
         val n2 = LinkedList.Node(3)
@@ -33,7 +34,7 @@ class RandomPointerListCopy : AlgorithmModel() {
         n3.rand = n1
         val input = head.string()
         val output = copyListWithRand2(head)
-        return Pair(input, output.string())
+        return ExecuteResult(input, output.string())
     }
 
     companion object {

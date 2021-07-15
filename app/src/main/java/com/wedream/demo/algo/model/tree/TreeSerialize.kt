@@ -1,6 +1,7 @@
 package com.wedream.demo.algo.model.tree
 
 import com.wedream.demo.algo.model.AlgorithmModel
+import com.wedream.demo.algo.model.ExecuteResult
 import com.wedream.demo.algo.model.Option
 import com.wedream.demo.algo.structure.BinaryTree
 import com.wedream.demo.util.string
@@ -22,7 +23,7 @@ class TreeSerialize : AlgorithmModel() {
         )
     }
 
-    override fun execute(option: Option?): Pair<String, String> {
+    override fun execute(option: Option?): ExecuteResult {
         when (option?.id) {
             0 -> {
                 return serialize()
@@ -30,13 +31,13 @@ class TreeSerialize : AlgorithmModel() {
             1 -> {
                 val input = "0!1!3!#!#!4!#!#!2!#!#!"
                 val head = recoverPreOrder(input)
-                return Pair(input, head.string())
+                return ExecuteResult(input, head.string())
             }
         }
         return serialize()
     }
 
-    private fun serialize(): Pair<String, String> {
+    private fun serialize(): ExecuteResult {
         val root = BinaryTree.Node(0)
         val n1 = BinaryTree.Node(1)
         val n2 = BinaryTree.Node(2)
@@ -47,7 +48,7 @@ class TreeSerialize : AlgorithmModel() {
         n1.left = n3
         n1.right = n4
         val output = serializeByPre(root)
-        return Pair(root.string(), output)
+        return ExecuteResult(root.string(), output)
     }
 
     companion object {

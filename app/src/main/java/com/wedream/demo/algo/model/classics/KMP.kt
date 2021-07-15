@@ -1,6 +1,7 @@
 package com.wedream.demo.algo.model.classics
 
 import com.wedream.demo.algo.model.AlgorithmModel
+import com.wedream.demo.algo.model.ExecuteResult
 import com.wedream.demo.algo.model.Option
 
 class KMP : AlgorithmModel() {
@@ -13,11 +14,11 @@ class KMP : AlgorithmModel() {
             "构建数组nextArr，nextArr[i]表示以match[0]开头的前缀串" +
             "和以match[i-1]为结尾的后缀串的最大匹配长度是多。，"
 
-    override fun execute(option: Option?): Pair<String, String> {
+    override fun execute(option: Option?): ExecuteResult {
         val s = "1231231241231235"
         val m = "1231241231235"
         val output = getIndexOf(s, m)
-        return Pair("$s, $m", output.toString())
+        return ExecuteResult("$s, $m", output.toString())
     }
 
     companion object {

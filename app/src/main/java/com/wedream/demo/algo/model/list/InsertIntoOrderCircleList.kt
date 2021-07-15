@@ -1,6 +1,7 @@
 package com.wedream.demo.algo.model.list
 
 import com.wedream.demo.algo.model.AlgorithmModel
+import com.wedream.demo.algo.model.ExecuteResult
 import com.wedream.demo.algo.model.Option
 import com.wedream.demo.algo.structure.LinkedList
 import com.wedream.demo.util.string
@@ -19,7 +20,7 @@ class InsertIntoOrderCircleList : AlgorithmModel() {
             "插入位置的条件为pre <= num <= cur，\n" +
             "如果没有找到，应该在尾部插入，并返回新节点和头结点较小者为新的头结点。"
 
-    override fun execute(option: Option?): Pair<String, String> {
+    override fun execute(option: Option?): ExecuteResult {
         val head = LinkedList.Node(1)
         val n1 = LinkedList.Node(2)
         val n2 = LinkedList.Node(2)
@@ -35,7 +36,7 @@ class InsertIntoOrderCircleList : AlgorithmModel() {
         val input = head.string()
         val num = 5
         insertInto(head, num)
-        return Pair("$input, $num", head.string())
+        return ExecuteResult("$input, $num", head.string())
     }
 
     companion object {

@@ -1,6 +1,7 @@
 package com.wedream.demo.algo.model.array
 
 import com.wedream.demo.algo.model.AlgorithmModel
+import com.wedream.demo.algo.model.ExecuteResult
 import com.wedream.demo.algo.model.Option
 import com.wedream.demo.util.string
 import java.util.*
@@ -21,10 +22,10 @@ class MaxValuesInSlidingWindow : AlgorithmModel() {
             "    如果是的话说明此时队头已经不在当前窗口的范围内，删去。\n" +
             "    这样，这个队列就成了一个维护窗口为w的子数组的最大值更新的结构，队头元素就是每个窗口的最大值。"
 
-    override fun execute(option: Option?): Pair<String, String> {
+    override fun execute(option: Option?): ExecuteResult {
         val input = intArrayOf(4, 3, 5, 4, 3, 3, 6, 7)
         val result = execute(input, 3)
-        return Pair(input.string() + ", 3", result.string())
+        return ExecuteResult(input.string() + ", 3", result.string())
     }
 
     companion object {

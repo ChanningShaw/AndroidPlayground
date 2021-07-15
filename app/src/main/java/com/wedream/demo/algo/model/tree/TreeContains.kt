@@ -1,6 +1,7 @@
 package com.wedream.demo.algo.model.tree
 
 import com.wedream.demo.algo.model.AlgorithmModel
+import com.wedream.demo.algo.model.ExecuteResult
 import com.wedream.demo.algo.model.Option
 import com.wedream.demo.algo.model.tree.TreeContains.Companion.checkContains
 import com.wedream.demo.algo.structure.BinaryTree
@@ -18,7 +19,7 @@ class TreeContains : AlgorithmModel() {
     override var tips = ""
 
 
-    override fun execute(option: Option?): Pair<String, String> {
+    override fun execute(option: Option?): ExecuteResult {
         val n1 = BinaryTree.Node(1)
         val n2 = BinaryTree.Node(2)
         val n3 = BinaryTree.Node(3)
@@ -47,7 +48,7 @@ class TreeContains : AlgorithmModel() {
         n22.right = n25
         n24.left = n28
         val output = n1.contains(n22)
-        return Pair("${n1.string()}\n ${n22.string()}", output.string())
+        return ExecuteResult("${n1.string()}\n ${n22.string()}", output.string())
     }
 
     companion object {

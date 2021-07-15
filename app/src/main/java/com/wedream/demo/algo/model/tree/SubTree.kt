@@ -1,6 +1,7 @@
 package com.wedream.demo.algo.model.tree
 
 import com.wedream.demo.algo.model.AlgorithmModel
+import com.wedream.demo.algo.model.ExecuteResult
 import com.wedream.demo.algo.model.Option
 import com.wedream.demo.algo.model.tree.SubTree.Companion.subTree
 import com.wedream.demo.algo.structure.BinaryTree
@@ -13,7 +14,7 @@ class SubTree : AlgorithmModel() {
 
     override var tips = ""
 
-    override fun execute(option: Option?): Pair<String, String> {
+    override fun execute(option: Option?): ExecuteResult {
         val n1 = BinaryTree.Node(1)
         val n2 = BinaryTree.Node(2)
         val n3 = BinaryTree.Node(3)
@@ -42,7 +43,7 @@ class SubTree : AlgorithmModel() {
         n24.right = n28
         n25.left = n29
         val output = n22.isSubTreeOf1(n1)
-        return Pair("${n1.string()}\n ${n22.string()}", output.string())
+        return ExecuteResult("${n1.string()}\n ${n22.string()}", output.string())
     }
 
     companion object {

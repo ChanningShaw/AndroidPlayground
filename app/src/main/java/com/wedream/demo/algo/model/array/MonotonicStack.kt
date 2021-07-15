@@ -1,6 +1,7 @@
 package com.wedream.demo.algo.model.array
 
 import com.wedream.demo.algo.model.AlgorithmModel
+import com.wedream.demo.algo.model.ExecuteResult
 import com.wedream.demo.algo.model.Option
 import com.wedream.demo.util.string
 import java.util.*
@@ -17,10 +18,10 @@ class MonotonicStack : AlgorithmModel() {
             "如果i对应的值比栈顶小，那么弹出栈顶，左边比栈顶其小的位置就是栈顶的下一个位置（单调递减）\n" +
             "右边比栈顶小的位置就是当前入栈位置i"
 
-    override fun execute(option: Option?): Pair<String, String> {
+    override fun execute(option: Option?): ExecuteResult {
         val arr = intArrayOf(3, 4, 1, 5, 6, 2, 7)
         val result = getNearLess(arr)
-        return Pair(arr.string(), result.string())
+        return ExecuteResult(arr.string(), result.string())
     }
 
     companion object {

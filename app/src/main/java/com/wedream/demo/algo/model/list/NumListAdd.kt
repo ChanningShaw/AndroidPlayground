@@ -1,6 +1,7 @@
 package com.wedream.demo.algo.model.list
 
 import com.wedream.demo.algo.model.AlgorithmModel
+import com.wedream.demo.algo.model.ExecuteResult
 import com.wedream.demo.algo.model.Option
 import com.wedream.demo.algo.structure.LinkedList
 import com.wedream.demo.util.string
@@ -22,7 +23,7 @@ class NumListAdd : AlgorithmModel() {
             "先将2个链表逆序，然后从头到尾相加，构建新链表\n" +
             "相加完以后再逆序还原"
 
-    override fun execute(option: Option?): Pair<String, String> {
+    override fun execute(option: Option?): ExecuteResult {
         val head1 = LinkedList.Node(1)
         val n11 = LinkedList.Node(2)
         val n12 = LinkedList.Node(3)
@@ -42,7 +43,7 @@ class NumListAdd : AlgorithmModel() {
         n22.next = n23
         val input = "${head1.string()}\n${head2.string()}"
         val output = addNumList2(head1, head2)
-        return Pair(input, output.string())
+        return ExecuteResult(input, output.string())
     }
 
     companion object {

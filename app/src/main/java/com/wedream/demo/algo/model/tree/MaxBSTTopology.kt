@@ -1,6 +1,7 @@
 package com.wedream.demo.algo.model.tree
 
 import com.wedream.demo.algo.model.AlgorithmModel
+import com.wedream.demo.algo.model.ExecuteResult
 import com.wedream.demo.algo.model.Option
 import com.wedream.demo.algo.structure.BinaryTree
 import com.wedream.demo.util.string
@@ -20,7 +21,7 @@ class MaxBSTTopology : AlgorithmModel() {
             "解法二："
 
 
-    override fun execute(option: Option?): Pair<String, String> {
+    override fun execute(option: Option?): ExecuteResult {
         val root = BinaryTree.Node(6)
         val n0 = BinaryTree.Node(0)
         val n1 = BinaryTree.Node(1)
@@ -57,7 +58,7 @@ class MaxBSTTopology : AlgorithmModel() {
         n13.left = n20
         n13.right = n16
         val output = maxBSTTopology(root)
-        return Pair(root.string(), output.string())
+        return ExecuteResult(root.string(), output.string())
     }
 
     companion object {

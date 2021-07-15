@@ -1,6 +1,7 @@
 package com.wedream.demo.algo.model.tree
 
 import com.wedream.demo.algo.model.AlgorithmModel
+import com.wedream.demo.algo.model.ExecuteResult
 import com.wedream.demo.algo.model.Option
 import com.wedream.demo.algo.structure.BinaryTree
 import com.wedream.demo.util.string
@@ -19,7 +20,7 @@ class GetMaxLengthWithSum : AlgorithmModel() {
             "另外注意，树中和数组中不同之处在于，树中有很多条路径，数组中只有一条路径，所以" +
             "当遍历完一个节点以后，如果level == sumMap[curSum]，那么需要删除，以免影响其他路径遍历"
 
-    override fun execute(option: Option?): Pair<String, String> {
+    override fun execute(option: Option?): ExecuteResult {
         val root = BinaryTree.Node(1)
         val n1 = BinaryTree.Node(-2)
         val n2 = BinaryTree.Node(3)
@@ -35,7 +36,7 @@ class GetMaxLengthWithSum : AlgorithmModel() {
         n5.left = n6
 
         val output = getMaxLengthWithSum(root, 6)
-        return Pair(root.string(), output.toString())
+        return ExecuteResult(root.string(), output.toString())
     }
 
     companion object {

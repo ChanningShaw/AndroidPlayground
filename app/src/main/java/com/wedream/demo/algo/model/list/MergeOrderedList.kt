@@ -1,6 +1,7 @@
 package com.wedream.demo.algo.model.list
 
 import com.wedream.demo.algo.model.AlgorithmModel
+import com.wedream.demo.algo.model.ExecuteResult
 import com.wedream.demo.algo.model.Option
 import com.wedream.demo.algo.structure.LinkedList
 import com.wedream.demo.util.string
@@ -17,7 +18,7 @@ class MergeOrderedList : AlgorithmModel() {
             "把较小的节点连接到head后面，直到某一个指针为null，\n" +
             "3、把不为null的另外一个指针继续连接到head后面"
 
-    override fun execute(option: Option?): Pair<String, String> {
+    override fun execute(option: Option?): ExecuteResult {
         val head1 = LinkedList.Node(1)
         val n1 = LinkedList.Node(2)
         val n2 = LinkedList.Node(2)
@@ -33,7 +34,7 @@ class MergeOrderedList : AlgorithmModel() {
         val input1 = head1.string()
         val input2 = head2.string()
         val output = merge(head1, head2)
-        return Pair("${input1}, $input2", output.string())
+        return ExecuteResult("${input1}, $input2", output.string())
     }
 
     companion object {

@@ -1,6 +1,7 @@
 package com.wedream.demo.algo.model.list
 
 import com.wedream.demo.algo.model.AlgorithmModel
+import com.wedream.demo.algo.model.ExecuteResult
 import com.wedream.demo.algo.model.Option
 import com.wedream.demo.algo.structure.LinkedList
 import com.wedream.demo.util.string
@@ -16,7 +17,7 @@ class PalindromeLink : AlgorithmModel() {
             "方法二：基本和方法一一致，只不过只需要压一遍的元素。需要先找中间节点\n" +
             "方法三：将右半边翻转，然后同时从两头往中间遍历比较，比较完之后，恢复右边链表"
 
-    override fun execute(option: Option?): Pair<String, String> {
+    override fun execute(option: Option?): ExecuteResult {
         val head = LinkedList.Node(0)
         val n1 = LinkedList.Node(1)
         val n2 = LinkedList.Node(1)
@@ -27,7 +28,7 @@ class PalindromeLink : AlgorithmModel() {
         n1.next = n2
         n2.next = n3
         val output = isPalindrome3(head)
-        return Pair(head.string(), output.toString())
+        return ExecuteResult(head.string(), output.toString())
     }
 
     companion object {

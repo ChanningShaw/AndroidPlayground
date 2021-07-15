@@ -95,8 +95,8 @@ class AlgorithmDetailActivity : AppCompatActivity() {
                 option = options[item]
             }
             val result = model.execute(option)
-            inputView.text = result.first
-            outputView.text = result.second
+            inputView.text = result.input
+            outputView.text = result.output
         }
     }
 }

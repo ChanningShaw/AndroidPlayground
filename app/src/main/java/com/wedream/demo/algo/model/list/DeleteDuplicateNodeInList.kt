@@ -1,6 +1,7 @@
 package com.wedream.demo.algo.model.list
 
 import com.wedream.demo.algo.model.AlgorithmModel
+import com.wedream.demo.algo.model.ExecuteResult
 import com.wedream.demo.algo.model.Option
 import com.wedream.demo.algo.structure.LinkedList
 import com.wedream.demo.util.string
@@ -15,7 +16,7 @@ class DeleteDuplicateNodeInList : AlgorithmModel() {
             "每遍历一个节点，查询哈希表中有没有存在，如果不存在，那就加入哈希表；\n" +
             "如果存在，就删除该节点，继续遍历下一个节点\n"
 
-    override fun execute(option: Option?): Pair<String, String> {
+    override fun execute(option: Option?): ExecuteResult {
         val head = LinkedList.Node(1)
         val n1 = LinkedList.Node(2)
         val n2 = LinkedList.Node(3)
@@ -27,7 +28,7 @@ class DeleteDuplicateNodeInList : AlgorithmModel() {
         n3.next = n4
         val input = head.string()
         deduplicate(head)
-        return Pair(input, head.string())
+        return ExecuteResult(input, head.string())
     }
 
     companion object {

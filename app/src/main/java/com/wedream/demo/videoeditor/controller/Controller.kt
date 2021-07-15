@@ -8,12 +8,14 @@ abstract class Controller {
 
     private var compositeDisposable = CompositeDisposable()
     private var objectsContext = arrayListOf<Any>()
+    private val children = arrayListOf<Controller>()
 
     fun bind(objects: List<Any>?) {
         objects?.let {
             objectsContext.addAll(it)
             inject(this, it)
         }
+        bindChildren(objects)
         onBind()
     }
 
@@ -62,6 +64,12 @@ abstract class Controller {
                     }
                 }
             }
+        }
+    }
+
+    private fun bindChildren(objects: List<Any>?) {
+        for (child in children) {
+            child.bind(objects)
         }
     }
 }

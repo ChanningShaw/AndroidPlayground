@@ -1,6 +1,7 @@
 package com.wedream.demo.algo.model.list
 
 import com.wedream.demo.algo.model.AlgorithmModel
+import com.wedream.demo.algo.model.ExecuteResult
 import com.wedream.demo.algo.model.Option
 import com.wedream.demo.algo.structure.LinkedList
 import com.wedream.demo.util.string
@@ -25,7 +26,7 @@ class JudgeWhetherListIntersect : AlgorithmModel() {
             "从一个环的入口开始往后找，如果遍历一遍都找不到另外一个环的节点，说明不相交\n" +
             "否则返回一个换的入口即可。"
 
-    override fun execute(option: Option?): Pair<String, String> {
+    override fun execute(option: Option?): ExecuteResult {
         val head1 = LinkedList.Node(0)
         val n1 = LinkedList.Node(1)
         val n2 = LinkedList.Node(2)
@@ -45,7 +46,7 @@ class JudgeWhetherListIntersect : AlgorithmModel() {
         head2.next = n3
         val input = "${head1.string()}\n${head2.string()}"
         val output = judgeWhetherListIntersect(head1, head2).toString()
-        return Pair(input, output)
+        return ExecuteResult(input, output)
     }
 
     companion object {
