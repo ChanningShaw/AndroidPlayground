@@ -6,7 +6,9 @@ import android.os.Parcelable
 import com.wedream.demo.app.ApplicationHolder
 
 open class Category(val name: String) : Parcelable {
-    val children = ArrayList<Category>()
+
+    private val children = ArrayList<Category>()
+
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(name)
         parcel.writeInt(children.size)
@@ -37,6 +39,14 @@ open class Category(val name: String) : Parcelable {
         override fun newArray(size: Int): Array<Category?> {
             return arrayOfNulls(size)
         }
+    }
+
+    fun getChildren(): ArrayList<Category> {
+        return children
+    }
+
+    fun getChildCount(): Int {
+        return children.size
     }
 
     fun addCategory(c: Category): Category {

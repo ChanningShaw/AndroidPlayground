@@ -24,7 +24,7 @@ class ComponentCategory(val componentName: ComponentName) :
             val size = parcel.readInt()
             if (size > 0) {
                 parcel.readParcelable<Category>(Category::class.java.classLoader)?.let {
-                    category.children.add(it)
+                    category.addCategory(it)
                 }
             }
             return category

@@ -43,7 +43,7 @@ open class CategoryActivity : AppCompatActivity() {
             intent.component = data.componentName
         } else {
             intent.setClass(this@CategoryActivity, CategoryActivity::class.java)
-            intent.putParcelableArrayListExtra("categories", data.children)
+            intent.putParcelableArrayListExtra("categories", data.getChildren())
         }
         startActivity(intent)
     }

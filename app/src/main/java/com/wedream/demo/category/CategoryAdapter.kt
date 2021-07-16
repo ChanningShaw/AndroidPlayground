@@ -11,6 +11,7 @@ class CategoryAdapter(context: Context) : CommonAdapter<Category, CategoryAdapte
 
     class Holder(view: View) : RecyclerView.ViewHolder(view) {
         val textView: TextView = view.findViewById(R.id.tv)
+        val childCount: TextView = view.findViewById(R.id.child_count)
     }
 
     override fun getItemLayout(): Int {
@@ -21,6 +22,12 @@ class CategoryAdapter(context: Context) : CommonAdapter<Category, CategoryAdapte
         super.onBindViewHolder(holder, position)
         val data = getData()[position]
         holder.textView.text = data.name
+        if (data is ComponentCategory) {
+            holder.childCount.visibility = View.GONE
+        } else {
+            holder.childCount.text = "共有${data.getChildCount()}个demo"
+            holder.childCount.visibility = View.VISIBLE
+        }
     }
 
     override fun getViewHolder(view: View): Holder {
