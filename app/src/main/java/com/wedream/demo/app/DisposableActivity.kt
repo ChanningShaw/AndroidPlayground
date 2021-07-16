@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
-open class DisposableActivity : AppCompatActivity() {
+open class DisposableActivity : BaseActivity() {
     private var compositeDisposable = CompositeDisposable()
 
     fun addToAutoDisposable(disposable: Disposable) {

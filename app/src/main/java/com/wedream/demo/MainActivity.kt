@@ -9,6 +9,7 @@ import com.wedream.demo.algo.activity.SortActivity
 import com.wedream.demo.algo.activity.TreeAlgorithmActivity
 import com.wedream.demo.app.ApplicationHolder
 import com.wedream.demo.app.CategoryActivity
+import com.wedream.demo.app.MyApplication
 import com.wedream.demo.category.Category
 import com.wedream.demo.category.ComponentCategory
 import com.wedream.demo.concurrent.JavaExecutorActivity

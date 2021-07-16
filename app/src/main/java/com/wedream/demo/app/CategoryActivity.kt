@@ -9,8 +9,9 @@ import com.wedream.demo.category.Category
 import com.wedream.demo.category.CategoryAdapter
 import com.wedream.demo.category.ComponentCategory
 import com.wedream.demo.common.CommonAdapter
+import com.wedream.demo.util.LogUtils.log
 
-open class CategoryActivity : AppCompatActivity() {
+open class CategoryActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category)
@@ -22,6 +23,9 @@ open class CategoryActivity : AppCompatActivity() {
 
     fun setCategoryList(categories: List<Category>) {
         val rv = findViewById<RecyclerView>(R.id.main_rv)
+        rv.post {
+            log { "post" }
+        }
         val adapter = CategoryAdapter(this)
         rv.layoutManager =
             androidx.recyclerview.widget.LinearLayoutManager(this, RecyclerView.VERTICAL, false)

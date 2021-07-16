@@ -6,12 +6,14 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Looper
 import com.tencent.mmkv.MMKV
 import com.wedream.demo.MainActivity
 import com.wedream.demo.app.ApplicationHolder.instance
 import com.wedream.demo.database.greenDao.DaoMaster
 import com.wedream.demo.database.greenDao.DaoOpenHelper
 import com.wedream.demo.database.greenDao.DaoSession
+import com.wedream.demo.util.LogUtils.log
 
 class MyApplication : Application() {
 
@@ -23,16 +25,29 @@ class MyApplication : Application() {
             val daoMaster = DaoMaster(DaoOpenHelper(instance, DB_NAME, null).writableDb)
             daoMaster.newSession()
         }
+        var appStartTime = 0L
+        var appResumeTime = 0L
+            set(value) {
+                if (field == 0L) {
+                    field = value
+                    log { "app start took ${appResumeTime - appStartTime} ms" }
+                }
+            }
     }
 
     private lateinit var appSp: SharedPreferences
+
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(base)
+        instance = this
+        appStartTime = System.currentTimeMillis()
+    }
 
     override fun onCreate() {
         super.onCreate()
         MMKV.initialize(this)
         val handler = MyCrashHandler()
 //        Thread.setDefaultUncaughtExceptionHandler(handler)
-        ApplicationHolder.instance = this
         appSp = getSharedPreferences("app_sp", Context.MODE_PRIVATE)
         DeviceParams.init(this)
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
