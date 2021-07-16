@@ -48,6 +48,7 @@ class TwoErrorNodesOfBST : AlgorithmModel() {
                     errs[1] = it
                 }
                 pre = it
+                true
             }
             return errs
         }

@@ -16,7 +16,11 @@ object TreeAlgorithm {
             MaxBSTTopology(),
             TwoErrorNodesOfBST(),
             TreeContains(),
-            SubTree()
+            SubTree(),
+            PostArrayToBST(),
+            IsBST(),
+            IsCBT(),
+            GenerateBST()
         )
     }
 }

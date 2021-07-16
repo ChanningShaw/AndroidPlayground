@@ -24,9 +24,11 @@ class CategoryAdapter(context: Context) : CommonAdapter<Category, CategoryAdapte
         holder.textView.text = data.name
         if (data is ComponentCategory) {
             holder.childCount.visibility = View.GONE
-        } else {
+        } else if (data.getChildCount() > 0) {
             holder.childCount.text = "共有${data.getChildCount()}个demo"
             holder.childCount.visibility = View.VISIBLE
+        } else {
+            holder.childCount.visibility = View.GONE
         }
     }
 

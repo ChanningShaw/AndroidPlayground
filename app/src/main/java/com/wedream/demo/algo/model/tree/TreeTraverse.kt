@@ -65,7 +65,12 @@ class TreeTraverse : AlgorithmModel() {
                 postTraverse(root, Mode.NonRecur)
             }
             6 -> {
-                levelTraverse(root)
+                val sb = StringBuilder()
+                levelTraverse(root) {
+                    sb.append(it.value)
+                    true
+                }
+                sb.toString()
             }
             else -> {
                 preTraverse(root, Mode.Recur)
@@ -80,10 +85,12 @@ class TreeTraverse : AlgorithmModel() {
             if (mode == Mode.Recur) {
                 preTraverse(root) {
                     builder.append(it.value)
+                    true
                 }
             } else {
                 preTraverseNonRecur(root) {
                     builder.append(it.value)
+                    true
                 }
             }
             return builder.toString()
@@ -94,10 +101,12 @@ class TreeTraverse : AlgorithmModel() {
             if (mode == Mode.Recur) {
                 midTraverse(root) {
                     builder.append(it.value)
+                    true
                 }
             } else {
                 midTraverseNonRecur(root) {
                     builder.append(it.value)
+                    true
                 }
             }
             return builder.toString()
@@ -108,22 +117,28 @@ class TreeTraverse : AlgorithmModel() {
             if (mode == Mode.Recur) {
                 postTraverse(root) {
                     builder.append(it.value)
+                    true
                 }
             } else {
                 postTraverseNonRecur2(root) {
                     builder.append(it.value)
+                    true
                 }
             }
             return builder.toString()
         }
 
-        fun levelTraverse(root: BinaryTree.Node<Int>): String {
+        fun levelTraverse(
+            root: BinaryTree.Node<Int>,
+            block: (node: BinaryTree.Node<Int>) -> Boolean
+        ) {
             val list = LinkedList<BinaryTree.Node<Int>>()
-            val sb = StringBuilder()
             list.add(root)
             while (list.isNotEmpty()) {
                 val n = list.pollFirst()!!
-                sb.append(n.value)
+                if (!block.invoke(n)) {
+                    return
+                }
                 if (n.left != null) {
                     list.add(n.left!!)
                 }
@@ -131,15 +146,16 @@ class TreeTraverse : AlgorithmModel() {
                     list.add(n.right!!)
                 }
             }
-            return sb.toString()
         }
 
         fun <T> preTraverse(
             root: BinaryTree.Node<T>?,
-            block: (node: BinaryTree.Node<T>) -> Unit
+            block: (node: BinaryTree.Node<T>) -> Boolean
         ) {
             if (root == null) return
-            block.invoke(root)
+            if (block.invoke(root)) {
+                return
+            }
             preTraverse(root.left, block)
             preTraverse(root.right, block)
         }
@@ -149,7 +165,7 @@ class TreeTraverse : AlgorithmModel() {
          */
         fun <T> preTraverseNonRecur(
             root: BinaryTree.Node<T>?,
-            block: (node: BinaryTree.Node<T>) -> Unit
+            block: (node: BinaryTree.Node<T>) -> Boolean
         ) {
             if (root != null) {
                 val stack = Stack<BinaryTree.Node<T>>()
@@ -169,11 +185,13 @@ class TreeTraverse : AlgorithmModel() {
 
         fun <T> midTraverse(
             root: BinaryTree.Node<T>?,
-            block: (node: BinaryTree.Node<T>) -> Unit
+            block: (node: BinaryTree.Node<T>) -> Boolean
         ) {
             if (root == null) return
             midTraverse(root.left, block)
-            block.invoke(root)
+            if (!block.invoke(root)) {
+                return
+            }
             midTraverse(root.right, block)
         }
 
@@ -182,7 +200,7 @@ class TreeTraverse : AlgorithmModel() {
          */
         fun <T> midTraverseNonRecur(
             root: BinaryTree.Node<T>?,
-            block: (node: BinaryTree.Node<T>) -> Unit
+            block: (node: BinaryTree.Node<T>) -> Boolean
         ) {
             if (root != null) {
                 val stack = Stack<BinaryTree.Node<T>>()
@@ -193,7 +211,9 @@ class TreeTraverse : AlgorithmModel() {
                         cur = cur.left
                     } else {
                         cur = stack.pop()
-                        block.invoke(cur)
+                        if (!block.invoke(cur)) {
+                            return
+                        }
                         cur = cur.right
                     }
                 }
@@ -202,12 +222,14 @@ class TreeTraverse : AlgorithmModel() {
 
         fun <T> postTraverse(
             root: BinaryTree.Node<T>?,
-            block: (node: BinaryTree.Node<T>) -> Unit
+            block: (node: BinaryTree.Node<T>) -> Boolean
         ) {
             if (root == null) return
             postTraverse(root.left, block)
             postTraverse(root.right, block)
-            block.invoke(root)
+            if (!block.invoke(root)) {
+                return
+            }
         }
 
         /**
@@ -215,7 +237,7 @@ class TreeTraverse : AlgorithmModel() {
          */
         fun <T> postTraverseNonRecur1(
             root: BinaryTree.Node<T>?,
-            block: (node: BinaryTree.Node<T>) -> Unit
+            block: (node: BinaryTree.Node<T>) -> Boolean
         ) {
             if (root != null) {
                 val s1 = Stack<BinaryTree.Node<T>>()
@@ -232,7 +254,9 @@ class TreeTraverse : AlgorithmModel() {
                     }
                 }
                 while (!s2.isEmpty()) {
-                    block.invoke(s2.pop())
+                    if (!block.invoke(s2.pop())) {
+                        return
+                    }
                 }
             }
         }
@@ -242,12 +266,12 @@ class TreeTraverse : AlgorithmModel() {
          */
         fun <T> postTraverseNonRecur2(
             root: BinaryTree.Node<T>?,
-            block: (node: BinaryTree.Node<T>) -> Unit
+            block: (node: BinaryTree.Node<T>) -> Boolean
         ) {
             if (root != null) {
                 val stack = Stack<BinaryTree.Node<T>>()
                 stack.push(root)
-                var cur: BinaryTree.Node<T>? = null
+                var cur: BinaryTree.Node<T>?
                 // head表示最近一次遍历的点
                 var head: BinaryTree.Node<T> = root
                 while (stack.isNotEmpty()) {
@@ -260,7 +284,9 @@ class TreeTraverse : AlgorithmModel() {
                         stack.push(cur.right)
                     } else {
                         // 都没有就出栈
-                        block.invoke(stack.pop())
+                        if (!block.invoke(stack.pop())) {
+                            return
+                        }
                         head = cur
                     }
                 }
