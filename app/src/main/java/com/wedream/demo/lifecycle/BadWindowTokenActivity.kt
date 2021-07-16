@@ -2,13 +2,13 @@ package com.wedream.demo.lifecycle
 
 import android.os.Bundle
 import android.view.MotionEvent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.wedream.demo.R
+import com.wedream.demo.app.BaseActivity
 
-class BadWindowTokenActivity : AppCompatActivity() {
+class BadWindowTokenActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -7,12 +7,12 @@ import android.util.DisplayMetrics
 import android.view.View
 import android.view.WindowManager
 import android.widget.HorizontalScrollView
-import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
+import com.wedream.demo.app.BaseActivity
 import com.wedream.demo.util.AndroidUtils.dip2pix
 import com.wedream.demo.util.LogUtils.log
 
-class TrackActivity : AppCompatActivity() {
+class TrackActivity : BaseActivity() {
 
     private var trackContainer: PlaneRecycler? = null
     private var horizontalScrollView: HorizontalScrollView? = null

@@ -5,9 +5,10 @@ import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
+import com.wedream.demo.app.BaseActivity
 import com.wedream.demo.util.LogUtils.log
 
-class FunctionProgrammingActivity : AppCompatActivity() {
+class FunctionProgrammingActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_function_programming)

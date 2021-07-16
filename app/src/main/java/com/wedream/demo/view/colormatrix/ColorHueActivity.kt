@@ -6,11 +6,11 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.SeekBar
-import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
+import com.wedream.demo.app.BaseActivity
 
 
-class ColorHueActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
+class ColorHueActivity : BaseActivity(), SeekBar.OnSeekBarChangeListener {
     private lateinit var imageView: ImageView
     private lateinit var seekBarHue: SeekBar
     private lateinit var seekBarSaturation: SeekBar

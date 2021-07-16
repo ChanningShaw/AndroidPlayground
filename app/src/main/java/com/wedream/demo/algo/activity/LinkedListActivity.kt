@@ -11,9 +11,10 @@ import com.wedream.demo.algo.AlgorithmRunner
 import com.wedream.demo.algo.algo.LinkedListAlgorithm
 import com.wedream.demo.algo.structure.LinkedList
 import com.wedream.demo.algo.view.LinkedListVisualizationView
+import com.wedream.demo.app.BaseActivity
 import kotlin.random.Random
 
-class LinkedListActivity : AppCompatActivity() {
+class LinkedListActivity : BaseActivity() {
 
     private var demoView: LinkedListVisualizationView? = null
     private var runner = AlgorithmRunner()

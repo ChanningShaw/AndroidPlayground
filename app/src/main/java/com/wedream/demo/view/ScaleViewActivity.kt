@@ -1,23 +1,21 @@
 package com.wedream.demo.view
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.Rect
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
-import android.util.DisplayMetrics
 import android.view.*
 import android.widget.FrameLayout
 import android.widget.HorizontalScrollView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
+import com.wedream.demo.app.BaseActivity
 import com.wedream.demo.app.DeviceParams
 import com.wedream.demo.util.LogUtils.log
 
 
-class ScaleViewActivity : AppCompatActivity() {
+class ScaleViewActivity : BaseActivity() {
 
     private lateinit var scaleView: ScaleView
     private lateinit var scrollView: HorizontalScrollView

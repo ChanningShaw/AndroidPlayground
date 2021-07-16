@@ -2,7 +2,6 @@ package com.wedream.demo.app
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.wedream.demo.R
 import com.wedream.demo.category.Category

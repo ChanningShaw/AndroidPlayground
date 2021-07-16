@@ -4,12 +4,11 @@ import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
-import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
-import com.wedream.demo.util.LogUtils.log
+import com.wedream.demo.app.BaseActivity
 
 
-class ViewLevelActivity : AppCompatActivity() {
+class ViewLevelActivity : BaseActivity() {
 
     var frameLayout : FrameLayout?= null
 

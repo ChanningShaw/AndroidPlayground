@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.HorizontalScrollView
 import android.widget.ScrollView
-import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
+import com.wedream.demo.app.BaseActivity
 import com.wedream.demo.util.LogUtils.log
 import com.wedream.demo.view.*
 import com.wedream.demo.view.multitrack.SliderView
@@ -16,7 +16,7 @@ import com.wedream.demo.view.multitrack.base.ElementView
 import com.wedream.demo.view.trackmove.CrossTrackMovementActivity
 import com.wedream.demo.view.trackmove.HorizontalScrollRunnable
 
-class NewMultiTrackActivity : AppCompatActivity() {
+class NewMultiTrackActivity : BaseActivity() {
 
     private lateinit var scrollView: ScrollView
     private lateinit var trackContainer: FrameLayout
@@ -206,7 +206,8 @@ class NewMultiTrackActivity : AppCompatActivity() {
         for (i in 0..10) {
             val track = FrameLayout(this)
             track.setBackgroundResource(R.color.color_gray)
-            val params = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, CrossTrackMovementActivity.TRACK_HEIGHT)
+            val params =
+                FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, CrossTrackMovementActivity.TRACK_HEIGHT)
             params.topMargin = offset
             trackContainer.addView(track, params)
             addViewsToGroup(i, track)

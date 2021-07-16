@@ -8,11 +8,11 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
+import com.wedream.demo.app.BaseActivity
 
 
-class ColorMatrixActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
+class ColorMatrixActivity : BaseActivity(), SeekBar.OnSeekBarChangeListener {
     private lateinit var imageView: ImageView
     private lateinit var seekBarR: SeekBar
     private lateinit var seekBarG: SeekBar

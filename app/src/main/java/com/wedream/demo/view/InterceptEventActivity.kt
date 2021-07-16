@@ -2,15 +2,14 @@ package com.wedream.demo.view
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
-import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
+import com.wedream.demo.app.BaseActivity
 import com.wedream.demo.util.LogUtils.log
 
-class InterceptEventActivity : AppCompatActivity() {
+class InterceptEventActivity : BaseActivity() {
 
     var intercept = false
     var animate = true
@@ -50,10 +49,10 @@ class InterceptEventActivity : AppCompatActivity() {
         }
     }
 
-     class TranslateXRunnable(val view: View) : Runnable {
-         override fun run() {
-             view.translationX += 10
-             view.postDelayed(this, 200)
-         }
-     }
+    class TranslateXRunnable(val view: View) : Runnable {
+        override fun run() {
+            view.translationX += 10
+            view.postDelayed(this, 200)
+        }
+    }
 }

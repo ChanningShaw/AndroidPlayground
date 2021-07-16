@@ -5,9 +5,10 @@ import android.widget.Button
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
+import com.wedream.demo.app.BaseActivity
 import com.wedream.demo.util.ArrayUtils
 
-class WaveViewActivity : AppCompatActivity() {
+class WaveViewActivity : BaseActivity() {
 
     private var waveView: WaveView? = null
     private var seekBar: SeekBar? = null

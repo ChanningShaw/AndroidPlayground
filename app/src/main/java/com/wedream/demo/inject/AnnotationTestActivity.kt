@@ -1,11 +1,10 @@
 package com.wedream.demo.inject
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import com.wedream.demo.util.LogUtils.log
+import com.wedream.demo.app.BaseActivity
 import com.wedream.demo.videoeditor.project.VideoProject
 
-class AnnotationTestActivity : AppCompatActivity() {
+class AnnotationTestActivity : BaseActivity() {
 
     @Inject(AccessId.VIDEO_PROJECT)
     lateinit var videoProject: VideoProject

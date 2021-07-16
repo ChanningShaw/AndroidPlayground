@@ -1,18 +1,20 @@
 package com.wedream.demo.algo.activity
 
 import android.os.Bundle
-import android.view.Gravity
 import android.view.View
-import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.Spinner
+import android.widget.TextView
 import com.tencent.mmkv.MMKV
 import com.wedream.demo.R
 import com.wedream.demo.algo.algo.LinearAlgorithm
 import com.wedream.demo.algo.algo.TreeAlgorithm
 import com.wedream.demo.algo.model.AlgorithmModel
 import com.wedream.demo.algo.model.Option
+import com.wedream.demo.app.BaseActivity
 
-class AlgorithmDetailActivity : AppCompatActivity() {
+class AlgorithmDetailActivity : BaseActivity() {
 
     lateinit var titleView: TextView
     private lateinit var tipsView: TextView

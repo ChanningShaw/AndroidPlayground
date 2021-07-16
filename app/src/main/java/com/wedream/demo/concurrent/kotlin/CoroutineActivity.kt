@@ -6,9 +6,10 @@ import android.widget.Button
 import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
+import com.wedream.demo.app.BaseActivity
 import kotlinx.coroutines.*
 
-class CoroutineActivity : AppCompatActivity() {
+class CoroutineActivity : BaseActivity() {
 
     companion object {
         const val TAG = "xcm"

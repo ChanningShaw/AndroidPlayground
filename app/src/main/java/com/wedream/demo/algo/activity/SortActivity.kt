@@ -10,9 +10,10 @@ import com.wedream.demo.R
 import com.wedream.demo.algo.AlgorithmRunner
 import com.wedream.demo.algo.algo.SortAlgorithm
 import com.wedream.demo.algo.view.SortVisualizationView
+import com.wedream.demo.app.BaseActivity
 import com.wedream.demo.util.ArrayUtils
 
-class SortActivity : AppCompatActivity() {
+class SortActivity : BaseActivity() {
 
     var sortView: SortVisualizationView? = null
     var data = emptyArray<Int>()

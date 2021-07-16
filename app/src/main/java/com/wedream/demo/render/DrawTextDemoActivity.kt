@@ -4,8 +4,9 @@ import android.os.Bundle
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
+import com.wedream.demo.app.BaseActivity
 
-class DrawTextDemoActivity : AppCompatActivity() {
+class DrawTextDemoActivity : BaseActivity() {
 
     var demoView: DrawTextDemoView? = null
 

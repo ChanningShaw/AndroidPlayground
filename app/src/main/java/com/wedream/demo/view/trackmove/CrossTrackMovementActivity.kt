@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.HorizontalScrollView
 import android.widget.ScrollView
-import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
+import com.wedream.demo.app.BaseActivity
 import com.wedream.demo.util.AndroidUtils
 import com.wedream.demo.util.LogUtils.log
 import com.wedream.demo.view.*
@@ -17,7 +17,7 @@ import com.wedream.demo.view.multitrack.base.ElementView
 import com.wedream.demo.view.multitrack.overlap
 import kotlin.math.round
 
-class CrossTrackMovementActivity : AppCompatActivity() {
+class CrossTrackMovementActivity : BaseActivity() {
 
     private lateinit var scrollView: ScrollView
     private lateinit var horizontalScrollView: HorizontalScrollView

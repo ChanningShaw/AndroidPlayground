@@ -2,10 +2,10 @@ package com.wedream.demo.render.gl3
 
 import android.opengl.GLSurfaceView
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import com.wedream.demo.app.BaseActivity
 
 
-abstract class AbsGLSurfaceActivity : AppCompatActivity() {
+abstract class AbsGLSurfaceActivity : BaseActivity() {
     private var mGLSurfaceView: GLSurfaceView? = null
 
     protected abstract fun bindRenderer(): GLSurfaceView.Renderer

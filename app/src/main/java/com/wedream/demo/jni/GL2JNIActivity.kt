@@ -1,10 +1,10 @@
 package com.wedream.demo.jni
 
-import android.app.Activity
 import android.os.Bundle
+import com.wedream.demo.app.BaseActivity
 
 
-class GL2JNIActivity : Activity() {
+class GL2JNIActivity : BaseActivity() {
     private var mView: GL2JNIView? = null
     override fun onCreate(icicle: Bundle?) {
         super.onCreate(icicle)

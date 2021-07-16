@@ -6,14 +6,14 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewOutlineProvider
 import android.widget.FrameLayout
-import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
+import com.wedream.demo.app.BaseActivity
 import com.wedream.demo.render.WaveView
 import com.wedream.demo.render.WaveViewActivity
 import com.wedream.demo.util.AndroidUtils
 import com.wedream.demo.util.LogUtils.log
 
-class OutlineActivity : AppCompatActivity() {
+class OutlineActivity : BaseActivity() {
 
     lateinit var container: FrameLayout
     var containerWidth = AndroidUtils.dip2pix(200)

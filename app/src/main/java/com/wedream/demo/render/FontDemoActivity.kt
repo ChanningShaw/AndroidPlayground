@@ -3,11 +3,11 @@ package com.wedream.demo.render
 import android.graphics.Typeface
 import android.os.Bundle
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
+import com.wedream.demo.app.BaseActivity
 
 
-class FontDemoActivity : AppCompatActivity() {
+class FontDemoActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_font)

@@ -1,13 +1,13 @@
 package com.wedream.demo.render
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.wedream.demo.R
+import com.wedream.demo.app.BaseActivity
 import kotlin.random.Random
 
-class RecyclerViewActivity : AppCompatActivity() {
+class RecyclerViewActivity : BaseActivity() {
 
     var recyclerView: RecyclerView? = null
     private val adapter = SimpleAdapter(this)

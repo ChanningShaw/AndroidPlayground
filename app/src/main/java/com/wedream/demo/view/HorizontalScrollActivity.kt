@@ -3,10 +3,10 @@ package com.wedream.demo.view
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.HorizontalScrollView
-import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
+import com.wedream.demo.app.BaseActivity
 
-class HorizontalScrollActivity : AppCompatActivity() {
+class HorizontalScrollActivity : BaseActivity() {
 
     private lateinit var scrollView :HorizontalScrollView
 

@@ -5,9 +5,10 @@ import android.widget.Button
 import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
+import com.wedream.demo.app.BaseActivity
 import com.wedream.demo.util.Vector2D
 
-class PlaneGeometryActivity : AppCompatActivity() {
+class PlaneGeometryActivity : BaseActivity() {
 
     private var demoView: PlaneGeometryView? = null
 

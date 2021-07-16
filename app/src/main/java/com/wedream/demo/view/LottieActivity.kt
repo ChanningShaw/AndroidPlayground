@@ -3,11 +3,11 @@ package com.wedream.demo.view
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import com.airbnb.lottie.LottieAnimationView
 import com.wedream.demo.R
+import com.wedream.demo.app.BaseActivity
 
-class LottieActivity : AppCompatActivity() {
+class LottieActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        setContentView(R.layout.activity_lottie)

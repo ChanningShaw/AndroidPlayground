@@ -6,11 +6,9 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
 import android.view.View
-import android.widget.FrameLayout
-import androidx.appcompat.app.AppCompatActivity
-import com.wedream.demo.R
+import com.wedream.demo.app.BaseActivity
 
-class CanvasLayerActivity : AppCompatActivity() {
+class CanvasLayerActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,7 +21,7 @@ class CanvasLayerView(context: Context) : View(context) {
     private var measureHeight = 0//父布局高度
     private val OFFSET = 100//偏移量
 
-    private var mPaint = Paint(Paint.ANTI_ALIAS_FLAG  or  Paint.FILTER_BITMAP_FLAG)
+    private var mPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
 
     init {
         //设置画笔的样式

@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.HorizontalScrollView
 import android.widget.SeekBar
-import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
+import com.wedream.demo.app.BaseActivity
 import com.wedream.demo.app.DeviceParams
 import com.wedream.demo.util.AndroidUtils
 import com.wedream.demo.util.KtUtils.asTo
@@ -18,7 +18,7 @@ import com.wedream.demo.videoeditor.timeline.widget.AbsTouchListener
 import com.wedream.demo.view.MyFrameLayout
 import kotlin.math.min
 
-class WaveView2Activity : AppCompatActivity() {
+class WaveView2Activity : BaseActivity() {
 
     private lateinit var segmentView: FrameLayout
     private lateinit var waveContainer: FrameLayout
@@ -98,7 +98,7 @@ class WaveView2Activity : AppCompatActivity() {
             }
         })
         seekBar.progress = 25
-        seekBar.setOnSeekBarChangeListener(object :SeekBar.OnSeekBarChangeListener{
+        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 val newScale = progressToScale(progress)
                 onScaleChange(newScale / scale, newScale)
@@ -115,7 +115,7 @@ class WaveView2Activity : AppCompatActivity() {
     }
 
     private fun progressToScale(progress: Int): Double {
-        val speed =  when {
+        val speed = when {
             progress < 25 -> {
                 0.1 + (progress - 0.0) / 25 * 0.9
             }

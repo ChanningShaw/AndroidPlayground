@@ -2,20 +2,17 @@ package com.wedream.demo.investment
 
 import android.os.Bundle
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.wedream.demo.R
+import com.wedream.demo.app.BaseActivity
 import com.wedream.demo.util.LogUtils.log
-import com.wedream.demo.util.TimeUtils
 import com.wedream.demo.util.TimeUtils.getTimeString
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.util.*
-import kotlin.math.max
 
-class BTCPredictActivity : AppCompatActivity() {
+class BTCPredictActivity : BaseActivity() {
 
     private lateinit var disposable: CompositeDisposable
     private lateinit var bullLastText3: TextView
@@ -34,6 +31,7 @@ class BTCPredictActivity : AppCompatActivity() {
     private lateinit var newsRecyclerView: RecyclerView
 
     private val adapter = NewsListAdapter(this)
+
     // 缓存，按时间降序排序
     private var cache = LinkedList<NewsEntity>()
 
@@ -76,7 +74,8 @@ class BTCPredictActivity : AppCompatActivity() {
                 showNews()
             }, {
                 log { "error, cause = ${it.cause} , msg = ${it.message}" }
-            }))
+            })
+        )
     }
 
     private fun startSpider() {
@@ -88,7 +87,8 @@ class BTCPredictActivity : AppCompatActivity() {
                 showNews()
             }, {
                 log { "error, cause = ${it.cause} , msg = ${it.message}" }
-            }))
+            })
+        )
     }
 
     /**
@@ -159,7 +159,7 @@ class BTCPredictActivity : AppCompatActivity() {
 
         bullLastText12.text = bullLast12.toString()
         bearLastText12.text = bearLast12.toString()
-        ratioLastText12.text = String.format("%.2f", bullLast12 * 1.0f / (bullLast12 + bearLast12) * 100)+ "%"
+        ratioLastText12.text = String.format("%.2f", bullLast12 * 1.0f / (bullLast12 + bearLast12) * 100) + "%"
 
         lastUpdate.text = getTimeString(now)
         adapter.setData(cache)

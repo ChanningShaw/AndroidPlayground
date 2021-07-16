@@ -7,14 +7,14 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
 import android.widget.ImageView
-import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
+import com.wedream.demo.app.BaseActivity
 import com.wedream.demo.app.DeviceParams
 import com.wedream.demo.util.AndroidUtils
 import com.wedream.demo.util.LogUtils.log
 
 
-class CanvasBitmapActivity : AppCompatActivity() {
+class CanvasBitmapActivity : BaseActivity() {
 
     private lateinit var bitmap: Bitmap
 

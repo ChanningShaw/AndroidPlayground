@@ -2,13 +2,13 @@ package com.wedream.demo.view.colormatrix
 
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.wedream.demo.R
+import com.wedream.demo.app.BaseActivity
 
 
-class ColorFilterActivity : AppCompatActivity() {
+class ColorFilterActivity : BaseActivity() {
     private lateinit var recyclerView: RecyclerView
     private var filtersAdapter: FiltersAdapter? = null
     private val filters: MutableList<FloatArray> = ArrayList()

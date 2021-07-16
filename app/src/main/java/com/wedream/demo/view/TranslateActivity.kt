@@ -5,11 +5,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.HorizontalScrollView
-import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
-import kotlinx.android.synthetic.main.activity_scale.*
+import com.wedream.demo.app.BaseActivity
 
-class TranslateActivity : AppCompatActivity() {
+class TranslateActivity : BaseActivity() {
 
     private lateinit var view1: View
     private lateinit var view2: View
