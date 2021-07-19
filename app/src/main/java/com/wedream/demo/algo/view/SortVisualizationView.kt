@@ -121,7 +121,7 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
         elements.clear()
         val viewHeight = getElementHeight()
         val w = getElementWidth()
-        val max = data.max() ?: return
+        val max = data.maxOrNull() ?: return
         var left = 0f
         for (i in data.indices) {
             val e = data[i]
@@ -135,7 +135,7 @@ class SortVisualizationView(context: Context, attrs: AttributeSet?, defStyle: In
         tempElements.clear()
         val viewHeight = getElementHeight()
         val w = getElementWidth()
-        val max = data.max() ?: return
+        val max = data.maxOrNull() ?: return
         var left = 0f
         for (i in tempData.indices) {
             val e = tempData[i]
