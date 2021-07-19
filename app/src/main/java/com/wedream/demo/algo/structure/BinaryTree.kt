@@ -4,6 +4,7 @@ class BinaryTree {
     class Node<T>(var value: T) {
         var left: Node<T>? = null
         var right: Node<T>? = null
+        var parent: Node<T>? = null
 
         // 在树的第几层
         var level = -1

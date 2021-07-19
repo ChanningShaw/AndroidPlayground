@@ -20,7 +20,14 @@ object TreeAlgorithm {
             PostArrayToBST(),
             IsBST(),
             IsCBT(),
-            GenerateBST()
+            GenerateBST(),
+            NextNode(),
+            LowestCommonAncestor(),
+            MaxDistance(),
+            TwoNodeDistance(),
+            GeneratePostArray(),
+            TreeCount(),
+            NodeCountOfCBT()
         )
     }
 }
