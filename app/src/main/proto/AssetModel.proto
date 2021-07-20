@@ -1,0 +1,10 @@
+syntax = "proto3";
+package wedream.demo.videoEditor.model;
+option java_package = "com.wedream.demo.videoeditor.project.model";
+option java_outer_classname = "BaseAssetModel";
+
+// 生成java方法，在工程目录执行：protoc -I=app/src/main/proto --java_out=./app/src/main/java AssetModel.proto
+message AssetModel {
+  int64 id = 1;
+  string path = 2;
+}
