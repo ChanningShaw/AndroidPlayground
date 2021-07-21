@@ -1,4 +1,4 @@
-package com.wedream.demo.algo.model.array
+package com.wedream.demo.algo.model.matrix
 
 import com.wedream.demo.algo.model.AlgorithmModel
 import com.wedream.demo.algo.model.ExecuteResult

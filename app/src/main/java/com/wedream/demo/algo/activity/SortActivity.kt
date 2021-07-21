@@ -5,10 +5,9 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.Button
 import android.widget.Spinner
-import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
 import com.wedream.demo.algo.AlgorithmRunner
-import com.wedream.demo.algo.algo.SortAlgorithm
+import com.wedream.demo.algo.playground.SortPG
 import com.wedream.demo.algo.view.SortVisualizationView
 import com.wedream.demo.app.BaseActivity
 import com.wedream.demo.util.ArrayUtils
@@ -19,7 +18,7 @@ class SortActivity : BaseActivity() {
     var data = emptyArray<Int>()
 
     private var runner = AlgorithmRunner()
-    var algo = SortAlgorithm.Type.Bubble
+    var algo = SortPG.Type.Bubble
 
     companion object {
         const val EL_SIZE = 10
@@ -37,7 +36,7 @@ class SortActivity : BaseActivity() {
         findViewById<Button>(R.id.start).setOnClickListener {
             sortView?.let {
                 runner.start(it) { channel ->
-                    SortAlgorithm.sort(data, channel, algo)
+                    SortPG.sort(data, channel, algo)
                 }
             }
         }
@@ -62,13 +61,13 @@ class SortActivity : BaseActivity() {
                 id: Long
             ) {
                 val algo = when (position) {
-                    0 -> SortAlgorithm.Type.Bubble
-                    1 -> SortAlgorithm.Type.Select
-                    2 -> SortAlgorithm.Type.Insert
-                    3 -> SortAlgorithm.Type.Shell
-                    4 -> SortAlgorithm.Type.Merge
-                    5 -> SortAlgorithm.Type.Quick
-                    else -> SortAlgorithm.Type.Bubble
+                    0 -> SortPG.Type.Bubble
+                    1 -> SortPG.Type.Select
+                    2 -> SortPG.Type.Insert
+                    3 -> SortPG.Type.Shell
+                    4 -> SortPG.Type.Merge
+                    5 -> SortPG.Type.Quick
+                    else -> SortPG.Type.Bubble
                 }
                 this@SortActivity.algo = algo
             }

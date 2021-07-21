@@ -1,10 +1,10 @@
-package com.wedream.demo.algo.algo
+package com.wedream.demo.algo.playground
 
 import com.wedream.demo.algo.AlgorithmRunner
 import com.wedream.demo.algo.action.*
 
 
-object SortAlgorithm {
+object SortPG {
 
     enum class Type {
         Bubble, Select, Insert, Shell, Merge, Quick

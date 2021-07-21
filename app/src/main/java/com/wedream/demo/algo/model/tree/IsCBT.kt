@@ -14,7 +14,8 @@ class IsCBT : AlgorithmModel() {
     override var title = "给定一棵树的根节点root，已知其所有节点的值都不一样，" +
             "判断此树是不是完全二叉树"
 
-    override var tips = ""
+    override var tips = "层次遍历，如果一个节点有左孩子而没有右孩子，那么不是完全二叉树；" +
+            "如果已经有叶子节点，后面还出现叶子节点，也不是完全二叉树。"
 
     override fun execute(option: Option?): ExecuteResult {
         val n1 = BinaryTree.Node(1)

@@ -70,6 +70,7 @@
         <activity android:name=".view.CanvasBitmapActivity" />
         <activity android:name=".render.WaveView2Activity" />
         <activity android:name=".render.CanvasLayerActivity" />
+        <activity android:name=".algo.activity.MatrixAlgorithmActivity" />
     </application>
 
 </manifest>

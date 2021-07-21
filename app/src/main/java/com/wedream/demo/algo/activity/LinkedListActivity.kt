@@ -8,7 +8,9 @@ import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
 import com.wedream.demo.algo.AlgorithmRunner
-import com.wedream.demo.algo.algo.LinkedListAlgorithm
+import com.wedream.demo.algo.playground.LinkedListAlgorithm.deleteK
+import com.wedream.demo.algo.playground.LinkedListAlgorithm.deleteLastK
+import com.wedream.demo.algo.playground.LinkedListAlgorithm.randomLinkedList
 import com.wedream.demo.algo.structure.LinkedList
 import com.wedream.demo.algo.view.LinkedListVisualizationView
 import com.wedream.demo.app.BaseActivity
@@ -28,7 +30,7 @@ class LinkedListActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_linked_list)
         findViewById<Button>(R.id.reset).setOnClickListener {
-            data = LinkedListAlgorithm.randomLinkedList(EL_SIZE)
+            data = randomLinkedList(EL_SIZE)
             demoView?.setData(data)
         }
         findViewById<Button>(R.id.start).setOnClickListener {
@@ -53,7 +55,7 @@ class LinkedListActivity : BaseActivity() {
                     0 -> {
                         algorithmCall = { channel ->
                             val random = Random(System.currentTimeMillis())
-                            LinkedListAlgorithm.deleteK(
+                            deleteK(
                                 data,
                                 random.nextInt(1, EL_SIZE + 1),
                                 channel
@@ -63,7 +65,7 @@ class LinkedListActivity : BaseActivity() {
                     1 -> {
                         algorithmCall = { channel ->
                             val random = Random(System.currentTimeMillis())
-                            LinkedListAlgorithm.deleteLastK(
+                            deleteLastK(
                                 data,
                                 random.nextInt(1, EL_SIZE + 1),
                                 channel

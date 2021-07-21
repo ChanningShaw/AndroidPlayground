@@ -9,6 +9,7 @@ import android.widget.TextView
 import com.tencent.mmkv.MMKV
 import com.wedream.demo.R
 import com.wedream.demo.algo.algo.LinearAlgorithm
+import com.wedream.demo.algo.algo.MatrixAlgorithm
 import com.wedream.demo.algo.algo.TreeAlgorithm
 import com.wedream.demo.algo.model.AlgorithmModel
 import com.wedream.demo.algo.model.Option
@@ -30,6 +31,7 @@ class AlgorithmDetailActivity : BaseActivity() {
 
         const val TYPE_LINEAR = "linear"
         const val TYPE_TREE = "tree"
+        const val TYPE_MATRIX = "matrix"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,6 +57,9 @@ class AlgorithmDetailActivity : BaseActivity() {
             }
             TYPE_TREE -> {
                 TreeAlgorithm.getModels()
+            }
+            TYPE_MATRIX -> {
+                MatrixAlgorithm.getModels()
             }
             else -> {
                 LinearAlgorithm.getModels()
