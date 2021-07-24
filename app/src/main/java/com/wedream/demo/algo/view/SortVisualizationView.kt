@@ -10,7 +10,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import com.wedream.demo.R
 import com.wedream.demo.planegeometry.reset
-import com.wedream.demo.algo.VisualizationView
+import com.wedream.demo.algo.playground.VisualizationView
 import com.wedream.demo.algo.action.*
 import com.wedream.demo.algo.action.AlgorithmAction.Companion.DEFAULT_DELAY_TIME
 

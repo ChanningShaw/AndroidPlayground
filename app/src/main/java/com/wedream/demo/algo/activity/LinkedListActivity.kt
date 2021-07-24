@@ -5,9 +5,8 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.Button
 import android.widget.Spinner
-import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
-import com.wedream.demo.algo.AlgorithmRunner
+import com.wedream.demo.algo.playground.AlgorithmRunner
 import com.wedream.demo.algo.playground.LinkedListAlgorithm.deleteK
 import com.wedream.demo.algo.playground.LinkedListAlgorithm.deleteLastK
 import com.wedream.demo.algo.playground.LinkedListAlgorithm.randomLinkedList

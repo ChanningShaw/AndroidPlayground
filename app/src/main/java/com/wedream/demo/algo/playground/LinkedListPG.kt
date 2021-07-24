@@ -1,11 +1,9 @@
 package com.wedream.demo.algo.playground
 
-import com.wedream.demo.algo.AlgorithmRunner
 import com.wedream.demo.algo.action.AlgorithmAction
 import com.wedream.demo.algo.action.DeleteAction
 import com.wedream.demo.algo.action.MoveAction
 import com.wedream.demo.algo.structure.LinkedList
-import com.wedream.demo.util.LogUtils.log
 import kotlin.random.Random
 
 inline fun <T> LinkedList<T>.forEach(action: (Int, LinkedList.Node<T>) -> Unit) {

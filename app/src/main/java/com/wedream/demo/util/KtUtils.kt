@@ -9,7 +9,7 @@ object KtUtils {
         }
     }
 
-    fun <T> Any?.asTo(): T? {
+    fun <T> Any?.takeAs(): T? {
         return this as? T
     }
 }

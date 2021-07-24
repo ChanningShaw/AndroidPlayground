@@ -24,7 +24,11 @@ object LinearAlgorithm {
             DeleteNodeInList(),
             InsertIntoOrderCircleList(),
             MergeOrderedList(),
-            KMP()
+            KMP(),
+            MinK(),
+            KthMin(),
+            LengthOfNeedToSort(),
+            ValueOfSpecificOccurNumber()
         )
     }
 }

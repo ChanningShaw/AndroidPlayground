@@ -22,9 +22,39 @@ object ArrayUtils {
         return array
     }
 
+    fun swap(i: Int, j: Int, data: Array<Int>) {
+        val temp = data[i]
+        data[i] = data[j]
+        data[j] = temp
+    }
+
+    fun swap(arr: IntArray, i: Int, j: Int) {
+        val temp = arr[i]
+        arr[i] = arr[j]
+        arr[j] = temp
+    }
+
+    fun insertSort(arr: IntArray, start: Int, end: Int) {
+        for (i in (start + 1)..end) {
+            for (j in i downTo start + 1) {
+                if (arr[j - 1] > arr[j]) {
+                    swap(arr, j - 1, j)
+                } else {
+                    break
+                }
+            }
+        }
+    }
+
     fun print(data: Array<Int>) {
         data.forEach {
             log { "$it" }
         }
+    }
+
+    fun copyArray(array: IntArray): IntArray {
+        val dst = IntArray(array.size)
+        System.arraycopy(array, 0, dst, 0, array.size)
+        return dst
     }
 }

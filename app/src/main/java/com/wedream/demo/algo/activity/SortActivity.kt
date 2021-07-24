@@ -6,7 +6,7 @@ import android.widget.AdapterView
 import android.widget.Button
 import android.widget.Spinner
 import com.wedream.demo.R
-import com.wedream.demo.algo.AlgorithmRunner
+import com.wedream.demo.algo.playground.AlgorithmRunner
 import com.wedream.demo.algo.playground.SortPG
 import com.wedream.demo.algo.view.SortVisualizationView
 import com.wedream.demo.app.BaseActivity

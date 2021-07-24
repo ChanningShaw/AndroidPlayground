@@ -11,7 +11,7 @@ import com.wedream.demo.R
 import com.wedream.demo.app.BaseActivity
 import com.wedream.demo.app.DeviceParams
 import com.wedream.demo.util.AndroidUtils
-import com.wedream.demo.util.KtUtils.asTo
+import com.wedream.demo.util.KtUtils.takeAs
 import com.wedream.demo.util.LogUtils.log
 import com.wedream.demo.videoeditor.timeline.utils.TimeRange
 import com.wedream.demo.videoeditor.timeline.widget.AbsTouchListener
@@ -67,7 +67,7 @@ class WaveView2Activity : BaseActivity() {
             }
 
             override fun onMoving(v: View, deltaX: Int, deltaY: Int) {
-                segmentView.layoutParams.asTo<ViewGroup.MarginLayoutParams>()?.let {
+                segmentView.layoutParams.takeAs<ViewGroup.MarginLayoutParams>()?.let {
                     if (movingLeft) {
                         it.marginStart += deltaX
                         it.width -= deltaX
@@ -171,7 +171,7 @@ class WaveView2Activity : BaseActivity() {
     private fun updateWaveViewOffset(deltaX: Int) {
         for (i in 0 until waveContainer.childCount) {
             val child = waveContainer.getChildAt(i)
-            child.layoutParams.asTo<ViewGroup.MarginLayoutParams>()?.let {
+            child.layoutParams.takeAs<ViewGroup.MarginLayoutParams>()?.let {
                 it.marginStart -= deltaX
                 child.layoutParams = it
             }

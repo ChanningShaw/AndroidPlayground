@@ -1,4 +1,4 @@
-package com.wedream.demo.algo
+package com.wedream.demo.algo.playground
 
 import com.wedream.demo.algo.action.AlgorithmAction
 import kotlinx.coroutines.*

@@ -7,7 +7,7 @@ import android.graphics.*
 import android.util.AttributeSet
 import com.wedream.demo.R
 import com.wedream.demo.algo.action.AlgorithmAction
-import com.wedream.demo.algo.VisualizationView
+import com.wedream.demo.algo.playground.VisualizationView
 import com.wedream.demo.algo.action.AlgorithmAction.Companion.DEFAULT_DELAY_TIME
 import com.wedream.demo.algo.action.DeleteAction
 import com.wedream.demo.algo.action.MoveAction

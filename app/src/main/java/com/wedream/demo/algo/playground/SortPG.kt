@@ -1,8 +1,7 @@
 package com.wedream.demo.algo.playground
 
-import com.wedream.demo.algo.AlgorithmRunner
 import com.wedream.demo.algo.action.*
-
+import com.wedream.demo.util.ArrayUtils.swap
 
 object SortPG {
 
@@ -210,12 +209,6 @@ object SortPG {
             k++
         }
         channel.sendAction(AlgorithmAction.FinishAction)
-    }
-
-    fun swap(i: Int, j: Int, data: Array<Int>) {
-        val temp = data[i]
-        data[i] = data[j]
-        data[j] = temp
     }
 
     suspend fun quickSort(
