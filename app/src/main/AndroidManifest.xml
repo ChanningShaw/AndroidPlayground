@@ -71,6 +71,7 @@
         <activity android:name=".render.WaveView2Activity" />
         <activity android:name=".render.CanvasLayerActivity" />
         <activity android:name=".algo.activity.MatrixAlgorithmActivity" />
+        <activity android:name=".inject.FiledInjectActivity" />
     </application>
 
 </manifest>

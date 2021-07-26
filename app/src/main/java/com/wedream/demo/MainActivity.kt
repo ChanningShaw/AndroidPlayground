@@ -15,6 +15,7 @@ import com.wedream.demo.concurrent.kotlin.FlowActivity
 import com.wedream.demo.concurrent.kotlin.FunctionProgrammingActivity
 import com.wedream.demo.concurrent.rxjava.RxJavaDemoActivity
 import com.wedream.demo.inject.AnnotationTestActivity
+import com.wedream.demo.inject.FiledInjectActivity
 import com.wedream.demo.investment.BTCPredictActivity
 import com.wedream.demo.jni.GL2JNIActivity
 import com.wedream.demo.jni.HelloJNIActivity
@@ -116,7 +117,8 @@ class MainActivity : CategoryActivity() {
         val recorder = ComponentCategory(AudioRecordActivity::class.java)
         val inject = Category("inject").addComponentCategories(
             listOf(
-                AnnotationTestActivity::class.java
+                AnnotationTestActivity::class.java,
+                FiledInjectActivity::class.java
             )
         )
         val investment = Category("investment").addComponentCategories(
