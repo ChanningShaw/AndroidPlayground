@@ -5,6 +5,7 @@ import com.wedream.demo.algo.model.array.*
 import com.wedream.demo.algo.model.classics.KMP
 import com.wedream.demo.algo.model.list.*
 import com.wedream.demo.algo.model.matrix.MaxRectSize
+import com.wedream.demo.algo.model.matrix.SearchInPartiallySortMatrix
 
 object LinearAlgorithm {
     fun getModels(): List<AlgorithmModel> {
@@ -28,7 +29,18 @@ object LinearAlgorithm {
             MinK(),
             KthMin(),
             LengthOfNeedToSort(),
-            ValueOfSpecificOccurNumber()
+            ValueOfSpecificOccurNumber(),
+            LengthOfIntegrableSubArray(),
+            PrintPairOfSumK(),
+            SubArrayOfSumK1(),
+            SubArrayOfSumK2(),
+            SubArrayOfSumK3(),
+            SmallSum(),
+            NormalNumberSort(),
+            AdjustOddOrEven(),
+            MaxSumOfSubArray(),
+            SmallPeakValueInArray(),
+            MaxProductOfSubArray()
         )
     }
 }

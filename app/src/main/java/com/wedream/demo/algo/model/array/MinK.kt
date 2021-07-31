@@ -15,13 +15,13 @@ class MinK : AlgorithmModel() {
     override var title = "给定一个无序整形数组arr，找到其中最小的k个数，" +
             "要求实现O(Nlogk)和O(N)时间复杂度"
 
-    override var tips = "一、O(Nlogk)：堆排序" +
+    override var tips = "一、O(Nlogk)：堆排序\n" +
             "二、使用BFPRT算法求出第k小的元素，然后求出最小的k个数"
 
     override fun execute(option: Option?): ExecuteResult {
-        val arr = intArrayOf(1, 2, 2, 2, 2, 2)
+        val arr = intArrayOf(5, 4, 3, 2, 1)
         val k = 4
-        val result = minKByBFPRT(arr, k)
+        val result = minK(arr, k)
         return ExecuteResult(arr.string() + ", $k", result.string())
     }
 
@@ -30,7 +30,7 @@ class MinK : AlgorithmModel() {
             if (k < 0 || k > arr.size) {
                 return arr
             }
-            val maxHeap = MaxHeap(k)
+            val maxHeap = MaxHeap<Int>(k)
             for (i in 0 until k) {
                 maxHeap.push(arr[i])
             }

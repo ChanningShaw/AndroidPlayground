@@ -20,7 +20,7 @@ fun <T> T.string(): String {
                         }
                         builder.append("\n")
                     }
-                    is IntArray -> {
+                    is IntArray, is DoubleArray -> {
                         builder.append("\n")
                         builder.append(t.string())
                         if (i != this.lastIndex) {
@@ -39,6 +39,16 @@ fun <T> T.string(): String {
             builder.append(']')
         }
         is IntArray -> {
+            builder.append('[')
+            for ((i, t) in withIndex()) {
+                builder.append(t)
+                if (i != lastIndex) {
+                    builder.append(',')
+                }
+            }
+            builder.append(']')
+        }
+        is DoubleArray -> {
             builder.append('[')
             for ((i, t) in withIndex()) {
                 builder.append(t)

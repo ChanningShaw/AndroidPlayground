@@ -2,25 +2,26 @@ package com.wedream.demo.algo.structure
 
 import com.wedream.demo.util.ArrayUtils.swap
 
-class MaxHeap(private val capacity: Int) {
+class MaxHeap<T : Comparable<T>>(private val capacity: Int) {
 
-    private val data = Array(capacity) { 0 }
+    private val data = ArrayList<T>(capacity)
     private var last = -1
 
-    fun push(value: Int) {
-        data[++last] = value
+    fun push(t: T) {
+        data.add(++last, t)
         bottomUpAdjust(last)
     }
 
-    fun pop(): Int {
+    fun pop(): T {
         val result = data[0]
+        data[0] = data[last]
         topDownAdjust(0)
         last--
         return result
     }
 
-    fun replace(value: Int) {
-        data[0] = value
+    fun replace(t: T) {
+        data[0] = t
         topDownAdjust(0)
     }
 
@@ -28,7 +29,7 @@ class MaxHeap(private val capacity: Int) {
         return last + 1
     }
 
-    fun peek(): Int {
+    fun peek(): T {
         return data[0]
     }
 
@@ -40,7 +41,7 @@ class MaxHeap(private val capacity: Int) {
         while (i > 0) {
             val parent = (i - 1) / 2
             if (data[parent] < data[i]) {
-                swap(parent, i, data)
+                swap(data, parent, i)
                 i = parent
             } else {
                 break
@@ -54,17 +55,17 @@ class MaxHeap(private val capacity: Int) {
     private fun topDownAdjust(index: Int) {
         var cur = index
         var left = cur * 2 + 1
-        var right = cur * 2 + 1
+        var right = cur * 2 + 2
         var biggerIndex = cur
         while (left < capacity) {
             if (data[left] > data[cur]) {
-                biggerIndex = cur
+                biggerIndex = left
             }
             if (right < capacity && data[right] > data[biggerIndex]) {
                 biggerIndex = right
             }
             if (biggerIndex != cur) {
-                swap(biggerIndex, cur, data)
+                swap(data, biggerIndex, cur)
             } else {
                 break
             }
@@ -77,7 +78,7 @@ class MaxHeap(private val capacity: Int) {
     fun toIntArray(): IntArray {
         val arr = IntArray(size())
         for (i in 0..last) {
-            arr[i] = data[i]
+            arr[i] = data[i] as Int
         }
         return arr
     }

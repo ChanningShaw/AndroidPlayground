@@ -67,7 +67,7 @@ object SortPG {
                             j, j + 1
                         )
                     )
-                    swap(j, j + 1, data)
+                    swap(data, j, j + 1)
                     hasSwap = true
                 }
             }
@@ -94,7 +94,7 @@ object SortPG {
                 }
             }
             channel.sendAction(SwapAction(i, minIndex))
-            swap(i, minIndex, data)
+            swap(data, i, minIndex)
         }
         channel.sendAction(AlgorithmAction.FinishAction)
     }
@@ -263,7 +263,7 @@ object SortPG {
             if (i >= j) break
             //交换两个元素的位置，使得左边的元素不大于pivot,右边的不小于pivot
             channel.sendAction(SwapAction(i, j))
-            swap(i, j, arr)
+            swap(arr, i, j)
         }
         channel.sendAction(SwapAction(j, left))
         arr[left] = arr[j]

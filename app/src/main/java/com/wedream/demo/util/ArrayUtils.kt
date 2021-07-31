@@ -22,13 +22,19 @@ object ArrayUtils {
         return array
     }
 
-    fun swap(i: Int, j: Int, data: Array<Int>) {
+    fun swap(data: Array<Int>, i: Int, j: Int) {
         val temp = data[i]
         data[i] = data[j]
         data[j] = temp
     }
 
     fun swap(arr: IntArray, i: Int, j: Int) {
+        val temp = arr[i]
+        arr[i] = arr[j]
+        arr[j] = temp
+    }
+
+    fun <T> swap(arr: ArrayList<T>, i: Int, j: Int) {
         val temp = arr[i]
         arr[i] = arr[j]
         arr[j] = temp
