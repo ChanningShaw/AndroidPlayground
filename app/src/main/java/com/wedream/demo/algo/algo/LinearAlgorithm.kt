@@ -2,10 +2,10 @@ package com.wedream.demo.algo.algo
 
 import com.wedream.demo.algo.model.*
 import com.wedream.demo.algo.model.array.*
+import com.wedream.demo.algo.model.classics.Huffman
 import com.wedream.demo.algo.model.classics.KMP
 import com.wedream.demo.algo.model.list.*
 import com.wedream.demo.algo.model.matrix.MaxRectSize
-import com.wedream.demo.algo.model.matrix.SearchInPartiallySortMatrix
 
 object LinearAlgorithm {
     fun getModels(): List<AlgorithmModel> {
@@ -40,7 +40,13 @@ object LinearAlgorithm {
             AdjustOddOrEven(),
             MaxSumOfSubArray(),
             SmallPeakValueInArray(),
-            MaxProductOfSubArray()
+            MaxProductOfSubArray(),
+            ProductExceptItself(),
+            ArrayPartition(),
+            MissingMinValue(),
+            MaxGap(),
+            MaxProfit(),
+            Huffman()
         )
     }
 }

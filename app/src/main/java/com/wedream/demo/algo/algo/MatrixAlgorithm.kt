@@ -11,7 +11,9 @@ object MatrixAlgorithm {
             ZigZagPrint(),
             SearchInPartiallySortMatrix(),
             MaxSumOfSubMatrix(),
-            TopKInMatrix()
+            TopKInMatrix(),
+            MaxBorderSize(),
+            ShortestPathInMatrix()
         )
     }
 }
