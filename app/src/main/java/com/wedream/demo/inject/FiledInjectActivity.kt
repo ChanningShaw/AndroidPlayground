@@ -11,17 +11,5 @@ class FiledInjectActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        inject()
-    }
-
-    private fun inject() {
-        val clazz = this.javaClass
-        val fields = clazz.declaredFields
-        for (field in fields) {
-            if (Delegate::class.java.isAssignableFrom(field.type)) {
-                field.isAccessible = true
-                log { "get = ${field.get(this)}" }
-            }
-        }
     }
 }

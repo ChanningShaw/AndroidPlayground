@@ -22,9 +22,6 @@ open class CategoryActivity : BaseActivity() {
 
     fun setCategoryList(categories: List<Category>) {
         val rv = findViewById<RecyclerView>(R.id.main_rv)
-        rv.post {
-            log { "post" }
-        }
         val adapter = CategoryAdapter(this)
         rv.layoutManager =
             androidx.recyclerview.widget.LinearLayoutManager(this, RecyclerView.VERTICAL, false)

@@ -14,6 +14,5 @@ open class MyRecyclerView(context: Context, attrs: AttributeSet?, defStyle: Int)
 
     override fun dispatchDraw(canvas: Canvas?) {
         super.dispatchDraw(canvas)
-        log { "dispatchDraw" }
     }
 }
