@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Looper
+import androidx.appcompat.app.AppCompatActivity
 import com.tencent.mmkv.MMKV
 import com.wedream.demo.MainActivity
 import com.wedream.demo.app.ApplicationHolder.instance
@@ -16,6 +17,9 @@ import com.wedream.demo.database.greenDao.DaoSession
 import com.wedream.demo.util.LogUtils.log
 
 class MyApplication : Application() {
+
+    private lateinit var appSp: SharedPreferences
+    private var currentResumeActivity: Activity? = null
 
     companion object {
         const val APP_SP_NAME = "app_sp"
@@ -35,8 +39,6 @@ class MyApplication : Application() {
             }
     }
 
-    private lateinit var appSp: SharedPreferences
-
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
         instance = this
@@ -46,8 +48,8 @@ class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         MMKV.initialize(this)
-        val handler = MyCrashHandler()
-//        Thread.setDefaultUncaughtExceptionHandler(handler)
+        val handler = MyCrashHandler(this)
+        Thread.setDefaultUncaughtExceptionHandler(handler)
         appSp = getSharedPreferences("app_sp", Context.MODE_PRIVATE)
         DeviceParams.init(this)
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
@@ -70,6 +72,7 @@ class MyApplication : Application() {
             }
 
             override fun onActivityResumed(activity: Activity) {
+                currentResumeActivity = activity
                 if (activity is CategoryActivity) {
                     return
                 }
@@ -87,6 +90,10 @@ class MyApplication : Application() {
             val splits = componentString.split("/")
             ComponentName(splits[0], splits[1])
         }
+    }
+
+    fun getCurrentResumeActivity() : Activity? {
+        return currentResumeActivity
     }
 
     fun getDaoSession(): DaoSession {

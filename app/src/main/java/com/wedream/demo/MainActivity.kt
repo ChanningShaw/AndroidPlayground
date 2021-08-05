@@ -6,6 +6,7 @@ import android.os.Bundle
 import com.wedream.demo.algo.activity.*
 import com.wedream.demo.app.ApplicationHolder
 import com.wedream.demo.app.CategoryActivity
+import com.wedream.demo.app.monitor.CrashHandlerActivity
 import com.wedream.demo.category.Category
 import com.wedream.demo.category.ComponentCategory
 import com.wedream.demo.concurrent.JavaExecutorActivity
@@ -115,6 +116,7 @@ class MainActivity : CategoryActivity() {
         )
         val editor = ComponentCategory(VideoEditorActivity::class.java)
         val recorder = ComponentCategory(AudioRecordActivity::class.java)
+        val monitor = ComponentCategory(CrashHandlerActivity::class.java)
         val touch = Category("touch").addComponentCategories(
             listOf(
                 EventDispatchActivity::class.java,
@@ -133,7 +135,17 @@ class MainActivity : CategoryActivity() {
             )
         )
         return listOf(
-            viewCategory, lifecycle, touch, multiThreading, algorithm, render, editor, recorder, inject, investment
+            viewCategory,
+            lifecycle,
+            touch,
+            multiThreading,
+            algorithm,
+            render,
+            editor,
+            recorder,
+            monitor,
+            inject,
+            investment
         )
     }
 }

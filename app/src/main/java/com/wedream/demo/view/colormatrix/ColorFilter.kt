@@ -2,7 +2,7 @@ package com.wedream.demo.view.colormatrix
 
 import android.graphics.*
 import android.widget.ImageView
-import com.wedream.demo.util.BitmapUtils.destroyBitmap
+import com.wedream.demo.util.destroy
 
 /**
  * 我收集的颜色滤镜
@@ -92,7 +92,7 @@ object ColorFilter {
         paint.colorFilter = matrixColorFilter
         val canvas = Canvas(resource)
         canvas.drawBitmap(bitmap, 0f, 0f, paint)
-        if (isRecycle) destroyBitmap(bitmap)
+        if (isRecycle) bitmap.destroy()
         return resource
     }
 
