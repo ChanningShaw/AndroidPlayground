@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!--video text-->
+  <array name="prebuilt_colors">
+    <item>#FFFFFF</item>
+    <item>#9B9B9B</item>
+    <item>#4A4A4A</item>
+    <item>#191919</item>
+    <item>#000000</item>
+
+    <item>#FFCDD2</item>
+    <item>#FF8B80</item>
+    <item>#E35050</item>
+    <item>#FD1838</item>
+    <item>#B71B1C</item>
+
+    <item>#FFF7C5</item>
+    <item>#FFFE8E</item>
+    <item>#FFEB00</item>
+    <item>#FFBB02</item>
+    <item>#F26C02</item>
+
+    <item>#FECEBF</item>
+    <item>#FEB198</item>
+    <item>#FD7B4A</item>
+    <item>#FC5B23</item>
+    <item>#CF3004</item>
+
+    <item>#93E2DC</item>
+    <item>#69D4CB</item>
+    <item>#40C5BB</item>
+    <item>#05968A</item>
+    <item>#005D55</item>
+
+    <item>#C4F2D2</item>
+    <item>#A2E6B8</item>
+    <item>#7FD99F</item>
+    <item>#5DCD85</item>
+    <item>#3BC06B</item>
+
+    <item>#8CE5EC</item>
+    <item>#5ED9E2</item>
+    <item>#04C0CF</item>
+    <item>#08ADB7</item>
+    <item>#15726D</item>
+
+    <item>#BBDEFA</item>
+    <item>#82B2FE</item>
+    <item>#438AFE</item>
+    <item>#1270FE</item>
+    <item>#0046C9</item>
+
+    <item>#BED0DE</item>
+    <item>#93AABD</item>
+    <item>#6B869B</item>
+    <item>#587589</item>
+    <item>#315266</item>
+
+    <item>#E3BCE8</item>
+    <item>#EA80FD</item>
+    <item>#E33EFF</item>
+    <item>#C000F9</item>
+    <item>#5F19B2</item>
+
+    <item>#D0C4E8</item>
+    <item>#B486FC</item>
+    <item>#865CFC</item>
+    <item>#6420FF</item>
+    <item>#3E22B7</item>
+
+    <item>#D7CCC8</item>
+    <item>#A1887E</item>
+    <item>#795547</item>
+    <item>#5D4037</item>
+    <item>#3E2624</item>
+
+    <item>#F0F3C2</item>
+    <item>#F4FE81</item>
+    <item>#EEFF41</item>
+    <item>#C6FF00</item>
+    <item>#6E8D02</item>
+  </array>
+
+</resources>

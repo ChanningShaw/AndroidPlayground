@@ -1,4 +1,4 @@
-package com.wedream.demo.view
+package com.wedream.demo.touch
 
 import android.annotation.SuppressLint
 import android.os.Bundle

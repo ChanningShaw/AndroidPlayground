@@ -53,7 +53,7 @@
         <activity android:name=".algo.activity.AlgorithmDetailActivity" />
         <activity android:name=".algo.activity.TreeAlgorithmActivity" />
         <activity android:name=".view.newtrack.NewMultiTrackActivity" />
-        <activity android:name=".view.InterceptEventActivity" />
+        <activity android:name=".touch.InterceptEventActivity" />
         <activity android:name=".view.LottieActivity" />
         <activity android:name=".view.colormatrix.ColorMatrixCategoryActivity" />
         <activity android:name=".view.colormatrix.ColorMatrixActivity" />
@@ -72,6 +72,7 @@
         <activity android:name=".render.CanvasLayerActivity" />
         <activity android:name=".algo.activity.MatrixAlgorithmActivity" />
         <activity android:name=".inject.FiledInjectActivity" />
+        <activity android:name=".touch.EventDispatchActivity" />
     </application>
 
 </manifest>

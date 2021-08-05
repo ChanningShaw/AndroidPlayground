@@ -6,7 +6,6 @@ import android.os.Bundle
 import com.wedream.demo.algo.activity.*
 import com.wedream.demo.app.ApplicationHolder
 import com.wedream.demo.app.CategoryActivity
-import com.wedream.demo.app.MyApplication
 import com.wedream.demo.category.Category
 import com.wedream.demo.category.ComponentCategory
 import com.wedream.demo.concurrent.JavaExecutorActivity
@@ -24,6 +23,8 @@ import com.wedream.demo.media.AudioRecordActivity
 import com.wedream.demo.planegeometry.PlaneGeometryActivity
 import com.wedream.demo.render.*
 import com.wedream.demo.render.gl3.GLColorActivity
+import com.wedream.demo.touch.EventDispatchActivity
+import com.wedream.demo.touch.InterceptEventActivity
 import com.wedream.demo.util.LogUtils.log
 import com.wedream.demo.videoeditor.VideoEditorActivity
 import com.wedream.demo.view.*
@@ -70,7 +71,6 @@ class MainActivity : CategoryActivity() {
                 ScaleActivity::class.java,
                 CrossTrackMovementActivity::class.java,
                 NewMultiTrackActivity::class.java,
-                InterceptEventActivity::class.java,
                 LottieActivity::class.java,
                 ColorMatrixCategoryActivity::class.java,
                 DrawViewActivity::class.java,
@@ -115,6 +115,12 @@ class MainActivity : CategoryActivity() {
         )
         val editor = ComponentCategory(VideoEditorActivity::class.java)
         val recorder = ComponentCategory(AudioRecordActivity::class.java)
+        val touch = Category("touch").addComponentCategories(
+            listOf(
+                EventDispatchActivity::class.java,
+                InterceptEventActivity::class.java,
+            )
+        )
         val inject = Category("inject").addComponentCategories(
             listOf(
                 AnnotationTestActivity::class.java,
@@ -127,7 +133,7 @@ class MainActivity : CategoryActivity() {
             )
         )
         return listOf(
-            viewCategory, lifecycle, multiThreading, algorithm, render, editor, recorder, inject, investment
+            viewCategory, lifecycle, touch, multiThreading, algorithm, render, editor, recorder, inject, investment
         )
     }
 }
