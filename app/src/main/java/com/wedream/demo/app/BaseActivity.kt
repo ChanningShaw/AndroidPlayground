@@ -25,7 +25,6 @@ open class BaseActivity : AppCompatActivity() {
         for (field in fields) {
             if (Delegate::class.java.isAssignableFrom(field.type)) {
                 field.isAccessible = true
-                log { "get = ${field.get(this)}" }
             }
         }
     }

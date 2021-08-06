@@ -6,8 +6,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.os.Looper
-import androidx.appcompat.app.AppCompatActivity
 import com.tencent.mmkv.MMKV
 import com.wedream.demo.MainActivity
 import com.wedream.demo.app.ApplicationHolder.instance
@@ -48,8 +46,7 @@ class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         MMKV.initialize(this)
-        val handler = MyCrashHandler(this)
-        Thread.setDefaultUncaughtExceptionHandler(handler)
+        val handler = CrashHandler(this)
         appSp = getSharedPreferences("app_sp", Context.MODE_PRIVATE)
         DeviceParams.init(this)
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {

@@ -72,7 +72,8 @@
         <activity android:name=".render.CanvasLayerActivity" />
         <activity android:name=".algo.activity.MatrixAlgorithmActivity" />
         <activity android:name=".inject.FiledInjectActivity" />
-        <activity android:name=".touch.EventDispatchActivity" /><activity android:name=".app.monitor.CrashHandlerActivity" />
+        <activity android:name=".touch.EventDispatchActivity" />
+        <activity android:name=".app.monitor.CrashHandlerActivity" />
+        <activity android:name=".app.monitor.ANRHandleActivity" />
     </application>
-
 </manifest>
