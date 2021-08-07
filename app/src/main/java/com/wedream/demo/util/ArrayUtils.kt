@@ -22,7 +22,7 @@ object ArrayUtils {
         return array
     }
 
-    fun swap(data: Array<Int>, i: Int, j: Int) {
+    fun <T> swap(data: Array<T>, i: Int, j: Int) {
         val temp = data[i]
         data[i] = data[j]
         data[j] = temp

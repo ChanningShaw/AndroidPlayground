@@ -12,7 +12,7 @@ import com.wedream.demo.algo.view.SortVisualizationView
 import com.wedream.demo.app.BaseActivity
 import com.wedream.demo.util.ArrayUtils
 
-class SortActivity : BaseActivity() {
+class SortPlaygroundActivity : BaseActivity() {
 
     var sortView: SortVisualizationView? = null
     var data = emptyArray<Int>()
@@ -69,7 +69,7 @@ class SortActivity : BaseActivity() {
                     5 -> SortPG.Type.Quick
                     else -> SortPG.Type.Bubble
                 }
-                this@SortActivity.algo = algo
+                this@SortPlaygroundActivity.algo = algo
             }
         }
     }

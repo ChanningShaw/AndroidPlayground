@@ -25,7 +25,6 @@ object LinearAlgorithm {
             DeleteNodeInList(),
             InsertIntoOrderCircleList(),
             MergeOrderedList(),
-            KMP(),
             MinK(),
             KthMin(),
             LengthOfNeedToSort(),

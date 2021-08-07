@@ -22,7 +22,7 @@
         <activity android:name=".render.MatrixDemoActivity" />
         <activity android:name=".render.DrawTextDemoActivity" />
         <activity android:name=".planegeometry.PlaneGeometryActivity" />
-        <activity android:name=".algo.activity.SortActivity" />
+        <activity android:name=".algo.activity.SortPlaygroundActivity" />
         <activity android:name="com.wedream.demo.concurrent.kotlin.CoroutineActivity" />
         <activity android:name="com.wedream.demo.concurrent.kotlin.FlowActivity" />
         <activity android:name=".render.DrawPathActivity" />
@@ -75,5 +75,7 @@
         <activity android:name=".touch.EventDispatchActivity" />
         <activity android:name=".app.monitor.CrashHandlerActivity" />
         <activity android:name=".app.monitor.ANRHandleActivity" />
+        <activity android:name=".algo.activity.StringAlgorithmActivity" />
+        <activity android:name=".algo.activity.SortAlgorithmActivity" />
     </application>
 </manifest>

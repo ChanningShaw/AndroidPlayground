@@ -12,7 +12,7 @@ class KMP : AlgorithmModel() {
 
     override var tips = "核心思想：充分利用已经匹配成功的部分。" +
             "构建数组nextArr，nextArr[i]表示以match[0]开头的前缀串" +
-            "和以match[i-1]为结尾的后缀串的最大匹配长度是多。，"
+            "和以match[i-1]为结尾的后缀串的最大匹配长度是多少。"
 
     override fun execute(option: Option?): ExecuteResult {
         val s = "1231231241231235"

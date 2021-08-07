@@ -8,9 +8,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import com.tencent.mmkv.MMKV
 import com.wedream.demo.R
-import com.wedream.demo.algo.algo.LinearAlgorithm
-import com.wedream.demo.algo.algo.MatrixAlgorithm
-import com.wedream.demo.algo.algo.TreeAlgorithm
+import com.wedream.demo.algo.algo.*
 import com.wedream.demo.algo.model.AlgorithmModel
 import com.wedream.demo.algo.model.Option
 import com.wedream.demo.app.BaseActivity
@@ -32,6 +30,8 @@ class AlgorithmDetailActivity : BaseActivity() {
         const val TYPE_LINEAR = "linear"
         const val TYPE_TREE = "tree"
         const val TYPE_MATRIX = "matrix"
+        const val TYPE_STRING = "string"
+        const val TYPE_SORT = "sort"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,6 +60,12 @@ class AlgorithmDetailActivity : BaseActivity() {
             }
             TYPE_MATRIX -> {
                 MatrixAlgorithm.getModels()
+            }
+            TYPE_STRING-> {
+                StringAlgorithm.getModels()
+            }
+            TYPE_SORT-> {
+                SortAlgorithm.getModels()
             }
             else -> {
                 LinearAlgorithm.getModels()

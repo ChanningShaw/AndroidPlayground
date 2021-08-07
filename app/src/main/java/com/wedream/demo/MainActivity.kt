@@ -99,11 +99,13 @@ class MainActivity : CategoryActivity() {
         )
         val algorithm = Category("algorithm").addComponentCategories(
             listOf(
-                SortActivity::class.java,
+                SortPlaygroundActivity::class.java,
                 LinkedListActivity::class.java,
                 LinearAlgorithmActivity::class.java,
                 TreeAlgorithmActivity::class.java,
-                MatrixAlgorithmActivity::class.java
+                MatrixAlgorithmActivity::class.java,
+                StringAlgorithmActivity::class.java,
+                SortAlgorithmActivity::class.java,
             )
         )
         val render = Category("render").addComponentCategories(
