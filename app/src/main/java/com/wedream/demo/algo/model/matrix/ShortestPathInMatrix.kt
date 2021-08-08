@@ -3,6 +3,7 @@ package com.wedream.demo.algo.model.matrix
 import com.wedream.demo.algo.model.AlgorithmModel
 import com.wedream.demo.algo.model.ExecuteResult
 import com.wedream.demo.algo.model.Option
+import com.wedream.demo.algo.structure.Pos
 import com.wedream.demo.util.string
 import java.util.*
 
@@ -70,12 +71,6 @@ class ShortestPathInMatrix : AlgorithmModel() {
             }
             map[toR][toC] = pre + 1
             queue.add(Pos(toR, toC))
-        }
-    }
-
-    private class Pos(val r: Int, val c: Int) {
-        override fun toString(): String {
-            return "$r,$c"
         }
     }
 }

@@ -20,7 +20,6 @@ class CrashHandler(private val application: MyApplication) : Thread.UncaughtExce
         Thread.setDefaultUncaughtExceptionHandler(this)
         val watchdog = ANRWatchDog().apply {
             setReportMainThreadOnly()
-            setIgnoreDebugger(true)
         }
         watchdog.setANRListener(object : ANRWatchDog.ANRListener{
             override fun onAppNotResponding(error: ANRError) {

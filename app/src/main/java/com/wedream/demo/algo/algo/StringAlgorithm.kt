@@ -15,7 +15,16 @@ object StringAlgorithm {
             StringStatistics(),
             GetIndexOfNullable(),
             ReplaceSpace(),
-            ReverseByWord()
+            ReverseByWord(),
+            RemoveDuplicateLetters(),
+            StringDistance(),
+            ShortestStringTransPath(),
+            BracketsValidity(),
+            ExpressionSolution(),
+            ConnectStrings(),
+            LongestUniqueSubString(),
+            MinLengthToWrap(),
+            MinCutCount(),
         )
     }
 }

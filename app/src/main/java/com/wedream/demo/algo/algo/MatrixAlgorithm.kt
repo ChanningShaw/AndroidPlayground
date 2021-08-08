@@ -13,7 +13,8 @@ object MatrixAlgorithm {
             MaxSumOfSubMatrix(),
             TopKInMatrix(),
             MaxBorderSize(),
-            ShortestPathInMatrix()
+            ShortestPathInMatrix(),
+            MatrixTraverse(),
         )
     }
 }
