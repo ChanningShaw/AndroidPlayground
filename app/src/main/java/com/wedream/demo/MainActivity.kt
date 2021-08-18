@@ -16,6 +16,7 @@ import com.wedream.demo.concurrent.kotlin.FlowActivity
 import com.wedream.demo.concurrent.kotlin.FunctionProgrammingActivity
 import com.wedream.demo.concurrent.rxjava.RxJavaDemoActivity
 import com.wedream.demo.inject.AnnotationTestActivity
+import com.wedream.demo.inject.ClassLoaderActivity
 import com.wedream.demo.inject.FiledInjectActivity
 import com.wedream.demo.investment.BTCPredictActivity
 import com.wedream.demo.jni.GL2JNIActivity
@@ -134,7 +135,8 @@ class MainActivity : CategoryActivity() {
         val inject = Category("inject").addComponentCategories(
             listOf(
                 AnnotationTestActivity::class.java,
-                FiledInjectActivity::class.java
+                FiledInjectActivity::class.java,
+                ClassLoaderActivity::class.java,
             )
         )
         val investment = Category("investment").addComponentCategories(

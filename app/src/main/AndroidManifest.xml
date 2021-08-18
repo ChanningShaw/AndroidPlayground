@@ -77,5 +77,6 @@
         <activity android:name=".app.monitor.ANRHandleActivity" />
         <activity android:name=".algo.activity.StringAlgorithmActivity" />
         <activity android:name=".algo.activity.SortAlgorithmActivity" />
+        <activity android:name=".inject.ClassLoaderActivity" />
     </application>
 </manifest>
