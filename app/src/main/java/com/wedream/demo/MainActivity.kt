@@ -3,6 +3,8 @@ package com.wedream.demo
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.PersistableBundle
 import com.wedream.demo.algo.activity.*
 import com.wedream.demo.app.ApplicationHolder
 import com.wedream.demo.app.CategoryActivity
@@ -81,7 +83,8 @@ class MainActivity : CategoryActivity() {
                 RefreshRateActivity::class.java,
                 OutlineActivity::class.java,
                 CanvasBitmapActivity::class.java,
-                WaveView2Activity::class.java
+                WaveView2Activity::class.java,
+                SwitchActivity::class.java,
             )
         )
         val lifecycle = Category("lifecycle").addComponentCategories(

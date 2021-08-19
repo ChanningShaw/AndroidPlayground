@@ -78,5 +78,6 @@
         <activity android:name=".algo.activity.StringAlgorithmActivity" />
         <activity android:name=".algo.activity.SortAlgorithmActivity" />
         <activity android:name=".inject.ClassLoaderActivity" />
+        <activity android:name=".view.SwitchActivity" />
     </application>
 </manifest>
