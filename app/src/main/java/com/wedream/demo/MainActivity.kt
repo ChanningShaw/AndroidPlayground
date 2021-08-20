@@ -118,7 +118,8 @@ class MainActivity : CategoryActivity() {
                 GL2JNIActivity::class.java,
                 FontDemoActivity::class.java,
                 GLColorActivity::class.java,
-                CanvasLayerActivity::class.java
+                CanvasLayerActivity::class.java,
+                SubThreadWindowActivity::class.java,
             )
         )
         val editor = ComponentCategory(VideoEditorActivity::class.java)
