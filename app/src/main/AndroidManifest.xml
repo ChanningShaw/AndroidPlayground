@@ -64,24 +64,25 @@
         <activity android:name=".view.layout.TranslateActivity" />
         <activity android:name=".lifecycle.BadWindowTokenActivity" />
         <activity android:name=".media.AudioRecordActivity" />
-        <activity android:name=".inject.AnnotationTestActivity" />
+        <activity android:name=".reflection.AnnotationTestActivity" />
         <activity android:name=".view.RefreshRateActivity" />
         <activity android:name=".view.layout.OutlineActivity" />
         <activity android:name=".view.CanvasBitmapActivity" />
         <activity android:name=".render.WaveView2Activity" />
         <activity android:name=".render.CanvasLayerActivity" />
         <activity android:name=".algo.activity.MatrixAlgorithmActivity" />
-        <activity android:name=".inject.FiledInjectActivity" />
+        <activity android:name=".reflection.FiledInjectActivity" />
         <activity android:name=".touch.EventDispatchActivity" />
         <activity android:name=".app.monitor.CrashHandlerActivity" />
         <activity android:name=".app.monitor.ANRHandleActivity" />
         <activity android:name=".algo.activity.StringAlgorithmActivity" />
         <activity android:name=".algo.activity.SortAlgorithmActivity" />
-        <activity android:name=".inject.ClassLoaderActivity" />
+        <activity android:name=".reflection.ClassLoaderActivity" />
         <activity android:name=".view.SwitchActivity" />
         <activity android:name=".render.SubThreadWindowActivity" />
         <activity android:name=".algo.activity.NumberAlgorithmActivity" />
         <activity android:name=".view.flowlayout.FlowLayoutActivity" />
         <activity android:name=".view.layout.DetachViewActivity" />
+        <activity android:name=".reflection.dynamicproxy.DynamicProxyActivity" />
     </application>
 </manifest>

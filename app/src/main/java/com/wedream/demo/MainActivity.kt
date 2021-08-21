@@ -15,15 +15,16 @@ import com.wedream.demo.concurrent.kotlin.CoroutineActivity
 import com.wedream.demo.concurrent.kotlin.FlowActivity
 import com.wedream.demo.concurrent.kotlin.FunctionProgrammingActivity
 import com.wedream.demo.concurrent.rxjava.RxJavaDemoActivity
-import com.wedream.demo.inject.AnnotationTestActivity
-import com.wedream.demo.inject.ClassLoaderActivity
-import com.wedream.demo.inject.FiledInjectActivity
+import com.wedream.demo.reflection.AnnotationTestActivity
+import com.wedream.demo.reflection.ClassLoaderActivity
+import com.wedream.demo.reflection.FiledInjectActivity
 import com.wedream.demo.investment.BTCPredictActivity
 import com.wedream.demo.jni.GL2JNIActivity
 import com.wedream.demo.jni.HelloJNIActivity
 import com.wedream.demo.lifecycle.BadWindowTokenActivity
 import com.wedream.demo.media.AudioRecordActivity
 import com.wedream.demo.planegeometry.PlaneGeometryActivity
+import com.wedream.demo.reflection.dynamicproxy.DynamicProxyActivity
 import com.wedream.demo.render.*
 import com.wedream.demo.render.gl3.GLColorActivity
 import com.wedream.demo.touch.EventDispatchActivity
@@ -141,11 +142,12 @@ class MainActivity : CategoryActivity() {
                 InterceptEventActivity::class.java,
             )
         )
-        val inject = Category("inject").addComponentCategories(
+        val inject = Category("reflection").addComponentCategories(
             listOf(
                 AnnotationTestActivity::class.java,
                 FiledInjectActivity::class.java,
                 ClassLoaderActivity::class.java,
+                DynamicProxyActivity::class.java,
             )
         )
         val investment = Category("investment").addComponentCategories(

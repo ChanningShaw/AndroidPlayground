@@ -1,11 +1,10 @@
-package com.wedream.demo.inject
+package com.wedream.demo.reflection
 
 import android.app.Application
 import android.os.Bundle
 import android.view.View
 import com.wedream.demo.app.BaseActivity
 import com.wedream.demo.util.LogUtils.log
-import com.wedream.demo.videoeditor.project.VideoProject
 
 class ClassLoaderActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,7 +1,7 @@
 package com.wedream.demo.videoeditor.controller
 
 import android.widget.TextView
-import com.wedream.demo.inject.Inject
+import com.wedream.demo.reflection.Inject
 import com.wedream.demo.videoeditor.const.Constants
 import com.wedream.demo.videoeditor.message.MessageChannel
 import com.wedream.demo.videoeditor.message.TimeLineMessageHelper

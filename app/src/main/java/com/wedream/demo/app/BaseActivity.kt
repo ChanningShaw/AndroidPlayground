@@ -2,8 +2,7 @@ package com.wedream.demo.app
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.wedream.demo.inject.Delegate
-import com.wedream.demo.util.LogUtils.log
+import com.wedream.demo.reflection.Delegate
 
 open class BaseActivity : AppCompatActivity() {
 

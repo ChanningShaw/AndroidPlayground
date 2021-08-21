@@ -2,10 +2,9 @@ package com.wedream.demo.videoeditor.statusbar
 
 import android.widget.TextView
 import com.wedream.demo.R
-import com.wedream.demo.inject.Inject
+import com.wedream.demo.reflection.Inject
 import com.wedream.demo.videoeditor.controller.ViewController
 import com.wedream.demo.videoeditor.editor.EditorGovernor
-import com.wedream.demo.videoeditor.editor.VideoEditor
 import com.wedream.demo.videoeditor.message.MessageChannel
 import com.wedream.demo.videoeditor.message.TimeLineMessageHelper
 import com.wedream.demo.videoeditor.timeline.data.TimelineViewModel

@@ -1,9 +1,7 @@
-package com.wedream.demo.inject
+package com.wedream.demo.reflection
 
 import android.os.Bundle
 import com.wedream.demo.app.BaseActivity
-import com.wedream.demo.util.LogUtils.log
-import java.lang.reflect.Modifier
 
 class FiledInjectActivity : BaseActivity() {
 

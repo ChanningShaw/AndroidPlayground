@@ -6,7 +6,7 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import com.wedream.demo.R
 import com.wedream.demo.app.DeviceParams
-import com.wedream.demo.inject.Inject
+import com.wedream.demo.reflection.Inject
 import com.wedream.demo.util.KtUtils.ifNullAndElse
 import com.wedream.demo.videoeditor.decorview.DecorViewManager
 import com.wedream.demo.videoeditor.editor.EditorGovernor

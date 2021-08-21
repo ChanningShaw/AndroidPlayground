@@ -2,7 +2,7 @@ package com.wedream.demo.videoeditor.controller
 
 import com.wedream.demo.R
 import com.wedream.demo.app.DeviceParams
-import com.wedream.demo.inject.Inject
+import com.wedream.demo.reflection.Inject
 import com.wedream.demo.videoeditor.const.Constants
 import com.wedream.demo.videoeditor.message.MessageChannel
 import com.wedream.demo.videoeditor.message.TimeLineMessageHelper

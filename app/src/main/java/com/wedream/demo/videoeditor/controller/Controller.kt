@@ -1,6 +1,6 @@
 package com.wedream.demo.videoeditor.controller
 
-import com.wedream.demo.inject.Inject
+import com.wedream.demo.reflection.Inject
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
