@@ -15,6 +15,7 @@ object MatrixAlgorithm {
             MaxBorderSize(),
             ShortestPathInMatrix(),
             MatrixTraverse(),
+            IslandCount(),
         )
     }
 }

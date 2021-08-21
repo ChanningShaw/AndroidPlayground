@@ -7,6 +7,10 @@ import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
 import com.wedream.demo.app.BaseActivity
+import com.wedream.demo.util.LogUtils.log
+import com.wedream.demo.util.curTimeString
+import com.wedream.demo.util.format
+import kotlinx.android.synthetic.main.activity_coroutine.*
 import kotlinx.coroutines.*
 
 class CoroutineActivity : BaseActivity() {
@@ -100,16 +104,17 @@ class CoroutineActivity : BaseActivity() {
 
         findViewById<Button>(R.id.suspend_1).setOnClickListener {
             GlobalScope.launch(Dispatchers.Main) {
-                Log.e(TAG, "协程初始化时间: ${System.currentTimeMillis()}")
+                Log.e(TAG, "suspend_1 start: $curTimeString")
                 val token = getToken()
                 val response = getResponse(token)
-                Log.e(TAG, "协程结束时间: ${System.currentTimeMillis()}")
+                Log.e(TAG, "suspend_1 end: $curTimeString")
             }
+            log { "suspend_1" }
         }
 
         findViewById<Button>(R.id.suspend_2).setOnClickListener {
             GlobalScope.launch(Dispatchers.Unconfined) {
-                Log.e(TAG, "协程初始化时间: ${System.currentTimeMillis()}")
+                Log.e(TAG, "suspend_2 start: ${System.currentTimeMillis().format}")
                 val token = GlobalScope.async(Dispatchers.Unconfined) {
                     return@async getToken()
                 }.await()
@@ -117,19 +122,19 @@ class CoroutineActivity : BaseActivity() {
                 val response = GlobalScope.async(Dispatchers.Unconfined) {
                     return@async getResponse(token)
                 }.await()
-                Log.e(TAG, "协程结束时间: ${System.currentTimeMillis()}")
+                Log.e(TAG, "suspend_2 end: ${System.currentTimeMillis().format}")
             }
         }
 
         findViewById<Button>(R.id.suspend_3).setOnClickListener {
             GlobalScope.launch(Dispatchers.Main) {
-                Log.e(TAG, "协程初始化时间: ${System.currentTimeMillis()}")
+                Log.e(TAG, "协程初始化时间: $curTimeString")
                 val token = getToken()
                 val response = getResponse(token)
-                Log.e(TAG, "协程结束时间: ${System.currentTimeMillis()}")
+                Log.e(TAG, "协程结束时间: $curTimeString")
             }
             for (i in 1..10) {
-                Log.e(TAG, "主线程打印第$i 次，时间:  ${System.currentTimeMillis()}")
+                Log.e(TAG, "主线程打印第$i 次，时间:  $curTimeString")
             }
         }
 
@@ -151,21 +156,23 @@ class CoroutineActivity : BaseActivity() {
     }
 
     private suspend fun getToken(): String {
+        Log.e(TAG, "getToken start，时间:  $$curTimeString")
         delay(100)
-        Log.e(TAG, "getToken 开始执行，时间:  ${System.currentTimeMillis()}")
+        Log.e(TAG, "getToken end，时间:  $$curTimeString")
         return "token"
     }
 
     private suspend fun getResponse(token: String): String {
-        delay(200)
-        Log.e(TAG, "getResponse 开始执行，时间:  ${System.currentTimeMillis()}")
+        Log.e(TAG, "getResponse start，时间:  $curTimeString")
+        delay(2000)
+        Log.e(TAG, "getResponse end，时间:  $curTimeString")
         return "response"
     }
 
     suspend fun getToken2(): String {
-        Log.e(TAG, "getToken2 start，线程：${Thread.currentThread().name}")
+        Log.e(TAG, "getToken2 start，线程：$curTimeString")
         delay(100)
-        Log.e(TAG, "getToken2 end，线程：${Thread.currentThread().name}")
+        Log.e(TAG, "getToken2 end，线程：$curTimeString")
         return "ask"
     }
 

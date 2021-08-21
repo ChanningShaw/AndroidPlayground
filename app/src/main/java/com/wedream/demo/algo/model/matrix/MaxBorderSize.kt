@@ -15,8 +15,7 @@ class MaxBorderSize : AlgorithmModel() {
 
     override var title = "给定一个N*N的方阵，在这个方阵中，只有0和1两种值，返回边框全是1的最大的子方阵的大小"
 
-    override var tips = "用预处理方法。先算出矩阵中每一个的下边和右边有多少个连续的i，形成两个矩阵right和down。" +
-            ""
+    override var tips = "用预处理方法。先算出矩阵中每一个的下边和右边有多少个连续的i，形成两个矩阵right和down。"
 
     override fun execute(option: Option?): ExecuteResult {
         val matrix = arrayOf(

@@ -3,8 +3,6 @@ package com.wedream.demo
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.PersistableBundle
 import com.wedream.demo.algo.activity.*
 import com.wedream.demo.app.ApplicationHolder
 import com.wedream.demo.app.CategoryActivity
@@ -35,6 +33,10 @@ import com.wedream.demo.videoeditor.VideoEditorActivity
 import com.wedream.demo.view.*
 import com.wedream.demo.view.canvas.DrawViewActivity
 import com.wedream.demo.view.colormatrix.ColorMatrixCategoryActivity
+import com.wedream.demo.view.flowlayout.FlowLayoutActivity
+import com.wedream.demo.view.layout.DetachViewActivity
+import com.wedream.demo.view.layout.OutlineActivity
+import com.wedream.demo.view.layout.TranslateActivity
 import com.wedream.demo.view.multitrack.TrackActivity
 import com.wedream.demo.view.newtips.NewTipsActivity
 import com.wedream.demo.view.newtrack.NewMultiTrackActivity
@@ -85,6 +87,8 @@ class MainActivity : CategoryActivity() {
                 CanvasBitmapActivity::class.java,
                 WaveView2Activity::class.java,
                 SwitchActivity::class.java,
+                FlowLayoutActivity::class.java,
+                DetachViewActivity::class.java,
             )
         )
         val lifecycle = Category("lifecycle").addComponentCategories(
@@ -110,6 +114,7 @@ class MainActivity : CategoryActivity() {
                 MatrixAlgorithmActivity::class.java,
                 StringAlgorithmActivity::class.java,
                 SortAlgorithmActivity::class.java,
+                NumberAlgorithmActivity::class.java,
             )
         )
         val render = Category("render").addComponentCategories(

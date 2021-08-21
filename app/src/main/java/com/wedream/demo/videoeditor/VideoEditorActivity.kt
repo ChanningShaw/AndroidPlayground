@@ -25,7 +25,7 @@ import com.wedream.demo.videoeditor.timeline.utils.TimelineUtils
 import com.wedream.demo.videoeditor.timeline.widget.ClickDetectTouchListener
 import com.wedream.demo.videoeditor.timeline.widget.MyHorizontalScrollView
 import com.wedream.demo.videoeditor.timeline.widget.TimelineAxisView
-import com.wedream.demo.view.MyFrameLayout
+import com.wedream.demo.view.layout.MyFrameLayout
 import java.util.*
 
 class VideoEditorActivity : DisposableActivity() {

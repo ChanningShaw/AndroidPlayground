@@ -16,7 +16,7 @@ import com.wedream.demo.videoeditor.project.ActionType
 import com.wedream.demo.videoeditor.timeline.data.Segment
 import com.wedream.demo.videoeditor.timeline.data.TimelineViewModel
 import com.wedream.demo.videoeditor.timeline.widget.SegmentTouchListener
-import com.wedream.demo.view.MyFrameLayout
+import com.wedream.demo.view.layout.MyFrameLayout
 import com.wedream.demo.view.trackmove.CrossTrackMovementActivity
 
 class TrackContainerController : ViewController() {

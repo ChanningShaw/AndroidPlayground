@@ -3,9 +3,7 @@ package com.wedream.demo.view
 import android.content.Context
 import android.graphics.Canvas
 import android.util.AttributeSet
-import android.widget.FrameLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.wedream.demo.util.LogUtils.log
 
 open class MyRecyclerView(context: Context, attrs: AttributeSet?, defStyle: Int) :
     RecyclerView(context, attrs, defStyle) {
@@ -14,5 +12,9 @@ open class MyRecyclerView(context: Context, attrs: AttributeSet?, defStyle: Int)
 
     override fun dispatchDraw(canvas: Canvas?) {
         super.dispatchDraw(canvas)
+    }
+
+    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+        super.onLayout(changed, l, t, r, b)
     }
 }

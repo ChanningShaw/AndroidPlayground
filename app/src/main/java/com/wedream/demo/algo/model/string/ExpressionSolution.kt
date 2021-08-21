@@ -31,7 +31,7 @@ class ExpressionSolution : AlgorithmModel() {
          */
         private fun value(chas: CharArray, index: Int): Result {
             val queue = LinkedList<String>()
-            var pre = 0
+            var pre = 0 // 当前的操作数
             var i = index
             while (i < chas.size && chas[i] != ')') {
                 when {

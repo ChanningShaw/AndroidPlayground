@@ -15,7 +15,7 @@ class BracketsValidity : AlgorithmModel() {
     override var title = "原问题：给定一个字符串str，判断是不是整体有效和括号字符串。" +
             "补充问题：给定一个括号字符串str，返回最长的有效括号字符串。"
 
-    override var tips = "原问题：字符只能是'('或者')'，任何遍历过程中')'不能比'('多，遍历完'('和')'应该一样多。\n" +
+    override var tips = "原问题：字符只能是'('或者')'，遍历过程中任何时候')'不能比'('多，遍历完'('和')'应该一样多。\n" +
             "补充问题：用动态规划。假设length[i]是str[0..i]中必须str[i]结尾的字符串最长有效长度。" +
             "那么如果str[i] == ')'，str[i - length[i-1] - 1]为'('，length[i] = length[i-1] + 2 + length[i - length[i-1] - 2]"
 

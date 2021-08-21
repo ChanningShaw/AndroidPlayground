@@ -17,7 +17,7 @@ class RecyclerViewActivity : BaseActivity() {
         setContentView(R.layout.activity_recycler)
         recyclerView = findViewById(R.id.recycler)
         recyclerView?.adapter = adapter
-        recyclerView?.layoutManager = GridLayoutManager(this, 4)
+        recyclerView?.layoutManager = GridLayoutManager(this, 1)
         adapter.setData(getData())
     }
 
@@ -25,7 +25,7 @@ class RecyclerViewActivity : BaseActivity() {
         val data = mutableListOf<SimpleAdapter.SimpleData>()
         val random = Random(System.currentTimeMillis())
         for (i in 0..200) {
-            val color = when (random.nextInt(3)) {
+            val color = when (i % 3) {
                 0 -> R.color.color_blue
                 1 -> R.color.color_violet
                 2 -> R.color.color_green

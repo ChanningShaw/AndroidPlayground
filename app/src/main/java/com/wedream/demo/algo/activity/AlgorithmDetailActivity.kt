@@ -32,6 +32,7 @@ class AlgorithmDetailActivity : BaseActivity() {
         const val TYPE_MATRIX = "matrix"
         const val TYPE_STRING = "string"
         const val TYPE_SORT = "sort"
+        const val TYPE_NUMBER = "num"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,11 +62,14 @@ class AlgorithmDetailActivity : BaseActivity() {
             TYPE_MATRIX -> {
                 MatrixAlgorithm.getModels()
             }
-            TYPE_STRING-> {
+            TYPE_STRING -> {
                 StringAlgorithm.getModels()
             }
-            TYPE_SORT-> {
+            TYPE_SORT -> {
                 SortAlgorithm.getModels()
+            }
+            TYPE_NUMBER -> {
+                NumberAlgorithm.getModels()
             }
             else -> {
                 LinearAlgorithm.getModels()

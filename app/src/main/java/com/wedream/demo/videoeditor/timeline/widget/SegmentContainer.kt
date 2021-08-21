@@ -2,9 +2,8 @@ package com.wedream.demo.videoeditor.timeline.widget
 
 import android.content.Context
 import android.util.AttributeSet
-import com.wedream.demo.util.LogUtils.printAndDie
 import com.wedream.demo.videoeditor.timeline.data.TimelineViewModel
-import com.wedream.demo.view.MyFrameLayout
+import com.wedream.demo.view.layout.MyFrameLayout
 import io.reactivex.disposables.Disposable
 
 class SegmentContainer(context: Context, attrs: AttributeSet?, defStyle: Int) :

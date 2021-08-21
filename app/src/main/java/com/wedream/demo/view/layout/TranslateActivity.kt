@@ -1,4 +1,4 @@
-package com.wedream.demo.view
+package com.wedream.demo.view.layout
 
 import android.os.Bundle
 import android.view.View

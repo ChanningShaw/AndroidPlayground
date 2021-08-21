@@ -15,7 +15,7 @@ import com.wedream.demo.util.KtUtils.takeAs
 import com.wedream.demo.util.LogUtils.log
 import com.wedream.demo.videoeditor.timeline.utils.TimeRange
 import com.wedream.demo.videoeditor.timeline.widget.AbsTouchListener
-import com.wedream.demo.view.MyFrameLayout
+import com.wedream.demo.view.layout.MyFrameLayout
 import kotlin.math.min
 
 class WaveView2Activity : BaseActivity() {

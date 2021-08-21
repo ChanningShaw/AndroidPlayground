@@ -33,8 +33,8 @@ class SimpleAdapter(context: Context) : CommonAdapter<SimpleAdapter.SimpleData, 
         holder.itemView.setBackgroundResource(data.colorRes)
         holder.newPos = position
         holder.itemView.setOnClickListener {
-            holder.downloadPos = position
-            downloadDemo(0, data, holder)
+//            holder.downloadPos = position
+//            downloadDemo(0, data, holder)
         }
     }
 

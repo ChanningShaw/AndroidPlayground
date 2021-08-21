@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object TimeUtils {
-
     fun getHourAndMinutes(calendar: Calendar): String {
         val h = calendar.get(Calendar.HOUR_OF_DAY)
         val hs = if (h >= 10) {
@@ -25,9 +24,15 @@ object TimeUtils {
         val df = SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss")
         return df.format(calendar.time)
     }
-
-    fun getTimeString(time: Long): String {
-        val df = SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss")
-        return df.format(Date(time))
-    }
 }
+
+val Long.format: String
+    get() = run {
+        val date = Date(this)
+        val strDateFormat = "yyyy-MM-dd HH:mm:ss:SSS"
+        val sdf = SimpleDateFormat(strDateFormat)
+        sdf.format(date)
+    }
+
+val curTimeString: String
+    get() = System.currentTimeMillis().format

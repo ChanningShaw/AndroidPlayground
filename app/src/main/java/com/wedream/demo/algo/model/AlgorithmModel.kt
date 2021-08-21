@@ -9,6 +9,10 @@ abstract class AlgorithmModel(
         return emptyList()
     }
 
+    open fun getLabels(): List<String> {
+        return emptyList()
+    }
+
     abstract fun execute(option: Option?): ExecuteResult
 }
 

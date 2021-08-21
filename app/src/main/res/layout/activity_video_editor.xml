@@ -52,18 +52,18 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
 
-          <com.wedream.demo.view.MyFrameLayout
+          <com.wedream.demo.view.layout.MyFrameLayout
             android:id="@+id/timeline_container"
             android:layout_width="0dp"
             android:layout_height="match_parent">
 
-              <com.wedream.demo.view.MyFrameLayout
+              <com.wedream.demo.view.layout.MyFrameLayout
                 android:id="@+id/track_container"
                 android:layout_width="0dp"
                 android:layout_height="match_parent">
-              </com.wedream.demo.view.MyFrameLayout>
+              </com.wedream.demo.view.layout.MyFrameLayout>
 
-          </com.wedream.demo.view.MyFrameLayout>
+          </com.wedream.demo.view.layout.MyFrameLayout>
 
       </com.wedream.demo.videoeditor.timeline.widget.MyHorizontalScrollView>
 
