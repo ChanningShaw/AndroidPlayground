@@ -7,7 +7,7 @@ class SelectSort<T : Comparable<T>> : SortModel<T>() {
     override var title = "实现选择排序"
 
     override val tips by lazy {
-        "每次选择最小的数加到前面已排序区域的最后。\n" + getSortProperty().toString()
+        "每次选择最小的数加到前面已排序区域的最后。"
     }
 
     override fun getSortProperty(): SortProperty {

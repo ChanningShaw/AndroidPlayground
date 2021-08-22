@@ -3,10 +3,8 @@ package com.wedream.demo.algo.model.sort
 import com.wedream.demo.algo.model.AlgorithmModel
 import com.wedream.demo.algo.model.ExecuteResult
 import com.wedream.demo.algo.model.Option
-import com.wedream.demo.util.ArrayUtils
 import com.wedream.demo.util.ArrayUtils.swap
 import com.wedream.demo.util.string
-import java.lang.StringBuilder
 
 abstract class SortModel<T : Comparable<T>> : AlgorithmModel() {
 
@@ -19,14 +17,6 @@ abstract class SortModel<T : Comparable<T>> : AlgorithmModel() {
     abstract fun getSortProperty(): SortProperty
 
     abstract fun onSort()
-
-    override fun getOptions(): List<Option> {
-        return listOf(
-            Option(SortType.Select.ordinal, "选择排序"),
-            Option(SortType.Bubble.ordinal, "冒泡排序"),
-            Option(SortType.Heap.ordinal, "堆排序"),
-        )
-    }
 
     override fun execute(option: Option?): ExecuteResult {
         val arr = arrayOf(
@@ -58,6 +48,11 @@ abstract class SortModel<T : Comparable<T>> : AlgorithmModel() {
     protected fun cmp(i: Int, j: Int): Int {
         cmpCount++
         return array[i].compareTo(array[j])
+    }
+
+    protected fun cmp(t1: T, t2: T): Int {
+        cmpCount++
+        return t1.compareTo(t2)
     }
 
     data class SortProperty(

@@ -14,10 +14,19 @@ class SortProxy<T : Comparable<T>> : SortModel<T>() {
         get() = currentModel.title
 
     override val tips: String
-        get() = currentModel.tips
+        get() = currentModel.tips + "\n${currentModel.getSortProperty()}"
 
     override fun execute(option: Option?): ExecuteResult {
         return currentModel.execute(option)
+    }
+
+    override fun getOptions(): List<Option> {
+        return listOf(
+            Option(SortType.Select.ordinal, "选择排序"),
+            Option(SortType.Bubble.ordinal, "冒泡排序"),
+            Option(SortType.Heap.ordinal, "堆排序"),
+            Option(SortType.Insert.ordinal, "插入排序"),
+        )
     }
 
     override fun onOptionSelect(option: Option) {
@@ -30,6 +39,9 @@ class SortProxy<T : Comparable<T>> : SortModel<T>() {
             }
             SortType.Heap.ordinal -> {
                 currentModel = HeapSort()
+            }
+            SortType.Insert.ordinal -> {
+                currentModel = InsertSort()
             }
         }
     }
