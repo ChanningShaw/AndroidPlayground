@@ -17,7 +17,7 @@ class SortAlgorithmActivity : CategoryActivity() {
 
     private fun buildData(): List<Category> {
         return SortAlgorithm.getModels().map {
-            Category(it.name)
+            Category("各种排序算法")
         }
     }
 

@@ -2,10 +2,7 @@ package com.wedream.demo.algo.activity
 
 import android.os.Bundle
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.Spinner
-import android.widget.TextView
+import android.widget.*
 import com.tencent.mmkv.MMKV
 import com.wedream.demo.R
 import com.wedream.demo.algo.algo.*
@@ -97,12 +94,26 @@ class AlgorithmDetailActivity : BaseActivity() {
                 it.name
             }
             val adapter =
-                object : ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, items) {
-
-                }
+                object : ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, items) {}
             optionsSelector.adapter = adapter
         } else {
             optionsSelector.visibility = View.GONE
+        }
+
+        optionsSelector.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
+                model.onOptionSelect(options[position])
+                titleView.text = model.title
+                tipsView.text = model.tips
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
         }
 
         executeButton.setOnClickListener {

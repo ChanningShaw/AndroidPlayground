@@ -1,9 +1,9 @@
 package com.wedream.demo.algo.model
 
 abstract class AlgorithmModel(
-    open var name: String = "",
-    open var title: String = "",
-    open var tips: String = ""
+    open val name: String = "",
+    open val title: String = "",
+    open val tips: String = ""
 ) {
     open fun getOptions(): List<Option> {
         return emptyList()
@@ -11,6 +11,10 @@ abstract class AlgorithmModel(
 
     open fun getLabels(): List<String> {
         return emptyList()
+    }
+
+    open fun onOptionSelect(option: Option) {
+
     }
 
     abstract fun execute(option: Option?): ExecuteResult
