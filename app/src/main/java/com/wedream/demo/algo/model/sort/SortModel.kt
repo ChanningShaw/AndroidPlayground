@@ -20,8 +20,7 @@ abstract class SortModel<T : Comparable<T>> : AlgorithmModel() {
 
     override fun execute(option: Option?): ExecuteResult {
         val arr = arrayOf(
-            5, 6, 3, 4, 1, 2, 5, 6, 3, 4, 1, 2, 5, 6, 3, 4, 1, 2,
-            5, 6, 3, 4, 1, 2, 5, 6, 3, 4, 1, 2, 5, 6, 3, 4, 1, 2
+            5, 6, 7, 8, 9, 1, 2, 3, 4,
         )
 
         val input = arr.string()
@@ -73,6 +72,6 @@ abstract class SortModel<T : Comparable<T>> : AlgorithmModel() {
     }
 
     enum class SortType {
-        Select, Bubble, Insert, Heap
+        Select, Bubble, Insert, Heap, Merge, Quick
     }
 }
