@@ -20,10 +20,10 @@ class SelectSort<T : Comparable<T>> : SortModel<T>() {
         )
     }
 
-    override fun onSort(arr: Array<T>) {
-        for (i in 0 until arr.lastIndex) { // 要插入的位置
+    override fun onSort() {
+        for (i in 0 until array.lastIndex) { // 要插入的位置
             var min = i
-            for (j in i + 1..arr.lastIndex) { // 寻找最小的数
+            for (j in i + 1..array.lastIndex) { // 寻找最小的数
                 if (cmp(j, min) < 0) {
                     min = j
                 }

@@ -21,9 +21,9 @@ class HeapSort<T : Comparable<T>> : SortModel<T>() {
         )
     }
 
-    override fun onSort(arr: Array<T>) {
-        heapSize = arr.size
-        for (i in arr.indices) {
+    override fun onSort() {
+        heapSize = array.size
+        for (i in heapSize shr 2 - 1 downTo 0) { // 最后一个节点的父节点开始
             shiftDown(i)
         }
         while (heapSize > 1) {

@@ -26,7 +26,7 @@ class SortProxy<T : Comparable<T>> : SortModel<T>() {
                 currentModel = SelectSort()
             }
             SortType.Bubble.ordinal -> {
-//                currentModel = BubbleSort()
+                currentModel = BubbleSort()
             }
             SortType.Heap.ordinal -> {
                 currentModel = HeapSort()
@@ -38,7 +38,7 @@ class SortProxy<T : Comparable<T>> : SortModel<T>() {
         return currentModel.getSortProperty()
     }
 
-    override fun onSort(arr: Array<T>) {
+    override fun onSort() {
 
     }
 }

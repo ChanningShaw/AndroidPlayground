@@ -18,7 +18,7 @@ abstract class SortModel<T : Comparable<T>> : AlgorithmModel() {
 
     abstract fun getSortProperty(): SortProperty
 
-    abstract fun onSort(arr: Array<T>)
+    abstract fun onSort()
 
     override fun getOptions(): List<Option> {
         return listOf(
@@ -29,14 +29,17 @@ abstract class SortModel<T : Comparable<T>> : AlgorithmModel() {
     }
 
     override fun execute(option: Option?): ExecuteResult {
-        val arr = arrayOf(5, 6, 3, 4, 1, 2, 5, 6, 3, 4, 1, 2, 5, 6, 3, 4, 1, 2)
+        val arr = arrayOf(
+            5, 6, 3, 4, 1, 2, 5, 6, 3, 4, 1, 2, 5, 6, 3, 4, 1, 2,
+            5, 6, 3, 4, 1, 2, 5, 6, 3, 4, 1, 2, 5, 6, 3, 4, 1, 2
+        )
 
         val input = arr.string()
         cmpCount = 0
         swapCount = 0
         sort(arr as Array<T>)
         val output = arr.string()
-        return ExecuteResult(input, output.string() + "，比较次数：$cmpCount，交换次数：$swapCount")
+        return ExecuteResult(input, output.string() + "\n比较次数：$cmpCount，交换次数：$swapCount")
     }
 
     fun sort(arr: Array<T>) {
@@ -44,7 +47,7 @@ abstract class SortModel<T : Comparable<T>> : AlgorithmModel() {
             return
         }
         array = arr
-        onSort(arr)
+        onSort()
     }
 
     protected fun swap(i: Int, j: Int) {
