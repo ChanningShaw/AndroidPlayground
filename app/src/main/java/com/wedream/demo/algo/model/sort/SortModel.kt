@@ -72,6 +72,6 @@ abstract class SortModel<T : Comparable<T>> : AlgorithmModel() {
     }
 
     enum class SortType {
-        Select, Bubble, Insert, Heap, Merge, Quick, Shell
+        Select, Bubble, Insert, Heap, Merge, Quick, Shell, Counting
     }
 }

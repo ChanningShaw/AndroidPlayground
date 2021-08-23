@@ -8,7 +8,7 @@ import com.wedream.demo.algo.model.Option
  */
 class SortProxy<T : Comparable<T>> : SortModel<T>() {
 
-    private var currentModel: SortModel<T> = SelectSort()
+    private var currentModel: SortModel<*> = SelectSort<T>()
 
     override val title: String
         get() = currentModel.title
@@ -29,31 +29,35 @@ class SortProxy<T : Comparable<T>> : SortModel<T>() {
             Option(SortType.Merge.ordinal, "归并排序"),
             Option(SortType.Quick.ordinal, "快速排序"),
             Option(SortType.Shell.ordinal, "希尔排序"),
+            Option(SortType.Counting.ordinal, "计数排序"),
         )
     }
 
     override fun onOptionSelect(option: Option) {
         when (option.id) {
             SortType.Select.ordinal -> {
-                currentModel = SelectSort()
+                currentModel = SelectSort<T>()
             }
             SortType.Bubble.ordinal -> {
-                currentModel = BubbleSort()
+                currentModel = BubbleSort<T>()
             }
             SortType.Heap.ordinal -> {
-                currentModel = HeapSort()
+                currentModel = HeapSort<T>()
             }
             SortType.Insert.ordinal -> {
-                currentModel = InsertSort()
+                currentModel = InsertSort<T>()
             }
             SortType.Merge.ordinal -> {
-                currentModel = MergeSort()
+                currentModel = MergeSort<T>()
             }
             SortType.Quick.ordinal -> {
-                currentModel = QuickSort()
+                currentModel = QuickSort<T>()
             }
             SortType.Shell.ordinal -> {
-                currentModel = ShellSort()
+                currentModel = ShellSort<T>()
+            }
+            SortType.Counting.ordinal -> {
+                currentModel = CountingSort()
             }
         }
     }
