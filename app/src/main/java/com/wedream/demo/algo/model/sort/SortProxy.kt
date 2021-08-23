@@ -28,6 +28,7 @@ class SortProxy<T : Comparable<T>> : SortModel<T>() {
             Option(SortType.Insert.ordinal, "插入排序"),
             Option(SortType.Merge.ordinal, "归并排序"),
             Option(SortType.Quick.ordinal, "快速排序"),
+            Option(SortType.Shell.ordinal, "希尔排序"),
         )
     }
 
@@ -50,6 +51,9 @@ class SortProxy<T : Comparable<T>> : SortModel<T>() {
             }
             SortType.Quick.ordinal -> {
                 currentModel = QuickSort()
+            }
+            SortType.Shell.ordinal -> {
+                currentModel = ShellSort()
             }
         }
     }

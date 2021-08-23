@@ -68,10 +68,10 @@ abstract class SortModel<T : Comparable<T>> : AlgorithmModel() {
     }
 
     enum class Complexity {
-        Const, LogN, N, NLogN, N2, N3,
+        Const, LogN, N, N1x, NLogN, N2, N3,
     }
 
     enum class SortType {
-        Select, Bubble, Insert, Heap, Merge, Quick
+        Select, Bubble, Insert, Heap, Merge, Quick, Shell
     }
 }
