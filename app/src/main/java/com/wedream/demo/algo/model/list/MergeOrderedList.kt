@@ -62,7 +62,7 @@ class MergeOrderedList : AlgorithmModel() {
                 }
                 cur = cur.next!!
             }
-            cur.next = cur1 ?: cur2
+            cur.next = cur1 ?: cur2 // 剩余部分直接连接
             return newHead
         }
     }

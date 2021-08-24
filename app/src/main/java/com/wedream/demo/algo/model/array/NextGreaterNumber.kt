@@ -19,12 +19,12 @@ class NextGreaterNumber : AlgorithmModel() {
 
     override fun execute(option: Option?): ExecuteResult {
         val arr = intArrayOf(3, 4, 1, 5, 6, 2, 7)
-        val result = execute(arr)
+        val result = nextGreaterNumber(arr)
         return ExecuteResult(arr.string(), result.string())
     }
 
     companion object {
-        fun execute(arr: IntArray): IntArray {
+        fun nextGreaterNumber(arr: IntArray): IntArray {
             if (arr.isEmpty()) {
                 return intArrayOf()
             }
@@ -32,6 +32,7 @@ class NextGreaterNumber : AlgorithmModel() {
             val stack = Stack<Int>()
             for (i in arr.indices) {
                 while (stack.isNotEmpty() && arr[i] > arr[stack.peek()]) {
+                    // 来了一个更大的，说明找到了下一个更大的位置
                     val index = stack.pop()
                     res[index] = arr[i]
                 }

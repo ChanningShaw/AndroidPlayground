@@ -33,8 +33,9 @@ class MonotonicStack : AlgorithmModel() {
             val stack = Stack<Int>()
             for (i in arr.indices) {
                 while (stack.isNotEmpty() && arr[i] < arr[stack.peek()]) {
+                    // 来了一个更小的，需要更新两边最小位置信息
                     val index = stack.pop()
-                    val leftValue = if (stack.isEmpty()) -1 else stack.peek()
+                    val leftValue = if (stack.isEmpty()) -1 else stack.peek() // 上一个比栈顶元素小的
                     res[index][0] = leftValue
                     res[index][1] = i
                 }

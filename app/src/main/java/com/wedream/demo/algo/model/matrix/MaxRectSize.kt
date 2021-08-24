@@ -21,9 +21,9 @@ class MaxRectSize : AlgorithmModel() {
 
     override fun execute(option: Option?): ExecuteResult {
         val input = arrayOf(
-            intArrayOf(1, 0, 1, 1),
+            intArrayOf(1, 0, 0, 1),
             intArrayOf(1, 1, 1, 1),
-            intArrayOf(1, 1, 1, 0)
+            intArrayOf(0, 0, 1, 0)
         )
         return ExecuteResult(input.string(), maxRectSize(input).toString())
     }
@@ -34,7 +34,7 @@ class MaxRectSize : AlgorithmModel() {
                 return 0
             }
             var maxArea = 0
-            val height = IntArray(map[0].size)
+            val height = IntArray(map[0].size) // 每列连续1的数量
             for (i in map.indices) {
                 for (j in map[0].indices) {
                     height[j] = if (map[i][j] == 0) 0 else height[j] + 1
@@ -52,19 +52,21 @@ class MaxRectSize : AlgorithmModel() {
             var maxArea = 0
             val maxStack = Stack<Int>()
             for (i in arr.indices) {
-                while (maxStack.isNotEmpty() && arr[i] < arr[maxStack.peek()]) {
+                while (maxStack.isNotEmpty() && arr[i] <= arr[maxStack.peek()]) {
+                    // 当前高度arr[i]已经不能向右扩张了
                     val right = maxStack.pop()
-                    val left = if (maxStack.isEmpty()) 0 else maxStack.peek()
-                    val curArea = (i - left) * arr[right]
-                    maxArea = max(maxArea, curArea)
+                    val left = if (maxStack.isEmpty()) -1 else maxStack.peek()
+                    val curArea = (i - left - 1) * arr[right] // i是下一个位置，所以要减1
+                    maxArea = max(maxArea, curArea) // 记录当前矩阵的大小
                 }
                 maxStack.push(i)
             }
+            // 已经全部入栈完毕，弹栈
             while (maxStack.isNotEmpty()) {
                 val right = maxStack.pop()
-                val left = if (maxStack.isEmpty()) 0 else maxStack.peek()
-                val curArea = (arr.size - left) * arr[right]
-                maxArea = max(maxArea, curArea)
+                val left = if (maxStack.isEmpty()) -1 else maxStack.peek()
+                val curArea = (arr.size - left - 1) * arr[right] //arr.size是因为已经遍历到最后了，left是上一个比其小的位置
+                maxArea = max(maxArea, curArea) // 记录当前矩阵的大小
             }
             return maxArea
         }

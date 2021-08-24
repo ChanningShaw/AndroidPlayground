@@ -41,10 +41,12 @@ class RandomPointerListCopy : AlgorithmModel() {
         fun copyListWithRand1(head: LinkedList.Node<Int>): LinkedList.Node<Int> {
             val map = HashMap<LinkedList.Node<Int>, LinkedList.Node<Int>>()
             var cur: LinkedList.Node<Int>? = head
+            // 先遍历一遍，复制主链
             while (cur != null) {
                 map[cur] = LinkedList.Node(cur.value)
                 cur = cur.next
             }
+            // 先遍历一遍，复制副链
             cur = head
             while (cur != null) {
                 map[cur]?.next = map[cur.next]
@@ -57,6 +59,7 @@ class RandomPointerListCopy : AlgorithmModel() {
         fun copyListWithRand2(head: LinkedList.Node<Int>): LinkedList.Node<Int> {
             var cur: LinkedList.Node<Int>? = head
             var next: LinkedList.Node<Int>?
+            // 遍历一遍，复制主链，直接复制在原节点的后面
             while (cur != null) {
                 next = cur.next
                 cur.next = LinkedList.Node(cur.value)
@@ -64,6 +67,7 @@ class RandomPointerListCopy : AlgorithmModel() {
                 cur = next
             }
 
+            // 再遍历一遍，复制副链，直接复制在原节点的后面
             cur = head
             var curCopy: LinkedList.Node<Int>?
             while (cur != null) {
@@ -73,6 +77,7 @@ class RandomPointerListCopy : AlgorithmModel() {
                 cur = next
             }
 
+            // 再遍历一遍，分开新旧链
             cur = head
             val res: LinkedList.Node<Int>? = head.next
             while (cur != null) {

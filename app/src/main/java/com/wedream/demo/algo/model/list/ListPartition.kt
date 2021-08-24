@@ -56,6 +56,7 @@ class ListPartition : AlgorithmModel() {
                 arr[i] = cur
                 cur = cur?.next
             }
+            // 借助数组来进行partition
             arrPartition(arr, pivot)
             for (i in 0..arr.size - 2) {
                 arr[i]?.next = arr[i + 1]
@@ -66,17 +67,17 @@ class ListPartition : AlgorithmModel() {
 
         fun listPartition2(head: LinkedList.Node<Int>, pivot: Int): LinkedList.Node<Int> {
             var sHead: LinkedList.Node<Int>? = null
-            var sTail: LinkedList.Node<Int>? = null
+            var sTail: LinkedList.Node<Int>? = null //小于部分的头和尾
             var eHead: LinkedList.Node<Int>? = null
-            var eTail: LinkedList.Node<Int>? = null
+            var eTail: LinkedList.Node<Int>? = null //等于部分的头和尾
             var bHead: LinkedList.Node<Int>? = null
-            var bTail: LinkedList.Node<Int>? = null
+            var bTail: LinkedList.Node<Int>? = null //大于部分的头和尾
             var cur: LinkedList.Node<Int>? = head
             var next: LinkedList.Node<Int>?
 
             while (cur != null) {
                 next = cur.next
-                cur.next = null
+                cur.next = null // 断开连接
                 if (cur.value < pivot) {
                     if (sHead == null) {
                         sHead = cur
@@ -115,8 +116,8 @@ class ListPartition : AlgorithmModel() {
         }
 
         private fun arrPartition(arr: Array<LinkedList.Node<Int>?>, pivot: Int) {
-            var small = -1
-            var big = arr.size
+            var small = -1 // [0,small]是小于pivot的部分
+            var big = arr.size //[big, arr.lastIndex]是大于pivot的部分
             var index = 0
             while (index != big) {
                 when {
@@ -127,7 +128,7 @@ class ListPartition : AlgorithmModel() {
                         index++
                     }
                     else -> {
-                        swap(arr, --big, index)
+                        swap(arr, --big, index) // 注意这里index不++
                     }
                 }
             }

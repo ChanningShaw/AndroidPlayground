@@ -11,7 +11,7 @@ class DeleteNodeInList : AlgorithmModel() {
     override var name = "在单链表中删除指定值的节点"
 
     override var title = "给定一个无序单链表的头结点head和整数num\n" +
-            "将链表中值为null的节点全部删除"
+            "将链表中值为num的节点全部删除"
 
     override var tips = "顺序遍历，找到第一个不为num的节点作为头结点，\n" +
             "然后再继续遍历，如果节点为num，删除即可"

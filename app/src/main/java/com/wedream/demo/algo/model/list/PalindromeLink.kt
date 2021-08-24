@@ -20,14 +20,16 @@ class PalindromeLink : AlgorithmModel() {
     override fun execute(option: Option?): ExecuteResult {
         val head = LinkedList.Node(0)
         val n1 = LinkedList.Node(1)
-        val n2 = LinkedList.Node(1)
-        val n3 = LinkedList.Node(0).apply {
+        val n2 = LinkedList.Node(2)
+        val n3 = LinkedList.Node(1)
+        val n4 = LinkedList.Node(0).apply {
             isLast = true
         }
         head.next = n1
         n1.next = n2
         n2.next = n3
-        val output = isPalindrome3(head)
+        n3.next = n4
+        val output = isPalindrome2(head)
         return ExecuteResult(head.string(), output.toString())
     }
 
@@ -35,6 +37,7 @@ class PalindromeLink : AlgorithmModel() {
         fun isPalindrome1(head: LinkedList.Node<Int>): Boolean {
             val stack = Stack<Int>()
             var cur: LinkedList.Node<Int>? = head
+            // 全部压栈
             while (cur != null) {
                 stack.push(cur.value)
                 cur = cur.next
@@ -54,6 +57,7 @@ class PalindromeLink : AlgorithmModel() {
                 return true
             }
             var right: LinkedList.Node<Int>? = head
+            // 找中间节点
             var mid: LinkedList.Node<Int>? = head.next
             while (right?.next != null && right.next?.next != null) {
                 mid = mid?.next
@@ -61,9 +65,9 @@ class PalindromeLink : AlgorithmModel() {
             }
 
             val stack = Stack<Int>()
-            while (right != null) {
-                stack.push(right.value)
-                right = right.next
+            while (mid != null) {
+                stack.push(mid.value)
+                mid = mid.next
             }
             var cur: LinkedList.Node<Int>? = head
             while (stack.isNotEmpty()) {

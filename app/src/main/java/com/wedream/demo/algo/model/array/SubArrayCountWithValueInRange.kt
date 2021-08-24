@@ -23,7 +23,7 @@ class SubArrayCountWithValueInRange : AlgorithmModel() {
             "那么arr[k..l](k<=i<=j<=l)肯定不满足条件，即若一个数组不满足条件，所有包含它的数组肯定都不满足条件。\n\n" +
 
             "使用双端队列维护窗口内的最大值，时间复杂度为O(n)，\n" +
-            "受此启发，我们可以维护两个双端队列来 实时更新 滑动窗口的最大值和最小值。\n" +
+            "受此启发，我们可以使用滑动窗口来解决，维护两个双端队列来实时更新滑动窗口的最大值和最小值。\n" +
             "如果全局最大值和全全局最小值都满足条件，那么滑动窗口中的任意子数组也是满足的。\n" +
             "在计算子数组数量时，每次只计算以滑动窗口的左边界为起点的子数组数量有多少，实际就是滑动窗口的长度。\n"
 
@@ -38,19 +38,21 @@ class SubArrayCountWithValueInRange : AlgorithmModel() {
             if (arr.isEmpty() || num < 0) {
                 return 0
             }
-            val qMin = LinkedList<Int>()
-            val qMax = LinkedList<Int>()
+            val qMin = LinkedList<Int>() // 里面放的是当前滑动窗口可能成为最大值的下标，这里面的值是递增的
+            val qMax = LinkedList<Int>() // 里面放的是当前滑动窗口可能成为最小值的下标，这里面的值的递减的
             var i = 0
-            var j = 0
+            var j = 0 // 左闭右开区间i, j
             var res = 0
             while (i < arr.size) {
                 while (j < arr.size) {
                     if (qMin.isEmpty() || qMin.peekLast() != j) {
                         while (qMin.isNotEmpty() && arr[j] <= arr[qMin.peekLast()]) {
+                            // 来了一个更小的，把之前大于此值的都移除
                             qMin.pollLast()
                         }
                         qMin.addLast(j)
                         while (qMax.isNotEmpty() && arr[j] >= arr[qMax.peekLast()]) {
+                            // 来了一个更大的，把之前小于此值的都移除
                             qMax.pollLast()
                         }
                         qMax.addLast(j)
@@ -62,9 +64,11 @@ class SubArrayCountWithValueInRange : AlgorithmModel() {
                 }
                 res += j - i
                 if (qMin.peekFirst() == i) {
+                    // 滑动窗口已经滑过，移除
                     qMin.pollFirst()
                 }
                 if (qMax.peekFirst() == i) {
+                    // 滑动窗口已经滑过，移除
                     qMax.pollFirst()
                 }
                 i++

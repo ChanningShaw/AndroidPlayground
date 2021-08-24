@@ -66,7 +66,7 @@ class NumListAdd : AlgorithmModel() {
             }
             var a = 0
             var b = 0
-            var ca = 0
+            var ca = 0 //进位
             var n = 0
             var head: LinkedList.Node<Int>? = null
             while (s1.isNotEmpty() || s2.isNotEmpty()) {
@@ -103,7 +103,7 @@ class NumListAdd : AlgorithmModel() {
 
             var a = 0
             var b = 0
-            var ca = 0
+            var ca = 0 // 进位
             var n = 0
             var head: LinkedList.Node<Int>? = null
             while (cur1 != null || cur2 != null) {
