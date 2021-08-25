@@ -1,5 +1,6 @@
 package com.wedream.demo.app
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.RecyclerView
@@ -9,6 +10,7 @@ import com.wedream.demo.category.CategoryAdapter
 import com.wedream.demo.category.ComponentCategory
 import com.wedream.demo.common.CommonAdapter
 import com.wedream.demo.util.LogUtils.log
+import com.wedream.demo.util.vibrate
 
 open class CategoryActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,6 +40,7 @@ open class CategoryActivity : BaseActivity() {
     }
 
     open fun onCategoryClick(data: Category, pos: Int) {
+        vibrate(100)
         val intent = Intent()
         if (data is ComponentCategory) {
             intent.component = data.componentName
