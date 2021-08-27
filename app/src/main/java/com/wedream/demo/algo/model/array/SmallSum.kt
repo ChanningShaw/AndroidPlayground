@@ -16,8 +16,10 @@ class SmallSum : AlgorithmModel() {
     override var title = "数组中一个数的小和为这个数左边小于或者等于该数的所有元素之和。" +
             "数组的小和就是所有元素的小和之和。给定数组arr，求其小和"
 
-    override var tips = "使用归并排序，因为小和涉及到基于位置的比较关系。" +
-            "在合并的过程中，左侧被选择时，可以算出它的小和=它的值*右侧剩余的长度"
+    override var tips = "如果arr[k]右边有N个数比它大，那么它的小和是arr[k]*N。" +
+            "使用归并排序，因为小和涉及到基于位置的比较关系。" +
+            "在合并的过程中，左侧被选择时，可以算出它的小和=它的值*右侧剩余的长度。" +
+            "但是有一个问题要注意，merge相等元素的时候，要先拷贝右边的元素"
 
     override fun execute(option: Option?): ExecuteResult {
         val arr = intArrayOf(1,3,5,2,4,6)
@@ -49,7 +51,7 @@ class SmallSum : AlgorithmModel() {
             var sum = 0
             var k = 0
             while (i <= mid && j <= right) {
-                if (arr[i] <= arr[j]) {
+                if (arr[i] < arr[j]) {
                     sum += arr[i] * (right - j + 1)
                     tmpArr[k++] = arr[i++]
                 }   else {

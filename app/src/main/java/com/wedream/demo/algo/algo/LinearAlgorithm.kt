@@ -45,7 +45,8 @@ object LinearAlgorithm {
             MissingMinValue(),
             MaxGap(),
             MaxProfit(),
-            Huffman()
+            Huffman(),
+            ShuffleCards(),
         )
     }
 }

@@ -27,7 +27,8 @@ object TreeAlgorithm {
             TwoNodeDistance(),
             GeneratePostArray(),
             TreeCount(),
-            NodeCountOfCBT()
+            NodeCountOfCBT(),
+            TreeWidth()
         )
     }
 }

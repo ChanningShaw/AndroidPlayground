@@ -46,7 +46,7 @@ class RandomPointerListCopy : AlgorithmModel() {
                 map[cur] = LinkedList.Node(cur.value)
                 cur = cur.next
             }
-            // 先遍历一遍，复制副链
+            // 再遍历一遍，复制副链
             cur = head
             while (cur != null) {
                 map[cur]?.next = map[cur.next]

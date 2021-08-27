@@ -28,6 +28,7 @@ class Huffman : AlgorithmModel() {
             }
             val minHeap = PriorityQueue<Int>()
             for (i in arr) {
+                
                 minHeap.add(i)
             }
             while (minHeap.size > 1) {
