@@ -14,8 +14,7 @@ class IsBST : AlgorithmModel() {
     override var title = "给定一棵树的根节点root，已知其所有节点的值都不一样，" +
             "判断此树是不是搜索二叉树"
 
-    override var tips = "按照中序遍历，如果是递增的，则是搜索二叉树，否则不是"
-
+    override var tips = "按照中序遍历，如果值是递增的，则是搜索二叉树，否则不是"
 
     override fun execute(option: Option?): ExecuteResult {
         val n1 = BinaryTree.Node(1)

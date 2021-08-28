@@ -28,7 +28,8 @@ object TreeAlgorithm {
             GeneratePostArray(),
             TreeCount(),
             NodeCountOfCBT(),
-            TreeWidth()
+            TreeWidth(),
+            IsBalancedTree()
         )
     }
 }

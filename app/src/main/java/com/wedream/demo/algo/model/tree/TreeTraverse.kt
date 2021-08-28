@@ -197,6 +197,7 @@ class TreeTraverse : AlgorithmModel() {
 
         /**
          * 使用栈和一个当前指针实现
+         * 对于每一颗子树，先处理左边界
          */
         fun <T> midTraverseNonRecur(
             root: BinaryTree.Node<T>?,

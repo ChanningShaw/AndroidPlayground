@@ -16,6 +16,7 @@ object MatrixAlgorithm {
             ShortestPathInMatrix(),
             MatrixTraverse(),
             IslandCount(),
+            NQueen(),
         )
     }
 }

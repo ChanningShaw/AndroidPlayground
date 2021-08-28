@@ -15,7 +15,7 @@ class NextNode : AlgorithmModel() {
             "给定一个节点node，要求找到其后续节点。该后续节点就是这棵树中序遍历序列中node的下一个节点"
 
     override var tips = "1. 如果有右孩子，肯定在右孩子中。后续节点是右孩子中最左边的节点\n" +
-            "2. 如果没有右孩子，那么就是当前节点是左孩子的父节点"
+            "2. 如果没有右孩子，那么后续节点是当前子树的作为左子树的父节点"
 
     override fun execute(option: Option?): ExecuteResult {
         val n1 = BinaryTree.Node(1)
