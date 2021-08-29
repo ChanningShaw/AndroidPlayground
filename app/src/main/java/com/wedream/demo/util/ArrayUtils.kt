@@ -34,6 +34,12 @@ object ArrayUtils {
         arr[j] = temp
     }
 
+    fun swap(arr: CharArray, i: Int, j: Int) {
+        val temp = arr[i]
+        arr[i] = arr[j]
+        arr[j] = temp
+    }
+
     fun <T> swap(arr: ArrayList<T>, i: Int, j: Int) {
         val temp = arr[i]
         arr[i] = arr[j]

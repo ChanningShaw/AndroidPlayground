@@ -50,6 +50,7 @@ object LinearAlgorithm {
             ShuffleCards(),
             MaintainMedium(),
             Hanoi(),
+            DoubleEndTake(),
         )
     }
 }

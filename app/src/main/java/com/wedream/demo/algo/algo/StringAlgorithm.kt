@@ -25,6 +25,8 @@ object StringAlgorithm {
             LongestUniqueSubString(),
             MinLengthToWrap(),
             MinCutCount(),
+            AllSubSequences(),
+            AllPermutations(),
         )
     }
 }
