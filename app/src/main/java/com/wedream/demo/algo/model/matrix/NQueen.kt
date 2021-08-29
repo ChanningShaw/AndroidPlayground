@@ -64,7 +64,7 @@ class NQueen : AlgorithmModel() {
         }
 
         /**
-         * 1的位表示不能放，0表示可以放
+         * colLim，leftDiaLim，rightDiaLim 1的位表示不能放，0表示可以放
          */
         private fun process2(
             allPos: Int,
@@ -75,11 +75,11 @@ class NQueen : AlgorithmModel() {
             if (colLim == allPos) {
                 return 1 // 已经填满了n列，成功，返回1
             }
-            var avaiPos = allPos and ((colLim or leftDiaLim or rightDiaLim).inv()) // (colLim or leftDiaLim or rightDiaLim) 整体的限制
+            var availPos = allPos and ((colLim or leftDiaLim or rightDiaLim).inv()) // (colLim or leftDiaLim or rightDiaLim) 整体的限制
             var res = 0
-            while (avaiPos != 0) {
-                val mostRightOne = avaiPos and (avaiPos.inv() + 1)
-                avaiPos -= mostRightOne // 更新剩下的可以位置
+            while (availPos != 0) {
+                val mostRightOne = availPos and (availPos.inv() + 1)
+                availPos -= mostRightOne // 更新剩下的可以位置
                 res += process2(
                     allPos,
                     colLim or mostRightOne, // 更新列限制

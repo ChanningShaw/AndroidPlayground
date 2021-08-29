@@ -4,6 +4,7 @@ import com.wedream.demo.algo.model.AlgorithmModel
 import com.wedream.demo.algo.model.ExecuteResult
 import com.wedream.demo.algo.model.Option
 import com.wedream.demo.util.string
+import java.util.*
 
 class MaintainMedium : AlgorithmModel() {
 
@@ -16,14 +17,49 @@ class MaintainMedium : AlgorithmModel() {
             "中位数就是较大部分的最小值或者最小部分的最大值。所以我们可以使用小顶堆和大顶堆的组合来实现。"
 
     override fun execute(option: Option?): ExecuteResult {
-        val arr = intArrayOf(1, 2, 2, 2, 2, 2)
+        val arr = intArrayOf(1, 3, 6, 2, 8, 1)
         val result = maintainMedium(arr)
         return ExecuteResult(arr.string(), result.string())
     }
 
     companion object {
         fun maintainMedium(arr: IntArray): IntArray {
-            return intArrayOf()
+            if (arr.isEmpty()) {
+                return intArrayOf()
+            }
+            val result = IntArray(arr.size)
+            val smallPart = PriorityQueue<Int> { i1, i2 -> // 大顶堆
+                i2 - i1
+            }
+            val bigPart = PriorityQueue<Int> { i1, i2 -> // 小顶堆
+                i1 - i2
+            }
+            for (i in arr.indices) {
+                if (smallPart.isEmpty() || i < smallPart.peek()) {
+                    smallPart.offer(arr[i])
+                    if (smallPart.size - bigPart.size > 1) {
+                        bigPart.offer(smallPart.poll())
+                    }
+                } else {
+                    bigPart.offer(arr[i])
+                    if (bigPart.size - smallPart.size > 1) {
+                        smallPart.offer(bigPart.poll())
+                    }
+                }
+                // 生成中位数
+                when {
+                    bigPart.size > smallPart.size -> {
+                        result[i] = bigPart.peek()
+                    }
+                    smallPart.size > bigPart.size -> {
+                        result[i] = smallPart.peek()
+                    }
+                    else -> {
+                        result[i] = (smallPart.peek() + bigPart.peek()) / 2
+                    }
+                }
+            }
+            return result
         }
     }
 }

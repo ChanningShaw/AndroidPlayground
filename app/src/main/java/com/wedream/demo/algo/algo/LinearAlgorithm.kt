@@ -47,6 +47,7 @@ object LinearAlgorithm {
             MaxProfit(),
             Huffman(),
             ShuffleCards(),
+            MaintainMedium()
         )
     }
 }
