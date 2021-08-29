@@ -51,6 +51,7 @@ object LinearAlgorithm {
             MaintainMedium(),
             Hanoi(),
             DoubleEndTake(),
+            RevertStackOnlyByRecur(),
         )
     }
 }
