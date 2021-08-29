@@ -2,6 +2,7 @@ package com.wedream.demo.algo.algo
 
 import com.wedream.demo.algo.model.*
 import com.wedream.demo.algo.model.array.*
+import com.wedream.demo.algo.model.classics.Hanoi
 import com.wedream.demo.algo.model.classics.Huffman
 import com.wedream.demo.algo.model.classics.KMP
 import com.wedream.demo.algo.model.list.*
@@ -47,7 +48,8 @@ object LinearAlgorithm {
             MaxProfit(),
             Huffman(),
             ShuffleCards(),
-            MaintainMedium()
+            MaintainMedium(),
+            Hanoi(),
         )
     }
 }
