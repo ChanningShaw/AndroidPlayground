@@ -10,7 +10,7 @@ class ValueOfSpecificOccurNumber : AlgorithmModel() {
 
     override var name = "在数组中找到出现次数大于N/K的数"
 
-    override var title = "给定一个整型数组arr，找出其中出现次数大鱼一半的数，如果没有打印提示信息。" +
+    override var title = "给定一个整型数组arr，找出其中出现次数大于一半的数，如果没有打印提示信息。" +
             "进阶问题：打印所有出现次数超过N/K的数，如果没有，打印提示信息"
 
     override var tips = "对消原则。对于每一个数，让其和其它数对消，最后剩下来的数，就是要求的数。"

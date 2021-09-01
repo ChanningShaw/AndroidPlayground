@@ -35,6 +35,9 @@ class PostArrayToBST: AlgorithmModel() {
             return posToBST(arr, 0, arr.lastIndex)
         }
 
+        /**
+         * 通过后续遍历数组构建二叉树
+         */
         private fun posToBST(arr: IntArray, start: Int, end: Int): BinaryTree.Node<Int>? {
             if (start > end) {
                 return null
@@ -55,14 +58,14 @@ class PostArrayToBST: AlgorithmModel() {
             }
             val root = arr[end]
             var left = end - 1
-            while (left >= start && arr[left] > root) {
+            while (left >= start && arr[left] > root) { // 寻找左子树的边界
                 left--
             }
             if (left < start || left == end - 1) {
-                // 都是左子树或者都是右子树
+                // 都是右子树或者都是左子树
                 return isPost(arr, start, end - 1)
             }
-            for (i in start..left) {
+            for (i in start..left) { // 检查左子树是否符合BST
                 if (arr[i] > root) {
                     return false
                 }

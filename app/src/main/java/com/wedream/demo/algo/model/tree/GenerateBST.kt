@@ -14,7 +14,7 @@ class GenerateBST : AlgorithmModel() {
     override var title = "给定一个有序数组sortArr， 已知其中没有重复值，用这个有序数组生成一颗平衡搜索二叉树，" +
             "并且该树的中序遍历结果和sortArr一致"
 
-    override var tips = "二分有序数组，中间值作为根节点，左边生成左子树，右边生成右子树"
+    override var tips = "关键字，平衡。二分有序数组，中间值作为根节点，左边生成左子树，右边生成右子树"
 
     override fun execute(option: Option?): ExecuteResult {
         val input = intArrayOf(1, 2, 3, 4, 5, 6, 7)

@@ -48,6 +48,9 @@ class SubTree : AlgorithmModel() {
     }
 
     companion object {
+        /**
+         * 判断t2是不是t1的子树
+         */
         fun <T> subTree(t1: BinaryTree.Node<T>?, t2: BinaryTree.Node<T>?) : Boolean {
             if (t1 == null && t2 == null) {
                 return true

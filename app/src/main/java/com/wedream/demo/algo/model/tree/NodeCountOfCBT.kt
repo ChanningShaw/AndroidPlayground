@@ -41,13 +41,17 @@ class NodeCountOfCBT : AlgorithmModel() {
             return treeNodeCount(root, 1, mostLeftLevel(root, 1))
         }
 
+        /**
+         * @param h 是整棵树的高度
+         * @return 以node为根节点的子树的节点数
+         */
         private fun <T> treeNodeCount(node: BinaryTree.Node<T>?, level: Int, h: Int): Int {
             if (level == h) {
                 return 1
             }
             return if (mostLeftLevel(node?.right, level + 1) == h) {
                     /* 右子树的最左孩子所在的层级为最下面的一层，说明左子树是满的
-                    左子树个数是 1 shl (h - level)，继续求右子树的数目 */
+                    左子树加上根节点个数是 1 shl (h - level)，继续求右子树的数目 */
                 (1 shl (h - level)) + treeNodeCount(node?.right, level + 1, h)
             } else {
                 /* 右子树的最左孩子所在的层级为倒数第二层，说明右子树是满的
@@ -56,6 +60,10 @@ class NodeCountOfCBT : AlgorithmModel() {
             }
         }
 
+        /**
+         * @param root 从哪个节点出发去找最左边节点
+         * @param level 从第几层出发去找最左边节点
+         */
         private fun <T> mostLeftLevel(root: BinaryTree.Node<T>?, level: Int): Int {
             var result = level
             var node = root

@@ -29,7 +29,7 @@ class LengthOfIntegrableSubArray : AlgorithmModel() {
                 return 0
             }
             var maxLength = 0
-            val set = hashSetOf<Int>()
+            val set = hashSetOf<Int>()//用于判断有没有重复
             for (i in arr.indices) {
                 set.clear()
                 var max = Int.MIN_VALUE

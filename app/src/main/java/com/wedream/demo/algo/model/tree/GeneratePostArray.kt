@@ -30,7 +30,7 @@ class GeneratePostArray : AlgorithmModel() {
             if (pre.isEmpty() || mid.isEmpty()) {
                 return intArrayOf()
             }
-            val map = hashMapOf<Int, Int>()
+            val map = hashMapOf<Int, Int>() // key是值，value是其出现的位置
             for (i in mid.indices) {
                 map[mid[i]] = i
             }
@@ -42,15 +42,15 @@ class GeneratePostArray : AlgorithmModel() {
         private fun setPost(
             pre: IntArray, preStart: Int, preEnd: Int,
             mid: IntArray, midStart: Int, midEnd: Int,
-            post: IntArray, postIndex: Int,
+            post: IntArray, postIndex: Int, // 当前post数组的生成位置
             midMap: HashMap<Int, Int>
         ): Int {
             if (preStart > preEnd) {
                 return postIndex
             }
             var index = postIndex // 当前生成的位置
-            post[index--] = pre[preStart]
-            val i = midMap[pre[preStart]]!! // 中序数组中分割的位置
+            post[index--] = pre[preStart] // 之前先序遍历的第一个点，在后序遍历中是最后的点
+            val i = midMap[pre[preStart]]!! // 用根节点分割中序数组，左边部分是左子树，右边部分是右子树
             // 生成后面部分
             index = setPost(
                 pre, preEnd - (midEnd - i) + 1, preEnd,// (midEnd - i) 后面部分的长度

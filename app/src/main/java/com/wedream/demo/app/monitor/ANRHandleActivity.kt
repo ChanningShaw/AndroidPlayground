@@ -17,5 +17,9 @@ class ANRHandleActivity : BaseActivity() {
             Thread.sleep(10 * 1000L)
             true
         }
+        // 注意，在点击事件里sleep不会触发anr
+//        findViewById<View>(R.id.bt1).setOnClickListener {
+//            Thread.sleep(10 * 1000L)
+//        }
     }
 }

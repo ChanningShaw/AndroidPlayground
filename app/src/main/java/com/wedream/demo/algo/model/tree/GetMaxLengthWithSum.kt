@@ -63,7 +63,7 @@ class GetMaxLengthWithSum : AlgorithmModel() {
                 sumMap[curSum] = level
             }
             if (sumMap.containsKey(curSum - sum)) {
-                //k + sum = cur, 说明k到level之间的路径和为sum， level - sumMap[curSum -sum]求出长度
+                //k + sum = curSum, 说明k到level之间的路径和为sum， level - sumMap[curSum -sum]求出长度
                 //并和之前已经找到的进行比较取较大值
                 curLen = max(level - sumMap[curSum - sum]!!, maxLen)
             }
