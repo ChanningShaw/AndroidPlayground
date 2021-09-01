@@ -52,6 +52,7 @@ object LinearAlgorithm {
             Hanoi(),
             DoubleEndTake(),
             RevertStackOnlyByRecur(),
+            KnapsackProblem01(),
         )
     }
 }
