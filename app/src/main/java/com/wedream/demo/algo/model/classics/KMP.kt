@@ -33,19 +33,19 @@ class KMP : AlgorithmModel() {
             val next = getNextArray(ms)
             while (si < ss.size && mi < ms.size) {
                 when {
-                    ss[si] == ms[mi] -> {
+                    ss[si] == ms[mi] -> { // 相等，一起往后移
                         si++
                         mi++
                     }
-                    next[mi] == -1 -> {
+                    next[mi] == -1 -> { // m串已经回调到0位置了，s串只能往后移一个位置
                         si++
                     }
                     else -> {
-                        mi = next[mi]
+                        mi = next[mi] // m串往前跳
                     }
                 }
             }
-            return if (mi == ms.size) si - mi else -1
+            return if (mi == ms.size) si - mi else -1 // mi越界表示m串已经匹配完毕，即找到了
         }
 
         /**
@@ -66,10 +66,10 @@ class KMP : AlgorithmModel() {
                         next[pos++] = ++cn
                     }
                     cn > 0 -> {
-                        // cn的前缀串的后一个字符是否相等
+                        // 往前跳
                         cn = next[cn]
                     }
-                    else -> {
+                    else -> { // 没发前跳了，前缀为0
                         next[pos++] = 0
                     }
                 }

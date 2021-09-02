@@ -3,6 +3,7 @@ package com.wedream.demo.algo.algo
 import com.wedream.demo.algo.model.AlgorithmModel
 import com.wedream.demo.algo.model.array.NumberStrToCharacterStr
 import com.wedream.demo.algo.model.classics.KMP
+import com.wedream.demo.algo.model.classics.Manacher
 import com.wedream.demo.algo.model.matrix.*
 import com.wedream.demo.algo.model.string.*
 
@@ -29,6 +30,7 @@ object StringAlgorithm {
             AllSubSequences(),
             AllPermutations(),
             NumberStrToCharacterStr(),
+            Manacher(),
         )
     }
 }
