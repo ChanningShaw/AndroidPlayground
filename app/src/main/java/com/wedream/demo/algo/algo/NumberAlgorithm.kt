@@ -12,6 +12,8 @@ object NumberAlgorithm {
             OnceNum(),
             RandomNum(),
             ZeroCountInFactorial(),
+            IsPowerOf(),
+            ArithmeticOperationByBit(),
         )
     }
 }

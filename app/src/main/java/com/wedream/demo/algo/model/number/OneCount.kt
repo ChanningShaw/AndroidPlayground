@@ -42,7 +42,7 @@ class OneCount : AlgorithmModel() {
             var res = 0
             var n = n
             while (n != 0) {
-                n -= n and (n.inv() - 1) // 干掉最右边的1
+                n -= n and (n.inv() + 1) // 干掉最右边的1
                 res++
             }
             return res
