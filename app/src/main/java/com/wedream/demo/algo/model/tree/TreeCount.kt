@@ -38,8 +38,8 @@ class TreeCount : AlgorithmModel() {
             num[0] = 1
             for (i in 1..n) { // 节点数总数
                 // 总结点为i的时候，左右子树的节点数
-                for (j in 1..i) {
-                    num[i] += num[j - 1] * num[i - j] // 扣除作为根节点的一个
+                for (j in 0 until i) {
+                    num[i] += num[j] * num[i - 1 - j] // 扣除作为根节点的一个
                 }
             }
             return num[n]

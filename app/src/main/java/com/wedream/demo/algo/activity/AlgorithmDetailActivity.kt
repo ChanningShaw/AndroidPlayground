@@ -30,6 +30,7 @@ class AlgorithmDetailActivity : BaseActivity() {
         const val TYPE_STRING = "string"
         const val TYPE_SORT = "sort"
         const val TYPE_NUMBER = "num"
+        const val TYPE_DP = "dp"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,6 +68,9 @@ class AlgorithmDetailActivity : BaseActivity() {
             }
             TYPE_NUMBER -> {
                 NumberAlgorithm.getModels()
+            }
+            TYPE_DP -> {
+                DPAlgorithm.getModels()
             }
             else -> {
                 LinearAlgorithm.getModels()

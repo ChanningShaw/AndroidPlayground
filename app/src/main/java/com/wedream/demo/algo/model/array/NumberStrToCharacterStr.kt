@@ -27,6 +27,9 @@ class NumberStrToCharacterStr : AlgorithmModel() {
             return transfer(chas, 0)
         }
 
+        /**
+         * todo 改成动态规划
+         */
         private fun transfer(chas: CharArray, i: Int): Int {
             if (i == chas.size) {
                 return 1

@@ -140,6 +140,7 @@ class MainActivity : CategoryActivity() {
                 StringAlgorithmActivity::class.java,
                 SortAlgorithmActivity::class.java,
                 NumberAlgorithmActivity::class.java,
+                DPAlgorithmActivity::class.java,
             )
         )
         val render = Category("render").addComponentCategories(

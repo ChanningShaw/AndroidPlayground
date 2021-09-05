@@ -4,7 +4,7 @@ import com.wedream.demo.algo.model.*
 import com.wedream.demo.algo.model.array.*
 import com.wedream.demo.algo.model.classics.Hanoi
 import com.wedream.demo.algo.model.classics.Huffman
-import com.wedream.demo.algo.model.classics.KMP
+import com.wedream.demo.algo.model.dp.DoubleEndTake
 import com.wedream.demo.algo.model.list.*
 import com.wedream.demo.algo.model.matrix.MaxRectSize
 
@@ -50,7 +50,6 @@ object LinearAlgorithm {
             ShuffleCards(),
             MaintainMedium(),
             Hanoi(),
-            DoubleEndTake(),
             RevertStackOnlyByRecur(),
             KnapsackProblem01(),
         )

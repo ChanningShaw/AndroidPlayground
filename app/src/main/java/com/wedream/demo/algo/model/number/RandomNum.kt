@@ -68,7 +68,7 @@ class RandomNum : AlgorithmModel() {
             var num = 0
             do {
                 num = rand01p()
-            } while (num == rand01p())
+            } while (num == rand01p()) // 如果相等，说明是00或者11，就重做
             return num
         }
 
