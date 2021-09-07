@@ -15,15 +15,15 @@ import com.wedream.demo.concurrent.kotlin.CoroutineActivity
 import com.wedream.demo.concurrent.kotlin.FlowActivity
 import com.wedream.demo.concurrent.kotlin.FunctionProgrammingActivity
 import com.wedream.demo.concurrent.rxjava.RxJavaDemoActivity
-import com.wedream.demo.reflection.AnnotationTestActivity
-import com.wedream.demo.reflection.ClassLoaderActivity
-import com.wedream.demo.reflection.FiledInjectActivity
 import com.wedream.demo.investment.BTCPredictActivity
 import com.wedream.demo.jni.GL2JNIActivity
 import com.wedream.demo.jni.HelloJNIActivity
 import com.wedream.demo.lifecycle.BadWindowTokenActivity
 import com.wedream.demo.media.AudioRecordActivity
 import com.wedream.demo.planegeometry.PlaneGeometryActivity
+import com.wedream.demo.reflection.AnnotationTestActivity
+import com.wedream.demo.reflection.ClassLoaderActivity
+import com.wedream.demo.reflection.FiledInjectActivity
 import com.wedream.demo.reflection.dynamicproxy.DynamicProxyActivity
 import com.wedream.demo.render.*
 import com.wedream.demo.render.gl3.GLColorActivity
@@ -97,7 +97,7 @@ class MainActivity : CategoryActivity() {
                 BadWindowTokenActivity::class.java
             )
         )
-        val multiThreading = Category("multiThreading").addComponentCategories(
+        val multiThreading = Category("concurrence").addComponentCategories(
             listOf(
                 CoroutineActivity::class.java,
                 FlowActivity::class.java,
