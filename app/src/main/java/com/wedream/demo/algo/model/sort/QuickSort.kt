@@ -35,7 +35,7 @@ class QuickSort<T : Comparable<T>> : SortModel<T>() {
         val pivot = array[left]
         var l = left
         var r = right
-        while (l < r) {
+        while (l < r) { // 最终跳出循环的时候 l == r
             while (l < r) {
                 if (cmp(array[r], pivot) > 0) {
                     r--
@@ -53,7 +53,7 @@ class QuickSort<T : Comparable<T>> : SortModel<T>() {
                 }
             }
         }
-        array[r] = pivot
+        array[r] = pivot // 将锚点设回，这里是r和l都可以
         return r
     }
 

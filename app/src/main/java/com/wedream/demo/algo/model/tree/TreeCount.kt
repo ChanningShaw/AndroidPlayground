@@ -5,9 +5,6 @@ import com.wedream.demo.algo.model.ExecuteResult
 import com.wedream.demo.algo.model.Option
 import com.wedream.demo.algo.structure.BinaryTree
 import com.wedream.demo.util.string
-import java.lang.StringBuilder
-import kotlin.math.max
-import kotlin.math.min
 
 class TreeCount : AlgorithmModel() {
     override var name = "统计和生成所有不同的二叉树"
@@ -65,7 +62,7 @@ class TreeCount : AlgorithmModel() {
                 // 左子树 * 右子树
                 for (lChild in leftChildren) {
                     for (rChild in rightChildren) {
-                        head.left  = lChild
+                        head.left = lChild
                         head.right = rChild
                         res.add(cloneTree(head))
                     }

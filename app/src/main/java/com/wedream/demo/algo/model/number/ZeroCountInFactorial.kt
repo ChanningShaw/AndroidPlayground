@@ -11,7 +11,7 @@ class ZeroCountInFactorial : AlgorithmModel() {
 
     override var title = "给定一个非负整数N，返回N!结果末尾为0的数量"
 
-    override var tips = ""
+    override var tips = "找1-n中5的因子的个数即可，比如5有一个5，25有2个5，125有3个5"
 
     override fun execute(option: Option?): ExecuteResult {
         val input = Int.MAX_VALUE
@@ -42,7 +42,7 @@ class ZeroCountInFactorial : AlgorithmModel() {
             var res = 0
             var num = n
             while (num != 0) {
-                res += num / 5
+                res += num / 5 // 每5个自然数有就会有一个5，每25个自然数有就会有一个25
                 num /= 5
             }
             return res
