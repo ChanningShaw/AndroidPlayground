@@ -42,8 +42,16 @@ import com.wedream.demo.view.multitrack.TrackActivity
 import com.wedream.demo.view.newtips.NewTipsActivity
 import com.wedream.demo.view.newtrack.NewMultiTrackActivity
 import com.wedream.demo.view.trackmove.CrossTrackMovementActivity
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+import javax.inject.Named
 
+@AndroidEntryPoint
 class MainActivity : CategoryActivity() {
+
+    @Inject
+    @Named("String2")
+    lateinit var testString: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +65,7 @@ class MainActivity : CategoryActivity() {
                 log { "activity not found, has renamed an activity?" }
             }
         }
+        log { "testString = $testString" }
         setCategoryList(buildData())
     }
 

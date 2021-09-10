@@ -13,7 +13,9 @@ import com.wedream.demo.database.greenDao.DaoMaster
 import com.wedream.demo.database.greenDao.DaoOpenHelper
 import com.wedream.demo.database.greenDao.DaoSession
 import com.wedream.demo.util.LogUtils.log
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class MyApplication : Application() {
 
     private lateinit var appSp: SharedPreferences
