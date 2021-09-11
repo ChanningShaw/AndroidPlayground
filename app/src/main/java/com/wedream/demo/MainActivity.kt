@@ -13,6 +13,7 @@ import com.wedream.demo.category.ComponentCategory
 import com.wedream.demo.concurrent.JavaExecutorActivity
 import com.wedream.demo.concurrent.kotlin.CoroutineActivity
 import com.wedream.demo.concurrent.kotlin.FlowActivity
+import com.wedream.demo.concurrent.kotlin.FlowUIActivity
 import com.wedream.demo.concurrent.kotlin.FunctionProgrammingActivity
 import com.wedream.demo.concurrent.rxjava.RxJavaDemoActivity
 import com.wedream.demo.investment.BTCPredictActivity
@@ -112,7 +113,8 @@ class MainActivity : CategoryActivity() {
                 FlowActivity::class.java,
                 FunctionProgrammingActivity::class.java,
                 RxJavaDemoActivity::class.java,
-                JavaExecutorActivity::class.java
+                JavaExecutorActivity::class.java,
+                FlowUIActivity::class.java,
             )
         )
         val algorithm = Category("algorithm").addComponentCategories(
