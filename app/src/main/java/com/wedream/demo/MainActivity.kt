@@ -3,9 +3,11 @@ package com.wedream.demo
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.viewModels
 import com.wedream.demo.algo.activity.*
 import com.wedream.demo.app.ApplicationHolder
 import com.wedream.demo.app.CategoryActivity
+import com.wedream.demo.app.MainViewModel
 import com.wedream.demo.app.monitor.ANRHandleActivity
 import com.wedream.demo.app.monitor.CrashHandlerActivity
 import com.wedream.demo.category.Category
@@ -54,6 +56,8 @@ class MainActivity : CategoryActivity() {
     @Named("String2")
     lateinit var testString: String
 
+    private val viewModel: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val lastCom = ApplicationHolder.instance.getLastResumeActivity()
@@ -67,6 +71,7 @@ class MainActivity : CategoryActivity() {
             }
         }
         log { "testString = $testString" }
+        viewModel
         setCategoryList(buildData())
     }
 

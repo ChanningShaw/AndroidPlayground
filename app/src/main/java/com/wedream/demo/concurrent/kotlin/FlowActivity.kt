@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.wedream.demo.R
 import com.wedream.demo.app.BaseActivity
 import com.wedream.demo.util.LogUtils.log
@@ -167,7 +168,7 @@ class FlowActivity : BaseActivity() {
         Log.e("xcm", "flowFun cost $time")
     }
 
-    private fun channelFlowFun() = runBlocking {
+    private fun channelFlowFun() = lifecycleScope.launch {
         val time = measureTimeMillis {
             channelFlow {
                 for (i in 1..5) {
@@ -196,7 +197,15 @@ class FlowActivity : BaseActivity() {
         }
     }
 
-    private fun CoroutineScope.numbersFrom(start: Int) = produce<Int> {
+    private fun flow1(): Flow<String> {
+        return flow {
+            repeat(10) {
+                emit(it.toString())
+            }
+        }
+    }
+
+    private fun CoroutineScope.numbersFrom(start: Int) = produce {
         var x = start
         while (true) send(x++) // infinite stream of integers from start
     }
@@ -204,7 +213,7 @@ class FlowActivity : BaseActivity() {
     /**
      * 这里是层层嵌套筛选的，
      */
-    private fun CoroutineScope.filter(numbers: ReceiveChannel<Int>, prime: Int) = produce<Int> {
+    private fun CoroutineScope.filter(numbers: ReceiveChannel<Int>, prime: Int) = produce {
         for (x in numbers) {
             Log.e("xcm", "x = $x, prime = $prime")
             if (x % prime != 0) {
@@ -214,7 +223,7 @@ class FlowActivity : BaseActivity() {
         }
     }
 
-    private fun CoroutineScope.produceNumbers() = produce<Int> {
+    private fun CoroutineScope.produceNumbers() = produce {
         var x = 1 // start from 1
         while (true) {
             send(x++) // produce next

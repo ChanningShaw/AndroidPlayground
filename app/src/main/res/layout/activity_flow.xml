@@ -9,37 +9,42 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="flow_builder" />
+
   <Button
     android:id="@+id/flow"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="flow" />
+
   <Button
     android:id="@+id/channel_flow"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="channel_flow" />
+
   <Button
     android:id="@+id/channel"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="channel" />
-    <Button
-      android:id="@+id/channel2"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="channel2" />
+
+  <Button
+    android:id="@+id/channel2"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="channel2" />
+
   <Button
     android:id="@+id/channel_conflated"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="channel_conflated" />
 
-    <Button
-  android:id="@+id/broadcast_channel"
-  android:layout_width="wrap_content"
-  android:layout_height="wrap_content"
-  android:text="broadcast_channel" />
+  <Button
+    android:id="@+id/broadcast_channel"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="broadcast_channel" />
 
   <Button
     android:id="@+id/channel_filter"

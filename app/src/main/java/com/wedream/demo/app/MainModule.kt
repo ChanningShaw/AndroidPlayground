@@ -1,20 +1,24 @@
 package com.wedream.demo.app
 
+import android.content.Context
+import com.wedream.demo.R
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityScoped
-import dagger.hilt.components.SingletonComponent
 import javax.inject.Named
-import javax.inject.Singleton
 
 @Module
 @InstallIn(ActivityComponent::class)
 class MainModule {
 
-    @ActivityScoped
     @Provides
+    @ActivityScoped
     @Named("String2")
-    fun provideTestString() = "This is a test string"
+    fun provideTestString2(
+        @ApplicationContext context: Context,
+        @Named("String1") testString1: String
+    ) = context.getString(R.string.app_name) + ", $testString1"
 }
