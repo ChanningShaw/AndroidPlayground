@@ -7,12 +7,12 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
   <application
-      android:name=".app.MyApplication"
-      android:allowBackup="true"
-      android:icon="@drawable/logo"
-      android:label="@string/app_name"
-      android:supportsRtl="true"
-      android:theme="@style/AppTheme">
+    android:name=".app.MyApplication"
+    android:allowBackup="true"
+    android:icon="@drawable/logo"
+    android:label="@string/app_name"
+    android:supportsRtl="true"
+    android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -64,7 +64,10 @@
         <activity android:name=".view.canvas.DrawViewActivity" />
         <activity android:name=".view.layout.TranslateActivity" />
         <activity android:name=".lifecycle.BadWindowTokenActivity" />
-        <activity android:name=".media.AudioRecordActivity" />
+        <activity
+          android:name=".media.AudioRecordActivity"
+          android:exported="true"
+          android:launchMode="singleTask" />
         <activity android:name=".reflection.AnnotationTestActivity" />
         <activity android:name=".view.RefreshRateActivity" />
         <activity android:name=".view.layout.OutlineActivity" />

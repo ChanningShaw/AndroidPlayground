@@ -4,8 +4,6 @@ import com.wedream.demo.util.IdUtils
 import com.wedream.demo.videoeditor.const.Constants.MIN_ASSET_DURATION
 import com.wedream.demo.videoeditor.project.AssetType
 import com.wedream.demo.videoeditor.project.ProjectModifyListener
-import com.wedream.demo.videoeditor.project.model.BaseAssetModel
-import kotlin.math.abs
 
 open class Asset(
     val id: Long,

@@ -1,5 +1,6 @@
 package com.wedream.demo.media
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Choreographer
 import android.view.View
@@ -11,6 +12,7 @@ import com.wedream.demo.app.DeviceParams
 import com.wedream.demo.app.DisposableActivity
 import com.wedream.demo.app.PermissionHelper
 import com.wedream.demo.render.WaveView
+import com.wedream.demo.util.LogUtils.log
 
 class AudioRecordActivity : DisposableActivity() {
 
@@ -39,6 +41,11 @@ class AudioRecordActivity : DisposableActivity() {
             recordStatus = ++recordStatus % 3
             toggleRecord()
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        log { "onNewIntent" }
     }
 
     private fun toggleRecord() {
@@ -89,6 +96,9 @@ class AudioRecordActivity : DisposableActivity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        startRecord()
+        log { "onRequestPermissionsResult" }
+        if (grantResults.isNotEmpty()) {
+            startRecord()
+        }
     }
 }
