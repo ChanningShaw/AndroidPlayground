@@ -22,6 +22,7 @@ import com.wedream.demo.investment.BTCPredictActivity
 import com.wedream.demo.jni.GL2JNIActivity
 import com.wedream.demo.jni.HelloJNIActivity
 import com.wedream.demo.lifecycle.BadWindowTokenActivity
+import com.wedream.demo.lifecycle.LifecycleHolderTestActivity
 import com.wedream.demo.media.AudioRecordActivity
 import com.wedream.demo.planegeometry.PlaneGeometryActivity
 import com.wedream.demo.reflection.AnnotationTestActivity
@@ -109,7 +110,8 @@ class MainActivity : CategoryActivity() {
         )
         val lifecycle = Category("lifecycle").addComponentCategories(
             listOf(
-                BadWindowTokenActivity::class.java
+                BadWindowTokenActivity::class.java,
+                LifecycleHolderTestActivity::class.java,
             )
         )
         val multiThreading = Category("concurrence").addComponentCategories(

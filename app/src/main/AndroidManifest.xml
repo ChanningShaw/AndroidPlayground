@@ -88,6 +88,6 @@
         <activity android:name=".view.flowlayout.FlowLayoutActivity" />
         <activity android:name=".view.layout.DetachViewActivity" />
         <activity android:name=".reflection.dynamicproxy.DynamicProxyActivity" />
-        <activity android:name=".concurrent.kotlin.FlowUIActivity" />
+        <activity android:name=".concurrent.kotlin.FlowUIActivity" /><activity android:name=".lifecycle.LifecycleHolderTestActivity" />
     </application>
 </manifest>
