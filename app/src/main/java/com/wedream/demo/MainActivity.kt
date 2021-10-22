@@ -12,6 +12,7 @@ import com.wedream.demo.app.monitor.ANRHandleActivity
 import com.wedream.demo.app.monitor.CrashHandlerActivity
 import com.wedream.demo.category.Category
 import com.wedream.demo.category.ComponentCategory
+import com.wedream.demo.compose.ComposeActivity
 import com.wedream.demo.concurrent.JavaExecutorActivity
 import com.wedream.demo.concurrent.kotlin.CoroutineActivity
 import com.wedream.demo.concurrent.kotlin.FlowActivity
@@ -114,6 +115,11 @@ class MainActivity : CategoryActivity() {
                 LifecycleHolderTestActivity::class.java,
             )
         )
+        val compose = Category("compose").addComponentCategories(
+            listOf(
+                ComposeActivity::class.java,
+            )
+        )
         val multiThreading = Category("concurrence").addComponentCategories(
             listOf(
                 CoroutineActivity::class.java,
@@ -176,6 +182,7 @@ class MainActivity : CategoryActivity() {
         return listOf(
             viewCategory,
             lifecycle,
+            compose,
             touch,
             multiThreading,
             algorithm,
