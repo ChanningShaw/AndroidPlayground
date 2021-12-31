@@ -1,15 +1,16 @@
 package com.wedream.demo.concurrent.kotlin
 
 import android.os.Bundle
+import android.os.SystemClock
 import android.util.Log
 import android.widget.Button
 import android.widget.RadioGroup
 import androidx.lifecycle.lifecycleScope
 import com.wedream.demo.R
 import com.wedream.demo.app.BaseActivity
+import com.wedream.demo.concurrent.PreloadTask
 import com.wedream.demo.util.LogUtils.log
 import com.wedream.demo.util.curTimeString
-import kotlinx.android.synthetic.main.activity_coroutine.*
 import kotlinx.coroutines.*
 
 class CoroutineActivity : BaseActivity() {
@@ -92,7 +93,23 @@ class CoroutineActivity : BaseActivity() {
             }
             Log.e(TAG, "主线程阻塞2s")
             Thread.sleep(2000L)
-            Log.e(TAG, "主线程slepp结束时间: ${System.currentTimeMillis()}")
+            Log.e(TAG, "主线程sleep结束时间: ${System.currentTimeMillis()}")
+        }
+
+        findViewById<Button>(R.id.async_task).setOnClickListener {
+            GlobalScope.launch(Dispatchers.IO) {
+                val before = SystemClock.elapsedRealtime()
+                val task = PreloadTask.of {
+                    runBlocking {
+                        delay(30)
+                    }
+                    0
+                }.start()
+                val result = task.get()
+                log {
+                    "async task,result = $result,  cost = ${SystemClock.elapsedRealtime() - before}"
+                }
+            }
         }
 
         findViewById<Button>(R.id.suspend_1).setOnClickListener {

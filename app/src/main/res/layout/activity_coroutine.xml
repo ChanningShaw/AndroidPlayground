@@ -1,101 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:orientation="vertical">
-
-  <Button
-    android:id="@+id/launch"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="主线程与协程协同" />
-
-  <RadioGroup
-    android:id="@+id/rg_start_modes"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
-
-    <RadioButton
-      android:id="@+id/start_mode_default"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:checked="true"
-      android:text="default" />
-
-    <RadioButton
-      android:id="@+id/start_mode_atomic"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="atomic" />
-
-
-    <RadioButton
-      android:id="@+id/start_mode_undispatched"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="undispatched" />
-
-
-    <RadioButton
-      android:id="@+id/start_mode_lazy"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="lazy" />
-
-  </RadioGroup>
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
 
     <Button
-      android:id="@+id/start_mode"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="启动模式" />
+        android:id="@+id/launch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="主线程与协程协同" />
 
     <Button
-      android:id="@+id/async"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="async" />
+        android:id="@+id/start_mode"
+        app:layout_constraintTop_toBottomOf="@id/launch"
+        app:layout_constraintLeft_toLeftOf="@id/launch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="启动模式" />
+
+    <RadioGroup
+        android:id="@+id/rg_start_modes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/start_mode"
+        app:layout_constraintTop_toBottomOf="@id/start_mode"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/start_mode_default"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="default" />
+
+        <RadioButton
+            android:id="@+id/start_mode_atomic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="atomic" />
+
+
+        <RadioButton
+            android:id="@+id/start_mode_undispatched"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="undispatched" />
+
+
+        <RadioButton
+            android:id="@+id/start_mode_lazy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="lazy" />
+
+    </RadioGroup>
 
     <Button
-      android:id="@+id/runBlocking"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="runBlocking" />
+        android:id="@+id/async"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rg_start_modes"
+        android:text="async" />
 
     <Button
-      android:id="@+id/suspend_1"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="suspend_1" />
+        android:id="@+id/runBlocking"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/async"
+        app:layout_constraintTop_toTopOf="@id/async"
+        android:text="runBlocking" />
 
     <Button
-      android:id="@+id/suspend_2"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="suspend_2" />
+        android:id="@+id/async_task"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/runBlocking"
+        app:layout_constraintTop_toTopOf="@id/runBlocking"
+        android:text="async_task" />
 
     <Button
-      android:id="@+id/suspend_3"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="suspend_3" />
+        android:id="@+id/suspend_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/async"
+        android:text="suspend_1" />
 
     <Button
-      android:id="@+id/suspend_4"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="suspend_4" />
+        android:id="@+id/suspend_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/suspend_1"
+        app:layout_constraintTop_toTopOf="@id/suspend_1"
+        android:text="suspend_2" />
 
     <Button
-      android:id="@+id/cancel1"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="cancel1" />
+        android:id="@+id/suspend_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/suspend_2"
+        app:layout_constraintTop_toTopOf="@id/suspend_2"
+        android:text="suspend_3" />
 
     <Button
-      android:id="@+id/cancel2"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="cancel2" />
-</LinearLayout>
+        android:id="@+id/suspend_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/suspend_3"
+        app:layout_constraintTop_toTopOf="@id/suspend_3"
+        android:text="suspend_4" />
+
+    <Button
+        android:id="@+id/cancel1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/suspend_1"
+        app:layout_constraintTop_toBottomOf="@id/suspend_1"
+        android:text="cancel1" />
+
+    <Button
+        android:id="@+id/cancel2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/cancel1"
+        app:layout_constraintTop_toTopOf="@id/cancel1"
+        android:text="cancel2" />
+</androidx.constraintlayout.widget.ConstraintLayout>

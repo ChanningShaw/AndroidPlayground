@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.lifecycle.viewModelScope
 import com.wedream.demo.algo.activity.*
 import com.wedream.demo.app.ApplicationHolder
 import com.wedream.demo.app.CategoryActivity
@@ -48,6 +49,7 @@ import com.wedream.demo.view.newtips.NewTipsActivity
 import com.wedream.demo.view.newtrack.NewMultiTrackActivity
 import com.wedream.demo.view.trackmove.CrossTrackMovementActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -73,7 +75,6 @@ class MainActivity : CategoryActivity() {
             }
         }
         log { "testString = $testString" }
-        viewModel
         setCategoryList(buildData())
     }
 
