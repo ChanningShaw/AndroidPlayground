@@ -9,9 +9,6 @@ import android.os.Bundle
 import com.tencent.mmkv.MMKV
 import com.wedream.demo.MainActivity
 import com.wedream.demo.app.ApplicationHolder.instance
-import com.wedream.demo.database.greenDao.DaoMaster
-import com.wedream.demo.database.greenDao.DaoOpenHelper
-import com.wedream.demo.database.greenDao.DaoSession
 import com.wedream.demo.util.LogUtils.log
 import dagger.hilt.android.HiltAndroidApp
 
@@ -24,11 +21,6 @@ class MyApplication : Application() {
     companion object {
         const val APP_SP_NAME = "app_sp"
         const val KEY_LAST_RESUME_ACTIVITY = "key_last_resume_activity"
-        const val DB_NAME = "investment.db"
-        val daoSession: DaoSession by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
-            val daoMaster = DaoMaster(DaoOpenHelper(instance, DB_NAME, null).writableDb)
-            daoMaster.newSession()
-        }
         var appStartTime = 0L
         var appResumeTime = 0L
             set(value) {
@@ -93,10 +85,6 @@ class MyApplication : Application() {
 
     fun getCurrentResumeActivity() : Activity? {
         return currentResumeActivity
-    }
-
-    fun getDaoSession(): DaoSession {
-        return daoSession
     }
 
     fun cleanLastResumeActivity() {

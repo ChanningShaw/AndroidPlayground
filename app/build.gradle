@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
-apply plugin: 'org.greenrobot.greendao' // apply plugin
 
 android {
     compileSdkVersion 30
@@ -68,14 +67,6 @@ android {
     }
 }
 
-greendao {
-    schemaVersion 1 //数据库版本号
-    daoPackage 'com.wedream.demo.database.greenDao'
-    targetGenDir 'src/main/java'//设置DaoMaster、DaoSession、Dao目录,请注意，这里路径用/不要用.
-    generateTests false //设置为true以自动生成单元测试。
-    targetGenDirTests 'src/main/java' //应存储生成的单元测试的基本目录。默认为 src / androidTest / java。
-}
-
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -89,7 +80,6 @@ dependencies {
     implementation "com.google.android.material:material:1.4.0"
     implementation 'org.jsoup:jsoup:1.13.1'
     implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.9.1'
-    implementation 'org.greenrobot:greendao:3.3.0'
     implementation 'com.airbnb.android:lottie:3.7.0'
     implementation 'com.github.bumptech.glide:glide:4.12.0'
 
