@@ -20,6 +20,7 @@ import com.wedream.demo.concurrent.kotlin.FlowActivity
 import com.wedream.demo.concurrent.kotlin.FlowUIActivity
 import com.wedream.demo.concurrent.kotlin.FunctionProgrammingActivity
 import com.wedream.demo.concurrent.rxjava.RxJavaDemoActivity
+import com.wedream.demo.game.tankwar.TankWarActivity
 import com.wedream.demo.investment.BTCPredictActivity
 import com.wedream.demo.jni.GL2JNIActivity
 import com.wedream.demo.jni.HelloJNIActivity
@@ -121,6 +122,11 @@ class MainActivity : CategoryActivity() {
                 ComposeActivity::class.java,
             )
         )
+        val game = Category("game").addComponentCategories(
+            listOf(
+                TankWarActivity::class.java,
+            )
+        )
         val multiThreading = Category("concurrence").addComponentCategories(
             listOf(
                 CoroutineActivity::class.java,
@@ -185,6 +191,7 @@ class MainActivity : CategoryActivity() {
             viewCategory,
             lifecycle,
             compose,
+            game,
             touch,
             multiThreading,
             algorithm,

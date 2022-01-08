@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.wedream.demo">
+    package="com.wedream.demo">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
-  <application
-    android:name=".app.MyApplication"
-    android:allowBackup="true"
-    android:icon="@drawable/logo"
-    android:label="@string/app_name"
-    android:supportsRtl="true"
-    android:theme="@style/AppTheme">
+    <application
+        android:name=".app.MyApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/logo"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,8 +40,8 @@
         <activity android:name=".view.TabLayoutActivity" />
         <activity android:name=".view.ViewPagerActivity" />
         <activity
-          android:name=".view.multitrack.TrackActivity"
-          android:screenOrientation="landscape" />
+            android:name=".view.multitrack.TrackActivity"
+            android:screenOrientation="landscape" />
         <activity android:name=".view.HorizontalScrollActivity" />
         <activity android:name=".app.CategoryActivity" />
         <activity android:name=".investment.BTCPredictActivity" />
@@ -65,9 +65,9 @@
         <activity android:name=".view.layout.TranslateActivity" />
         <activity android:name=".lifecycle.BadWindowTokenActivity" />
         <activity
-          android:name=".media.AudioRecordActivity"
-          android:exported="true"
-          android:launchMode="singleTask" />
+            android:name=".media.AudioRecordActivity"
+            android:exported="true"
+            android:launchMode="singleTask" />
         <activity android:name=".reflection.AnnotationTestActivity" />
         <activity android:name=".view.RefreshRateActivity" />
         <activity android:name=".view.layout.OutlineActivity" />
@@ -92,5 +92,8 @@
         <activity android:name=".lifecycle.LifecycleHolderTestActivity" />
         <activity android:name=".compose.ComposeActivity" />
         <activity android:name=".algo.activity.DPAlgorithmActivity" />
-  </application>
+        <activity
+            android:name=".game.tankwar.TankWarActivity"
+            android:screenOrientation="landscape" />
+    </application>
 </manifest>

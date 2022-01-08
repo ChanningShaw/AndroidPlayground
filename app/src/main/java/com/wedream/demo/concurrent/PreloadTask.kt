@@ -20,36 +20,40 @@ class PreloadTask<T> private constructor(private var block: () -> T) {
 
     @MainThread
     fun start(): PreloadTask<T> {
-        Log.e("PreloadTask", "start")
-        job = GlobalScope.launch(Dispatchers.IO) {
-            result = block.invoke()
+        synchronized(this) {
+            if (job != null) {
+                return this
+            }
+            job = GlobalScope.launch(Dispatchers.IO) {
+                result = block.invoke()
+            }
+            return this
         }
-        return this
     }
 
     @JvmOverloads
     @MainThread
     fun get(timeout : Long = 2000): T? {
-        val job = job ?: return block.invoke()
-        return if (job.isCompleted) {
-            Log.e("PreloadTask", "get result = $result")
-            result
-        } else {
-            if (job.isActive) {
-                Log.e("PreloadTask", "start block")
-                try {
-                    runBlocking {
-                        withTimeout(timeout) {
-                            job.join()
-                        }
-                    }
-                } catch (e : TimeoutCancellationException) {
-                    return block.invoke()
-                }
-                Log.e("PreloadTask", "end block, result = $result")
-                result ?: block.invoke()
+        synchronized(this) {
+            val job = job ?: return block.invoke()
+            return if (job.isCompleted) {
+                result
             } else {
-                block.invoke()
+                if (job.isActive) {
+                    try {
+                        runBlocking {
+                            withTimeout(timeout) {
+                                job.join()
+                            }
+                        }
+                    } catch (e : TimeoutCancellationException) {
+                        // timeout
+                        return block.invoke()
+                    }
+                    result
+                } else {
+                    block.invoke()
+                }
             }
         }
     }
