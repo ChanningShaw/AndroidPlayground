@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.TextView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.wedream.demo.R
 import com.wedream.demo.app.BaseActivity
+import com.wedream.demo.util.LogUtils.log
 
 class ViewPagerActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +38,10 @@ class SimpleAdapter : PagerAdapter(){
         val view = LayoutInflater.from(container.context).inflate(R.layout.item_view_pager, null)
         view.findViewById<TextView>(R.id.tv).text = data[position]
         container.addView(view)
+        view.tag = data[position]
+        view.viewTreeObserver.addOnDrawListener {
+            log { "onDraw: ${view.tag}, ${view.left}, ${view.top}, ${view.right}, ${view.bottom}, isShow = ${view.isShown}" }
+        }
         return view
     }
 

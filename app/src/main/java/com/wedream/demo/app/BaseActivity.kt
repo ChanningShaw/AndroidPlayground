@@ -2,9 +2,10 @@ package com.wedream.demo.app
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.wedream.demo.app.track.IPageTrackNode
 import com.wedream.demo.reflection.Delegate
 
-open class BaseActivity : AppCompatActivity() {
+open class BaseActivity : AppCompatActivity(), IPageTrackNode {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

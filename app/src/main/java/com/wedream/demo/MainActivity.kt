@@ -4,13 +4,15 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.lifecycle.viewModelScope
 import com.wedream.demo.algo.activity.*
 import com.wedream.demo.app.ApplicationHolder
 import com.wedream.demo.app.CategoryActivity
 import com.wedream.demo.app.MainViewModel
 import com.wedream.demo.app.monitor.ANRHandleActivity
 import com.wedream.demo.app.monitor.CrashHandlerActivity
+import com.wedream.demo.app.track.Events
+import com.wedream.demo.app.track.TrackParams
+import com.wedream.demo.app.track.onEvent
 import com.wedream.demo.category.Category
 import com.wedream.demo.category.ComponentCategory
 import com.wedream.demo.compose.ComposeActivity
@@ -50,7 +52,6 @@ import com.wedream.demo.view.newtips.NewTipsActivity
 import com.wedream.demo.view.newtrack.NewMultiTrackActivity
 import com.wedream.demo.view.trackmove.CrossTrackMovementActivity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -202,5 +203,14 @@ class MainActivity : CategoryActivity() {
             inject,
             investment
         )
+    }
+
+    override fun fillTrackParams(params: TrackParams) {
+        params["1"] = "2"
+    }
+
+    override fun onResume() {
+        super.onResume()
+        onEvent(Events.Key.PAGE_SHOW)
     }
 }

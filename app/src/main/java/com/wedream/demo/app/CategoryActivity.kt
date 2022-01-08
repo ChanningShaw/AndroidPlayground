@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.RecyclerView
 import com.wedream.demo.R
+import com.wedream.demo.app.track.onEvent
 import com.wedream.demo.category.Category
 import com.wedream.demo.category.CategoryAdapter
 import com.wedream.demo.category.ComponentCategory
@@ -32,6 +33,9 @@ open class CategoryActivity : BaseActivity() {
             CommonAdapter.OnItemClickListener<Category, CategoryAdapter.Holder> {
             override fun onItemClick(data: Category, holder: CategoryAdapter.Holder, pos: Int) {
                 onCategoryClick(data, pos)
+                onEvent("click") {
+                    this["pos"] = pos.toString()
+                }
             }
         })
     }
