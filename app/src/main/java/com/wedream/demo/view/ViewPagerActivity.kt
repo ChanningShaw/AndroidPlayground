@@ -10,6 +10,7 @@ import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.wedream.demo.R
 import com.wedream.demo.app.BaseActivity
+import com.wedream.demo.app.track.logWhenShow
 import com.wedream.demo.util.LogUtils.log
 
 class ViewPagerActivity : BaseActivity() {
@@ -39,8 +40,8 @@ class SimpleAdapter : PagerAdapter(){
         view.findViewById<TextView>(R.id.tv).text = data[position]
         container.addView(view)
         view.tag = data[position]
-        view.viewTreeObserver.addOnDrawListener {
-            log { "onDraw: ${view.tag}, ${view.left}, ${view.top}, ${view.right}, ${view.bottom}, isShow = ${view.isShown}" }
+        view.logWhenShow("view_show") {
+            this["page"] = data[position]
         }
         return view
     }

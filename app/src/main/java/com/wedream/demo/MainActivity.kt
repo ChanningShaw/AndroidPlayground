@@ -10,9 +10,7 @@ import com.wedream.demo.app.CategoryActivity
 import com.wedream.demo.app.MainViewModel
 import com.wedream.demo.app.monitor.ANRHandleActivity
 import com.wedream.demo.app.monitor.CrashHandlerActivity
-import com.wedream.demo.app.track.Events
-import com.wedream.demo.app.track.TrackParams
-import com.wedream.demo.app.track.onEvent
+import com.wedream.demo.app.track.*
 import com.wedream.demo.category.Category
 import com.wedream.demo.category.ComponentCategory
 import com.wedream.demo.compose.ComposeActivity
@@ -211,6 +209,14 @@ class MainActivity : CategoryActivity() {
 
     override fun onResume() {
         super.onResume()
-        onEvent(Events.Key.PAGE_SHOW)
+        logEvent(Events.Key.PAGE_SHOW)
+        logStart("page_stay_duration")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        logEnd("page_stay_duration") { params, time ->
+            params["duration"] = time
+        }
     }
 }

@@ -5,9 +5,13 @@ import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.wedream.demo.R
+import com.wedream.demo.app.track.ITrackNode
 import com.wedream.demo.common.CommonAdapter
 
-class CategoryAdapter(context: Context) : CommonAdapter<Category, CategoryAdapter.Holder>(context) {
+class CategoryAdapter(
+    context: Context,
+    private val parent: ITrackNode
+) : CommonAdapter<Category, CategoryAdapter.Holder>(context) {
 
     class Holder(view: View) : RecyclerView.ViewHolder(view) {
         val textView: TextView = view.findViewById(R.id.tv)
@@ -20,6 +24,7 @@ class CategoryAdapter(context: Context) : CommonAdapter<Category, CategoryAdapte
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         super.onBindViewHolder(holder, position)
+        holder.itemView.setTag(R.id.lib_track_tag_id_params_source, this)
         val data = getData()[position]
         holder.textView.text = data.name
         if (data is ComponentCategory) {

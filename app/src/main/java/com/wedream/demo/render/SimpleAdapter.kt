@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.wedream.demo.R
+import com.wedream.demo.app.track.logWhenShow
 import com.wedream.demo.common.CommonAdapter
 import com.wedream.demo.util.LogUtils.log
 import com.wedream.demo.view.TasksCompletedView
@@ -32,9 +33,13 @@ class SimpleAdapter(context: Context) : CommonAdapter<SimpleAdapter.SimpleData, 
         holder.text.text = data.n.toString()
         holder.itemView.setBackgroundResource(data.colorRes)
         holder.newPos = position
+        holder.itemView.tag = data.n
         holder.itemView.setOnClickListener {
 //            holder.downloadPos = position
 //            downloadDemo(0, data, holder)
+        }
+        holder.itemView.logWhenShow("itemView_show") {
+            this["text"] = data.n
         }
     }
 

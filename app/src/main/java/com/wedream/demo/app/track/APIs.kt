@@ -11,22 +11,27 @@ private const val TAG_ID_PARENT_TRACK_NODE = R.id.lib_track_tag_parent_track_nod
 private const val TAG_ID_PARAMS_SOURCE = R.id.lib_track_tag_id_params_source
 
 fun View.logWhenShow(eventName: String, updater: TrackParamsUpdater? = null) {
-
+    setupTrack {
+        logEvent(eventName, updater)
+    }
 }
 
-fun View.onEvent(eventName: String, updater: TrackParamsUpdater? = null) {
+fun View.logEvent(eventName: String, updater: TrackParamsUpdater? = null) {
     Event(eventName).logView(this, updater)
 }
 
-fun ITrackNode.logStart(eventName: String) {
-
+fun logStart(eventName: String, updater: TrackParamsUpdater? = null) {
+    ContinuousEvent(eventName).apply {
+        update(updater)
+        start()
+    }
 }
 
-fun ITrackNode.logEnd(eventName: String, params: Map<String, Any>) {
-
+fun ITrackNode.logEnd(eventName: String, updater: ((TrackParams, Long) -> Unit)? = null) {
+    ContinuousEvent.get(eventName)?.end(this, updater)
 }
 
-fun ITrackNode.onEvent(eventName: String, updater: TrackParamsUpdater? = null) {
+fun ITrackNode.logEvent(eventName: String, updater: TrackParamsUpdater? = null) {
     Event(eventName).logNode(this, updater)
 }
 

@@ -3,4 +3,5 @@
   <item name="view_tag_segment" type="id"/>
   <item name="lib_track_tag_parent_track_node" type="id"/>
   <item name="lib_track_tag_id_params_source" type="id"/>
+  <item name="lib_track_tag_id_view_tracker" type="id"/>
 </resources>
