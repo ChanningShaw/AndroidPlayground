@@ -4,6 +4,8 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
+import com.ss.android.ugc.aweme.ecommerce.trackimpl.setPreviousTrackNode
+import com.wedream.demo.app.track.TrackParams
 import com.wedream.demo.algo.activity.*
 import com.wedream.demo.app.ApplicationHolder
 import com.wedream.demo.app.CategoryActivity
@@ -69,6 +71,7 @@ class MainActivity : CategoryActivity() {
             val intent = Intent()
             intent.component = lastCom
             try {
+                intent.setPreviousTrackNode(this)
                 startActivity(intent)
             } catch (e: ActivityNotFoundException) {
                 log { "activity not found, has renamed an activity?" }
@@ -204,12 +207,12 @@ class MainActivity : CategoryActivity() {
     }
 
     override fun fillTrackParams(params: TrackParams) {
-        params["1"] = "2"
+        params["MainActivity"] = "this is ${this.javaClass.simpleName}"
     }
 
     override fun onResume() {
         super.onResume()
-        logEvent(Events.Key.PAGE_SHOW)
+        logEvent("page_show")
         logStart("page_stay_duration")
     }
 

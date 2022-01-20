@@ -29,30 +29,31 @@ class ViewTracker(
     @Volatile
     private var job: Job? = null
 
-    private var onDrawListener = object : ViewTreeObserver.OnDrawListener {
-        override fun onDraw() {
+    private var onPreDrawListener = object : ViewTreeObserver.OnPreDrawListener {
+        override fun onPreDraw(): Boolean {
             if (stopped) {
-                return
+                return true
             }
             log { "view ${targetView.tag} onDraw, listener = $this" }
             if (job != null) {
-                return
+                return true
             }
             val currentTime = SystemClock.elapsedRealtime()
             if (currentTime - lastCheckTime < INTERVAL) {
-                job = CoroutineScope(Dispatchers.Main).launch {
+                job = CoroutineScope(Dispatchers.IO).launch {
                     delay(lastCheckTime + INTERVAL - currentTime)
                     checkVisible()
                     job = null
                 }
                 log { "create job1 = $job for view ${targetView.tag}" }
             } else {
-                job = CoroutineScope(Dispatchers.Main).launch {
+                job = CoroutineScope(Dispatchers.IO).launch {
                     checkVisible()
                     job = null
                 }
                 log { "create job2 = $job for view ${targetView.tag}" }
             }
+            return true
         }
     }
 
@@ -94,7 +95,7 @@ class ViewTracker(
 
     fun start() {
         updateScreenSize(targetView.context)
-        targetView.viewTreeObserver.addOnDrawListener(onDrawListener)
+        targetView.viewTreeObserver.addOnPreDrawListener(onPreDrawListener)
         targetView.addOnAttachStateChangeListener(onAttachStateChangeListener)
         stopped = false
     }
@@ -104,7 +105,6 @@ class ViewTracker(
             val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
             val point = Point()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                // 全面屏需要使用getRealSize来获取高度
                 wm.defaultDisplay.getRealSize(point)
                 if (point.y > 0 && point.x > 0) {
                     screenWidth = point.x

@@ -4,14 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.widget.TextView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.wedream.demo.R
 import com.wedream.demo.app.BaseActivity
 import com.wedream.demo.app.track.logWhenShow
-import com.wedream.demo.util.LogUtils.log
 
 class ViewPagerActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

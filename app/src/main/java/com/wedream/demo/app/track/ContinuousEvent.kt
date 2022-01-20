@@ -5,7 +5,9 @@ import java.util.*
 
 class ContinuousEvent(eventName: String) : Event(eventName) {
     companion object {
-        private val eventsPool = WeakHashMap<String, ContinuousEvent>()
+        private val eventsPool by lazy {
+            WeakHashMap<String, ContinuousEvent>()
+        }
 
         fun get(eventName: String): ContinuousEvent? {
             return eventsPool[eventName]

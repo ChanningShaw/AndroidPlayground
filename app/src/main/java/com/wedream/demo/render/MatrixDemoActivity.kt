@@ -5,6 +5,8 @@ import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
 import com.wedream.demo.R
 import com.wedream.demo.app.BaseActivity
+import com.wedream.demo.app.track.TrackParams
+import com.wedream.demo.app.track.logEvent
 
 class MatrixDemoActivity : BaseActivity() {
 
@@ -26,5 +28,14 @@ class MatrixDemoActivity : BaseActivity() {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
             }
         })
+    }
+
+    override fun fillTrackParams(params: TrackParams) {
+        params["MatrixDemoActivity"] = "this is ${javaClass.simpleName}"
+    }
+
+    override fun onResume() {
+        super.onResume()
+        logEvent("page_show")
     }
 }

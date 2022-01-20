@@ -10,7 +10,10 @@ import com.wedream.demo.R
 private const val TAG_ID_PARENT_TRACK_NODE = R.id.lib_track_tag_parent_track_node
 private const val TAG_ID_PARAMS_SOURCE = R.id.lib_track_tag_id_params_source
 
-fun View.logWhenShow(eventName: String, updater: TrackParamsUpdater? = null) {
+fun View.logWhenShow(
+    eventName: String,
+    updater: TrackParamsUpdater? = null
+) {
     setupTrack {
         logEvent(eventName, updater)
     }
@@ -38,9 +41,9 @@ fun ITrackNode.logEvent(eventName: String, updater: TrackParamsUpdater? = null) 
 /**
  * 获取Fragment的父节点
  */
-internal fun Fragment.findParentTrackNode(): IParamsSource? {
-    return this.parentFragment as? IParamsSource
-        ?: this.activity as? IParamsSource
+internal fun Fragment.findParentTrackNode(): ITrackNode? {
+    return this.parentFragment as? ITrackNode
+        ?: this.activity as? ITrackNode
 }
 
 /**
@@ -65,8 +68,8 @@ internal fun Fragment.findParentTrackNode(): IParamsSource? {
 /**
  * 获取View的父节点，沿着ViewTree向上寻找
  */
-internal fun View.findParentTrackNode(): IParamsSource? {
-    var trackNode: IParamsSource?
+internal fun View.findParentTrackNode(): ITrackNode? {
+    var trackNode: ITrackNode?
     var currView: View? = this
 
     while (currView != null) {
@@ -79,7 +82,7 @@ internal fun View.findParentTrackNode(): IParamsSource? {
         // 当前位置移到ViewTree的父节点
         currView = currView.parent as? View
         // 看看父节点是不是ITrackNode
-        if (currView is IParamsSource) {
+        if (currView is ITrackNode) {
             return currView
         }
     }
@@ -90,8 +93,15 @@ internal fun View.findParentTrackNode(): IParamsSource? {
 /**
  * 获取View设置的父节点
  */
-fun View.getParentTrackNode(): IPageTrackNode? {
+fun View.getParentTrackNode(): ITrackNode? {
     return this.getTag(TAG_ID_PARENT_TRACK_NODE) as? IPageTrackNode
+}
+
+/**
+ * 手动设置View的父节点
+ */
+fun View.setParentTrackNode(node: ITrackNode) {
+    this.setTag(TAG_ID_PARENT_TRACK_NODE, node)
 }
 
 /**

@@ -1,12 +1,16 @@
 package com.wedream.demo.app.track
 
+import android.util.Log
 import android.view.View
-import com.wedream.demo.util.LogUtils.log
 
 open class Event(var name: String) {
     val params = TrackParams()
     var chainNode: ITrackNode? = null
     var chainView: View? = null
+
+    companion object {
+        const val TAG = "event"
+    }
 
     open fun put(key: String, value: Any?): Event {
         params[key] = value
@@ -34,11 +38,11 @@ open class Event(var name: String) {
     }
 
     open fun logView(view: View, updater: TrackParamsUpdater?) {
-        update(updater).node(view).emit()
+        node(view).update(updater).emit()
     }
 
     open fun logNode(node: ITrackNode, updater: TrackParamsUpdater?) {
-        update(updater).node(node).emit()
+        node(node).update(updater).emit()
     }
 
 //    open fun chainBy(fragment: Fragment): Event {
@@ -53,10 +57,7 @@ open class Event(var name: String) {
 
     open fun emit() {
         chainNode?.fillChain(params)
-        if (chainNode is IPageTrackNode) {
-            params[Events.Key.PAGE_NAME] = (chainNode as IPageTrackNode).getPageName()
-        }
         chainView?.fillChain(params)
-        log { "$name : $params"  }
+        Log.e(TAG, "$name : $params")
     }
 }
