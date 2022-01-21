@@ -1,10 +1,10 @@
 package com.wedream.demo.app.track
 
 import android.view.View
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 object TrackNodeStore {
 
@@ -32,7 +32,10 @@ object TrackNodeStore {
     }
 
     @JvmStatic
-    fun snap(trackNode: ITrackNode): TrackNodeSnapshot {
+    fun snap(
+        trackNode: ITrackNode,
+        updater: TrackParamsUpdater? = null
+    ): TrackNodeSnapshot {
         if (trackNode is TrackNodeSnapshot) return trackNode
 
         val fnId = generateFrozenNodeId(trackNode)
@@ -41,6 +44,7 @@ object TrackNodeStore {
             fnId,
             TrackParams().also { params ->
                 trackNode.fillChain(params)
+                updater?.invoke(params)
             },
             trackNode.previousTrackNode() as? TrackNodeSnapshot
         ).apply {
@@ -49,13 +53,17 @@ object TrackNodeStore {
     }
 
     @JvmStatic
-    fun snap(view: View): TrackNodeSnapshot {
+    fun snap(
+        view: View,
+        updater: TrackParamsUpdater? = null
+    ): TrackNodeSnapshot {
         val fnId = generateFrozenNodeId(view)
         val previousNode = view.trackNode?.previousTrackNode()
         return TrackNodeSnapshot(
             fnId,
             TrackParams().also { params ->
                 previousNode?.fillChain(params)
+                updater?.invoke(params)
             },
             view.referrerTrackNode as? TrackNodeSnapshot
         ).apply {
@@ -66,33 +74,17 @@ object TrackNodeStore {
     @JvmStatic
     fun getById(id: String?, owner: LifecycleOwner): TrackNodeSnapshot? {
         return id2FrozenNodes[id ?: return null].apply {
-            addLifecycleObserver(owner, id)
-        }
-    }
-
-    @JvmStatic
-    fun removeSnapshot(node: TrackNodeSnapshot?) {
-        node?.let {
-            id2FrozenNodes.remove(it.id)
-            val iterator = owner2Id.iterator()
-            while (iterator.hasNext()) {
-                val e = iterator.next()
-                if (e.value == it.id) {
-                    iterator.remove()
-                    break
-                }
+            owner.lifecycle.coroutineScope.launch(Dispatchers.Main) {
+                addLifecycleObserver(owner, id)
             }
         }
     }
 
-    @JvmStatic
-    fun count(): Int {
-        return id2FrozenNodes.size
-    }
-
     private fun addLifecycleObserver(owner: LifecycleOwner, nodeId: String) {
-        owner.lifecycle.addObserver(observer)
-        owner2Id[owner] = nodeId
+        if (owner2Id[owner] == null) {
+            owner.lifecycle.addObserver(observer)
+            owner2Id[owner] = nodeId
+        }
     }
 
     private fun removeLifecycleObserver(source: LifecycleOwner) {

@@ -136,9 +136,7 @@ class TrackContainerController : ViewController() {
         view.text = segment.id.toString()
         view.setTag(R.id.view_tag_segment, segment)
         view.setOnTouchListener(segmentTouchListener)
-        view.logWhenShow("track_show") {
-            this["id"] = segment.id
-        }
+        view.logWhenShow("track_show")
         CrossTrackMovementActivity.setViewBg(view, segment.id)
         view.translationX = DeviceParams.SCREEN_WIDTH * 0.5f + segment.left.toFloat()
     }

@@ -38,7 +38,7 @@ internal fun View.fillChain(trackParams: TrackParams) {
         // if current view impl ITrackNode or has set parentTrackNode, switch to track node chain
         currNode = currView as? ITrackNode ?: currView.getParentTrackNode()
         if (currNode != null) {
-            currNode.fillTrackParams(trackParams)
+            currNode.fillChain(trackParams)
             return
         }
 

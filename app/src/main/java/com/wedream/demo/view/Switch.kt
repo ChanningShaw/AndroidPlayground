@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
+import com.wedream.demo.app.track.logEvent
 import com.wedream.demo.util.dp
 
 open class Switch(context: Context, attrs: AttributeSet?, defStyle: Int) : View(context, attrs, defStyle) {
@@ -35,6 +36,9 @@ open class Switch(context: Context, attrs: AttributeSet?, defStyle: Int) : View(
         super.onAttachedToWindow()
         setOnClickListener {
             isCheck = !isCheck
+            logEvent("switch_click") {
+                this["is_check"] = if (isCheck) 1 else 0
+            }
             animator.cancel()
             animator.removeAllUpdateListeners()
             val lastCx = cx

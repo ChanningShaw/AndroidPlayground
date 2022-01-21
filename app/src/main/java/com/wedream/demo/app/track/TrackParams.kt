@@ -22,11 +22,15 @@ open class TrackParams : HashMap<String, Any?>(), Serializable {
         return this
     }
 
-    fun merge(params: Map<String, Any?>): TrackParams {
+    fun merge(params: Map<out String, Any?>): TrackParams {
         for (entry in params) {
             putIfNull(entry.key, entry.value)
         }
         return this
+    }
+
+    override fun putAll(from: Map<out String, Any?>) {
+        merge(from)
     }
 
     private fun putIfNull(key: String, value: Any?): TrackParams {

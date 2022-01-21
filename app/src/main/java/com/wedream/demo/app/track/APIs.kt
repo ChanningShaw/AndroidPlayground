@@ -94,7 +94,7 @@ internal fun View.findParentTrackNode(): ITrackNode? {
  * 获取View设置的父节点
  */
 fun View.getParentTrackNode(): ITrackNode? {
-    return this.getTag(TAG_ID_PARENT_TRACK_NODE) as? IPageTrackNode
+    return this.getTag(TAG_ID_PARENT_TRACK_NODE) as? ITrackNode
 }
 
 /**

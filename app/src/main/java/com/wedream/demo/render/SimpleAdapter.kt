@@ -38,9 +38,7 @@ class SimpleAdapter(context: Context) : CommonAdapter<SimpleAdapter.SimpleData, 
 //            holder.downloadPos = position
 //            downloadDemo(0, data, holder)
         }
-        holder.itemView.logWhenShow("itemView_show") {
-            this["text"] = data.n
-        }
+        holder.itemView.logWhenShow("itemView_show")
     }
 
     override fun getItemLayout(): Int {

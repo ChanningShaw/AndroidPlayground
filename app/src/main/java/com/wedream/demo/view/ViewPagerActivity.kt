@@ -38,9 +38,7 @@ class SimpleAdapter : PagerAdapter(){
         view.findViewById<TextView>(R.id.tv).text = data[position]
         container.addView(view)
         view.tag = data[position]
-        view.logWhenShow("view_show") {
-            this["page"] = data[position]
-        }
+        view.logWhenShow("view_show")
         return view
     }
 

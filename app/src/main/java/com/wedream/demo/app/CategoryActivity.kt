@@ -3,7 +3,9 @@ package com.wedream.demo.app
 import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.RecyclerView
+import com.ss.android.ugc.aweme.ecommerce.trackimpl.setPreviousTrackNode
 import com.wedream.demo.R
+import com.wedream.demo.app.track.TrackParams
 import com.wedream.demo.app.track.logEvent
 import com.wedream.demo.category.Category
 import com.wedream.demo.category.CategoryAdapter
@@ -11,12 +13,15 @@ import com.wedream.demo.category.ComponentCategory
 import com.wedream.demo.common.CommonAdapter
 
 open class CategoryActivity : BaseActivity() {
+
+    private var data: List<Category>? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category)
-        val data = intent.extras?.getParcelableArrayList<Category>("categories") as List<Category>?
+        data = intent.extras?.getParcelableArrayList("categories")
         data?.let {
-            setCategoryList(data)
+            setCategoryList(it)
         }
     }
 
@@ -44,6 +49,10 @@ open class CategoryActivity : BaseActivity() {
         }
     }
 
+    override fun fillTrackParams(params: TrackParams) {
+        params["CategoryActivity"] = "this is ${javaClass.simpleName}"
+    }
+
     open fun onCategoryClick(data: Category, pos: Int) {
         val intent = Intent()
         if (data is ComponentCategory) {
@@ -51,6 +60,9 @@ open class CategoryActivity : BaseActivity() {
         } else {
             intent.setClass(this@CategoryActivity, CategoryActivity::class.java)
             intent.putParcelableArrayListExtra("categories", data.getChildren())
+        }
+        intent.setPreviousTrackNode(this) {
+            this["category"] = data.name
         }
         startActivity(intent)
     }

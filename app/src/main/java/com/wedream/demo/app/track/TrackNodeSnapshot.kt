@@ -21,6 +21,6 @@ class TrackNodeSnapshot(val id: String,
     }
 
     override fun toString(): String {
-        return "FrozenTrackNode[id:$id](tid:$trackThreadId)"
+        return "TrackNodeSnapshot[id:$id](tid:$trackThreadId)"
     }
 }

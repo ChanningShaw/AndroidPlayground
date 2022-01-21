@@ -82,25 +82,37 @@ fun Uri.getPreviousTrackNode(owner: LifecycleOwner): TrackNodeSnapshot? {
 }
 
 
-fun Intent.setPreviousTrackNode(node: ITrackNode): ITrackNode {
-    val frozenNode = TrackNodeStore.snap(node)
+fun Intent.setPreviousTrackNode(
+    node: ITrackNode,
+    updater: TrackParamsUpdater? = null
+): TrackNodeSnapshot {
+    val frozenNode = TrackNodeStore.snap(node, updater)
     this.putExtra(EXTRA_PREVIOUS_TRACK_NODE_ID, frozenNode.id)
     return frozenNode
 }
 
-fun Intent.setPreviousTrackNode(view: View): ITrackNode {
+fun Intent.setPreviousTrackNode(
+    view: View,
+    updater: TrackParamsUpdater? = null
+): TrackNodeSnapshot {
     val frozenNode = TrackNodeStore.snap(view)
     this.putExtra(EXTRA_PREVIOUS_TRACK_NODE_ID, frozenNode.id)
     return frozenNode
 }
 
-fun Bundle.setPreviousTrackNode(node: ITrackNode): ITrackNode {
+fun Bundle.setPreviousTrackNode(
+    node: ITrackNode,
+    updater: TrackParamsUpdater? = null
+): TrackNodeSnapshot {
     val frozenNode = TrackNodeStore.snap(node)
     this.putString(EXTRA_PREVIOUS_TRACK_NODE_ID, frozenNode.id)
     return frozenNode
 }
 
-fun Bundle.setPreviousTrackNode(view: View): ITrackNode {
+fun Bundle.setPreviousTrackNode(
+    view: View,
+    updater: TrackParamsUpdater? = null
+): TrackNodeSnapshot {
     val frozenNode = TrackNodeStore.snap(view)
     this.putString(EXTRA_PREVIOUS_TRACK_NODE_ID, frozenNode.id)
     return frozenNode

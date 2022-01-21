@@ -3,6 +3,8 @@ package com.wedream.demo.view
 import android.os.Bundle
 import com.wedream.demo.R
 import com.wedream.demo.app.BaseActivity
+import com.wedream.demo.app.track.logEvent
+import com.wedream.demo.app.track.setParentTrackNode
 import com.wedream.demo.view.kytab.IndicatorConfig
 import com.wedream.demo.view.kytab.KyTabLayout
 
@@ -17,13 +19,16 @@ class TabLayoutActivity : BaseActivity() {
         val tabLayout: KyTabLayout = findViewById(R.id.tab)
         for (t in tabs) {
             val tab = tabLayout.newTab(t)
+            tab.getView().setParentTrackNode(this)
             tabLayout.addTab(tab)
         }
         val tab = tabLayout.ImageTab(R.drawable.mat_image)
         tabLayout.setIndicatorConfig(IndicatorConfig.Build().width(50).build())
+        tab.getView().setParentTrackNode(this)
         tabLayout.addTab(tab)
         for (i in 1..20) {
             val tab = tabLayout.newTab(i.toString())
+            tab.getView().setParentTrackNode(this)
             tabLayout.addTab(tab)
         }
 
@@ -32,6 +37,9 @@ class TabLayoutActivity : BaseActivity() {
                 if (index == 4) {
                     val tab = tabLayout.newTab("E")
                     tabLayout.replaceTab(tab, index)
+                }
+                tab.getView().logEvent("tab_click") {
+                    this["tab_index"] = index
                 }
             }
         })
