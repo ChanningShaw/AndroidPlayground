@@ -37,7 +37,7 @@ abstract class CommonAdapter<DATA, H : RecyclerView.ViewHolder>(private var cont
     fun setData(data: List<DATA>) {
         dataList.clear()
         dataList.addAll(data)
-        notifyDataSetChanged()
+        notifyItemRangeInserted(0, data.size)
     }
 
     fun getData(): List<DATA> {

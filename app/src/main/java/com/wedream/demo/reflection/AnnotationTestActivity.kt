@@ -2,6 +2,8 @@ package com.wedream.demo.reflection
 
 import android.os.Bundle
 import com.wedream.demo.app.BaseActivity
+import com.wedream.demo.reflection.annotations.KeyRequirements
+import com.wedream.demo.util.LogUtils.log
 import com.wedream.demo.videoeditor.project.VideoProject
 
 class AnnotationTestActivity : BaseActivity() {
@@ -17,6 +19,10 @@ class AnnotationTestActivity : BaseActivity() {
     private fun inject(vararg objects: Any) {
         val clazz = this.javaClass
         val fields = clazz.declaredFields
+        val an = objects[0].javaClass.annotations.filterIsInstance<KeyRequirements>().firstOrNull()
+        for (r in an?.requirements ?: emptyArray()) {
+            log { r.key }
+        }
         for (field in fields) {
 //            if (field.isAnnotationPresent(Inject::class.java)) {
 //                val inject = field.getAnnotation(Inject::class.java)

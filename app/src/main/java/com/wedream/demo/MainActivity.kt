@@ -97,6 +97,7 @@ class MainActivity : CategoryActivity() {
                 RecyclerViewActivity::class.java,
                 ViewLevelActivity::class.java,
                 ScaleViewActivity::class.java,
+                ViewStubActivity::class.java,
                 ScaleActivity::class.java,
                 CrossTrackMovementActivity::class.java,
                 NewMultiTrackActivity::class.java,
@@ -111,6 +112,8 @@ class MainActivity : CategoryActivity() {
                 SwitchActivity::class.java,
                 FlowLayoutActivity::class.java,
                 DetachViewActivity::class.java,
+                SpacedLineViewActivity::class.java,
+                TestTouchEventActivity::class.java,
             )
         )
         val lifecycle = Category("lifecycle").addComponentCategories(

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp">
+
+    <ViewStub
+        android:id="@+id/v1"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:inflatedId="@+id/v1"
+        android:layout="@layout/text_view"
+        android:visibility="gone" />
+
+    <ViewStub
+        android:id="@+id/v2"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:inflatedId="@+id/v2"
+        android:layout="@layout/image_view"
+        android:visibility="gone" />
+</FrameLayout>

@@ -95,5 +95,8 @@
         <activity
             android:name=".game.tankwar.TankWarActivity"
             android:screenOrientation="landscape" />
+        <activity android:name=".view.SpacedLineViewActivity" />
+        <activity android:name=".view.ViewStubActivity" />
+        <activity android:name=".view.TestTouchEventActivity" />
     </application>
 </manifest>

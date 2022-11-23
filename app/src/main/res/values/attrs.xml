@@ -7,4 +7,13 @@
     <attr name="ringColor" format="color"/>
     <attr name="ringBgColor" format="color"/>
   </declare-styleable>
+
+  <declare-styleable name="SpacedLineView">
+    <attr name="height" format="dimension"/>
+    <attr name="item_width" format="dimension"/>
+    <attr name="second_width" format="dimension"/>
+    <attr name="offset_width" format="dimension"/>
+    <attr name="first_color" format="color"/>
+    <attr name="second_color" format="color"/>
+  </declare-styleable>
 </resources>

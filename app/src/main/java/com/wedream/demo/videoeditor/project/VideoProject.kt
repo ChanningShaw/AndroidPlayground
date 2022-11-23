@@ -1,15 +1,17 @@
 package com.wedream.demo.videoeditor.project
 
+import com.wedream.demo.reflection.annotations.KeyRequirement
+import com.wedream.demo.reflection.annotations.KeyRequirements
 import com.wedream.demo.util.IdUtils
-import com.wedream.demo.util.LogUtils.printAndDie
 import com.wedream.demo.util.ToastUtils
-import com.wedream.demo.videoeditor.project.asset.Asset
-import com.wedream.demo.videoeditor.editor.EditorData
 import com.wedream.demo.videoeditor.editor.EditorUpdater
+import com.wedream.demo.videoeditor.project.asset.Asset
 import com.wedream.demo.videoeditor.project.asset.MainTrackAsset
-import io.reactivex.BackpressureStrategy
-import io.reactivex.subjects.PublishSubject
 
+@KeyRequirements(
+    KeyRequirement("a", false),
+    KeyRequirement("b")
+)
 class VideoProject : ProjectModifyListener {
     // 主轨素材，有序
     private var assets = arrayListOf<Asset>()

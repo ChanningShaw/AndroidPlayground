@@ -3,6 +3,8 @@ package com.wedream.demo.view.layout
 import android.content.Context
 import android.graphics.Canvas
 import android.util.AttributeSet
+import android.view.DragEvent
+import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
 import com.wedream.demo.util.LogUtils.log
@@ -25,6 +27,15 @@ open class MyFrameLayout(context: Context, attrs: AttributeSet?, defStyle: Int) 
         if (specificWidth != 0 && specificHeight != 0) {
             setMeasuredDimension(specificWidth, specificHeight)
         }
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        val r = super.dispatchTouchEvent(ev)
+        return r
+    }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        return super.onTouchEvent(event)
     }
 
     fun detachView(child: View) {
