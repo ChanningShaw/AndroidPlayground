@@ -98,5 +98,7 @@
         <activity android:name=".view.SpacedLineViewActivity" />
         <activity android:name=".view.ViewStubActivity" />
         <activity android:name=".view.TestTouchEventActivity" />
+        <activity android:name=".view.hesuan.HesuanActivity" />
+        <activity android:name="com.example.myapplication.ScreenShotActivity" />
     </application>
 </manifest>

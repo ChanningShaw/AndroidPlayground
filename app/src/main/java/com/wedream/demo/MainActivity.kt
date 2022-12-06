@@ -44,6 +44,7 @@ import com.wedream.demo.view.*
 import com.wedream.demo.view.canvas.DrawViewActivity
 import com.wedream.demo.view.colormatrix.ColorMatrixCategoryActivity
 import com.wedream.demo.view.flowlayout.FlowLayoutActivity
+import com.wedream.demo.view.hesuan.HesuanActivity
 import com.wedream.demo.view.layout.DetachViewActivity
 import com.wedream.demo.view.layout.OutlineActivity
 import com.wedream.demo.view.layout.TranslateActivity
@@ -112,6 +113,7 @@ class MainActivity : CategoryActivity() {
                 SwitchActivity::class.java,
                 FlowLayoutActivity::class.java,
                 DetachViewActivity::class.java,
+                HesuanActivity::class.java,
                 SpacedLineViewActivity::class.java,
                 TestTouchEventActivity::class.java,
             )

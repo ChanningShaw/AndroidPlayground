@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/hesuan" />
+
+    <TextView
+        android:id="@+id/status_bar_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="上午"
+        android:textColor="@color/color_white" />
+
+    <TextView
+        android:id="@+id/cur_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="cur_time"
+        android:textColor="#999999" />
+
+    <TextView
+        android:id="@+id/detect_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="detect_time"
+        android:textColor="@color/color_white" />
+</FrameLayout>
